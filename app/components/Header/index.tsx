@@ -4,7 +4,7 @@ import Link from 'next/link';
 import styles from './header.module.scss';
 import { Button, Flex } from 'antd';
 
-export const Heaedr = () => {
+const Header = () => {
   return (
     <header className={styles.header}>
       <section className={styles.header_container}>
@@ -28,3 +28,5 @@ export const Heaedr = () => {
     </header>
   );
 };
+
+export default Header;
