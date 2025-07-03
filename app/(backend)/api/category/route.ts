@@ -1,8 +1,8 @@
-import { SupabaseClient } from "@supabase/supabase-js";
-import { NextResponse } from "next/server";
-import { GetCategoryListUsecase } from "../../application/usecases/GetCategoryListUsecase";
-import { SbCategoryRepository } from "../../repositories/SbCategoryRepository";
-import { createClient } from "@/app/utils/supabase/server";
+import { SupabaseClient } from '@supabase/supabase-js';
+import { NextResponse } from 'next/server';
+import { GetCategoryListUsecase } from '../../application/usecases/GetCategoryListUsecase';
+import { SbCategoryRepository } from '../../repositories/SbCategoryRepository';
+import { createClient } from '@/app/utils/supabase/server';
 
 export async function GET() {
   const supabase: SupabaseClient = await createClient(); // supabse 불러오기

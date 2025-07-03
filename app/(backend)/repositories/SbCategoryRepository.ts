@@ -1,7 +1,7 @@
-import { SupabaseClient } from "@supabase/supabase-js";
-import { Category } from "../domain/entities/Category";
-import { CategoryTable } from "../domain/tables/CategoryTable";
-import { CategoryRepository } from "../domain/repositories/CategoryRepository";
+import { SupabaseClient } from '@supabase/supabase-js';
+import { Category } from '../domain/entities/Category';
+import { CategoryTable } from '../domain/tables/CategoryTable';
+import { CategoryRepository } from '../domain/repositories/CategoryRepository';
 
 export class SbCategoryRepository implements CategoryRepository {
   private supabase;
@@ -19,11 +19,9 @@ export class SbCategoryRepository implements CategoryRepository {
   }
 
   async findAll(): Promise<Category[]> {
-    const { data, error } = await this.supabase.from("category").select();
+    const { data, error } = await this.supabase.from('category').select();
 
     if (error) throw new Error(error.message);
-    return data.map((menu) =>
-      SbCategoryRepository.mapToMenu(menu)
-    ) as Category[];
+    return data.map((menu) => SbCategoryRepository.mapToMenu(menu)) as Category[];
   }
 }
