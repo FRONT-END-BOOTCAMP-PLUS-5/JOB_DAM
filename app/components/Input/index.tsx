@@ -1,6 +1,6 @@
 import React from 'react';
 import { Path, UseFormRegister } from 'react-hook-form';
-import styles from '@/app/login/loginForm.module.scss';
+import styles from '@/app/components/LoginForm/loginForm.module.scss';
 
 interface IFormValues {
   email: string;
