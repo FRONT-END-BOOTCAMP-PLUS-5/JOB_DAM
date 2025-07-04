@@ -12,7 +12,7 @@ const Header = () => {
         </div>
         <nav className={styles.header_nav}>
           <Link href="/">멘토 찾기</Link>
-          <Link href="/">커뮤니티</Link>
+          <Link href="/board">커뮤니티</Link>
           <Link href="/">채팅하기</Link>
         </nav>
         <div className={styles.user_nav}>

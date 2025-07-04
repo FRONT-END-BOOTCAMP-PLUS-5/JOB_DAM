@@ -31,15 +31,22 @@ export class SbQuestionRepository implements QuestionRepository {
     }
 
     async findAll(): Promise<Question[]> {
-        const { data, error } = await this.supabase.from('question').select("*");
+        const { data, error } = await this.supabase
+                                          .from('question')
+                                          .select("*");
 
         if (error) throw new Error(error.message);
         return data.map((item) => this.getEntities(item)) as Question[];
     }
 
-    async insertQuestion(): Promise<void> {
-        const { error } = await this.supabase.from('question').insert([this.clientData])
+    async insertQuestion(): Promise<Question> {
+        const { data, error } = await this.supabase
+                                     .from('question')
+                                     .insert([this.clientData])
+                                     .select("*")
+                                     .single()
 
         if (error) throw new Error(error.message)
+        return data as Question
     }
 }

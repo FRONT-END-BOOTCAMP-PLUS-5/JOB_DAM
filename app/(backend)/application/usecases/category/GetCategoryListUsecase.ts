@@ -1,6 +1,6 @@
-import { CategoryRepository } from '../../domain/repositories/CategoryRepository';
-import { CategoryTable } from '../../domain/tables/CategoryTable';
-import { CategoryDto } from '../dtos/CategoryDto';
+import { CategoryRepository } from '../../../domain/repositories/CategoryRepository';
+import { CategoryTable } from '../../../domain/tables/CategoryTable';
+import { CategoryDto } from '../../dtos/CategoryDto';
 
 export class GetCategoryListUsecase {
   private repository: CategoryRepository;
