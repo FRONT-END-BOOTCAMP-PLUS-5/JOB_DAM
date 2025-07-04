@@ -1,0 +1,85 @@
+@use '@/app/styles/mixin.scss';
+
+.login_form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  height: 100%;
+  padding-top: 5%;
+
+  .login_form_label {
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: left;
+    width: 70%;
+  }
+
+  .login_form_item {
+    width: 70%;
+    height: 5.5vh;
+    border-radius: 12px;
+    padding: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: 1px solid lightgray;
+
+    &::placeholder {
+      color: gray;
+    }
+  }
+
+  .login_button {
+    width: 70%;
+    height: 5.5vh;
+    border-radius: 12px;
+    padding: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    background-color: #6b70d6;
+    color: white;
+    margin-top: 5%;
+    cursor: pointer;
+  }
+
+  .login_form_checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 70%;
+    height: 5.5vh;
+    padding: 10px;
+  }
+
+  .login_form_checkbox_item {
+    display: flex;
+    gap: 10px;
+  }
+
+  span {
+    margin-top: auto;
+    margin-bottom: 20%;
+    font-size: 1.125rem;
+  }
+
+  a {
+    font-weight: 400;
+    color: blue;
+  }
+
+  .row_input_container {
+    @include mixin.flexCenter(row);
+    width: 100%;
+    margin-top: 5%;
+  }
+
+  .column_input_container {
+    @include mixin.flexCenter(column);
+    gap: 8px;
+    width: 100%;
+    background-color: red;
+  }
+}
