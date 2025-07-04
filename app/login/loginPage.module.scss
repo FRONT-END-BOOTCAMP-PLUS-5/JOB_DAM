@@ -2,8 +2,8 @@
   display: flex;
   align-items: center;
   flex-direction: column;
-  height: 100vh;
   width: 100vw;
+  height: 90vh;
   justify-content: center;
 }
 
@@ -15,22 +15,6 @@
   width: 35%;
   background-color: #f8f7fc;
   border-radius: 20px;
-
-  // 태블릿 (768px 이하)
-  @media (max-width: 768px) {
-    width: 70%;
-    height: 70vh;
-    padding: 20px;
-  }
-
-  // 모바일 (480px 이하)
-  @media (max-width: 480px) {
-    width: 90%;
-    height: auto;
-    min-height: 60vh;
-    padding: 16px;
-    border-radius: 16px;
-  }
 
   .loginTitle {
     display: flex;

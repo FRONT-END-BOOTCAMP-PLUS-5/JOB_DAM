@@ -1,7 +1,7 @@
 import React from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import styles from './loginForm.module.scss';
-import Input from './input';
+import Input from '@/app/components/Input';
 import Link from 'next/link';
 
 interface FormInput {
