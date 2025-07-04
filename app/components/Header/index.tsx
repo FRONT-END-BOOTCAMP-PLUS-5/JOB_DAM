@@ -2,9 +2,8 @@
 
 import Link from 'next/link';
 import styles from './header.module.scss';
-import { Button, Flex } from 'antd';
 
-export const Heaedr = () => {
+const Header = () => {
   return (
     <header className={styles.header}>
       <section className={styles.header_container}>
@@ -16,15 +15,17 @@ export const Heaedr = () => {
           <Link href="/">커뮤니티</Link>
           <Link href="/">채팅하기</Link>
         </nav>
-        <Flex justify="center" align="center" gap={15}>
-          <Button type="primary" href="/">
+        <div className={styles.user_nav}>
+          <Link className={`${styles.button} ${styles.login}`} href="/">
             로그인
-          </Button>
-          <Button type="default" href="/">
+          </Link>
+          <Link className={`${styles.button} ${styles.signup}`} href="/">
             회원가입
-          </Button>
-        </Flex>
+          </Link>
+        </div>
       </section>
     </header>
   );
 };
+
+export default Header;

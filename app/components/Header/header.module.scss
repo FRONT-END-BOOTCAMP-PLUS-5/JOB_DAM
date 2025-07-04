@@ -8,12 +8,13 @@
 
   &_container {
     max-width: 1440px;
+    padding: 0 20px;
     width: 100%;
     @include flexCenter(row);
   }
 
   &_nav {
-    width: 70%;
+    width: calc(100% - (100px + 180px));
     gap: 24px;
     font-size: 14px;
     @include flexCenter(row);
@@ -34,6 +35,33 @@
       color: #667eea;
       font-weight: 900;
       font-size: 20px;
+    }
+  }
+
+  .user_nav {
+    @include flexCenter(row);
+    gap: 16px;
+
+    & a {
+      font-size: 14px;
+    }
+
+    & .button {
+      padding: 8px 16px;
+      border-radius: 8px;
+      max-height: 35px;
+      @include flexCenter(row);
+    }
+
+    & .login {
+      border: 1px solid #667eea;
+      color: #667eea;
+      background-color: #fff;
+    }
+
+    & .signup {
+      background-color: #667eea;
+      color: #fff;
     }
   }
 }
