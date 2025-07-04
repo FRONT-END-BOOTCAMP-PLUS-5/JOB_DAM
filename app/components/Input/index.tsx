@@ -18,12 +18,12 @@ interface InputProps {
 export default function Input({ name, label, required, placeholder, className }: InputProps) {
   const { register } = useForm<IFormValues>();
 
-  const LoginFormLabel = label === '이메일' || '비밀번호' ? styles.loginFormLabel : styles.loginFormLabel;
-  const inputContainer = label === '이메일' || '비밀번호' ? styles.rowInputContainer : styles.columnInputContainer;
+  const login_form_label = label === '이메일' || '비밀번호' ? styles.login_form_label : styles.login_form_label;
+  const input_container = label === '이메일' || '비밀번호' ? styles.row_input_container : styles.column_input_container;
 
   return (
-    <div className={inputContainer}>
-      <label className={LoginFormLabel}>{label}</label>
+    <div className={input_container}>
+      <label className={login_form_label}>{label}</label>
       <input {...register(name, { required })} className={className} placeholder={placeholder} />
     </div>
   );

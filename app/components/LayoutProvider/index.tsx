@@ -6,10 +6,10 @@ import Footer from '../Footer';
 import Container from '../Container';
 
 export default function LayoutProvider({ children }: { children: React.ReactNode }) {
-  const pathName = usePathname();
-  const isAuthPage = pathName === '/login' || pathName === '/signup';
+  const path_name = usePathname();
+  const is_auth_page = path_name === '/login' || path_name === '/signup';
 
-  if (isAuthPage) {
+  if (is_auth_page) {
     return (
       <>
         <Header />
