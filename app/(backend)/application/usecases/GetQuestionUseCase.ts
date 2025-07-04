@@ -17,18 +17,16 @@ export class GetQuestionUseCase {
         const questions: QuestionTable[] = await this.repository.findAll();
 
 
-        /**
-         * Question table structure
-         * id
-         * title
-         * content
-         * createdAt
-         * updatedAt
-         * deletedAt
-         * categoryId
-         * */
-        const questionDtos: QuestionDto[] = questions.map((item) => ({ ...item }));
-
+        const questionDtos: QuestionDto[] = questions.map((item) => ({
+            id: item['id'],
+            title: item['title'],
+            content: item['content'],
+            memberId: item['member_id'],
+            createdAt: item['created_at'],
+            updatedAt: item['updated_at'],
+            deletedAt: item['deleted_at'],
+            categoryId: item['category_id']
+        }));
 
         return {
             question: questionDtos,
