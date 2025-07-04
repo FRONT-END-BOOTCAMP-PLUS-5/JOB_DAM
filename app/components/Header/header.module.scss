@@ -8,12 +8,13 @@
 
   &_container {
     max-width: 1440px;
+    padding: 0 20px;
     width: 100%;
     @include flexCenter(row);
   }
 
   &_nav {
-    width: 70%;
+    width: calc(100% - (100px + 180px));
     gap: 24px;
     font-size: 14px;
     @include flexCenter(row);
