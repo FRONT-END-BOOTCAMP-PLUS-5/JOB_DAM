@@ -36,4 +36,31 @@
       font-size: 20px;
     }
   }
+
+  .user_nav {
+    @include flexCenter(row);
+    gap: 16px;
+
+    & a {
+      font-size: 14px;
+    }
+
+    & .button {
+      padding: 8px 16px;
+      border-radius: 8px;
+      max-height: 35px;
+      @include flexCenter(row);
+    }
+
+    & .login {
+      border: 1px solid #667eea;
+      color: #667eea;
+      background-color: #fff;
+    }
+
+    & .signup {
+      background-color: #667eea;
+      color: #fff;
+    }
+  }
 }
