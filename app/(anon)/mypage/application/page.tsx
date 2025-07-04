@@ -1,8 +1,13 @@
 'use client';
 
+import { useState } from 'react';
 import styles from './application.module.scss';
 
 const Application = () => {
+  const [company, setCompany] = useState('');
+  const [grade, setGrade] = useState('');
+  const [workPeriod, setWorkPeriod] = useState('');
+
   return (
     <section className={styles.user_container}>
       <h3>멘토 신청하기</h3>
