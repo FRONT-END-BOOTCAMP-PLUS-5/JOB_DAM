@@ -1,7 +1,7 @@
-import styles from '@/app/components/SignUpForm/signupForm.module.scss';
+import styles from './signupPage.module.scss';
 
 function SignupLayout({ children }: { children: React.ReactNode }) {
-  return <main className={styles.signupPageContainer}>{children}</main>;
+  return <main className={styles.signUpLayoutContainer}>{children}</main>;
 }
 
 export default SignupLayout;

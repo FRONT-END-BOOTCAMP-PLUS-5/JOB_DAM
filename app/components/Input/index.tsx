@@ -1,25 +1,30 @@
-import React from 'react';
-import { Path, UseFormRegister } from 'react-hook-form';
 import styles from '@/app/components/LoginForm/loginForm.module.scss';
+import { Path, useForm } from 'react-hook-form';
 
 interface IFormValues {
   email: string;
   password: string;
+  nickname: string;
 }
 
 interface InputProps {
   label: string;
-  register: UseFormRegister<IFormValues>;
   required: boolean;
   name: Path<IFormValues>;
   placeholder: string;
+  className: string;
 }
 
-export default function Input({ name, label, register, required, placeholder }: InputProps) {
+export default function Input({ name, label, required, placeholder, className }: InputProps) {
+  const { register } = useForm<IFormValues>();
+
+  const LoginFormLabel = label === '이메일' || '비밀번호' ? styles.loginFormLabel : styles.loginFormLabel;
+  const inputContainer = label === '이메일' || '비밀번호' ? styles.rowInputContainer : styles.columnInputContainer;
+
   return (
-    <>
-      <label className={styles.loginFormLabel}>{label}</label>
-      <input {...register(name, { required })} className={styles.loginFormItem} placeholder={placeholder} />
-    </>
+    <div className={inputContainer}>
+      <label className={LoginFormLabel}>{label}</label>
+      <input {...register(name, { required })} className={className} placeholder={placeholder} />
+    </div>
   );
 }

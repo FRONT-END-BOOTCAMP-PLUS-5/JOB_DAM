@@ -15,13 +15,19 @@ export default function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.loginForm}>
-      <Input label="이메일" register={register} required={true} name="email" placeholder="이메일을 입력해주세요." />
+      <Input
+        label="이메일"
+        required={true}
+        name="email"
+        placeholder="이메일을 입력해주세요."
+        className={styles.loginFormItem}
+      />
       <Input
         label="비밀번호"
         name="password"
-        register={register}
         required={true}
         placeholder="비밀번호를 입력해주세요."
+        className={styles.loginFormItem}
       />
       <div className={styles.loginFormCheckbox}>
         <div className={styles.loginFormCheckboxItem}>
