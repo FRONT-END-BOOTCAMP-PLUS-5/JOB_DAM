@@ -27,18 +27,6 @@ export class SbQuestionRepository implements QuestionRepository {
 
     // 데이터베이스 데이터를 도메인 엔티티로 변환
     private getEntities(question: QuestionTable): Question {
-        /**
-         * Question table structure
-         * id,
-         * title,
-         * content,
-         * createdAt,
-         * deletedAt,
-         * updatedAt,
-         * categoryId
-         * answer_id
-         * */
-
         return {...question};
     }
 

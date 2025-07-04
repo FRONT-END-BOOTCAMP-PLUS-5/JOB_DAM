@@ -9,4 +9,5 @@ export class QuestionTable {
         public deleted_at: string,
         public category_id: number,
     ) {}
+
 }

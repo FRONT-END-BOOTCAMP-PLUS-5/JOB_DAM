@@ -9,4 +9,5 @@ export class QuestionDto {
         public updatedAt: string,
         public categoryId: number,
     ) {}
+
 }

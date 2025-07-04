@@ -9,4 +9,5 @@ export class Question {
         public updated_at: string,
         public category_id: number,
     ) {}
+
 }
