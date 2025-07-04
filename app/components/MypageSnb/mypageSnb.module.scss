@@ -1,0 +1,28 @@
+.mypage_nav {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  gap: 48px;
+
+  & .link_box {
+    display: flex;
+    gap: 12px;
+    flex-direction: column;
+
+    & h4 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #271adb;
+      margin-bottom: 8px;
+    }
+
+    & a {
+      font-size: 14px;
+
+      &:hover {
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+    }
+  }
+}
