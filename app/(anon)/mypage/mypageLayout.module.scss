@@ -1,0 +1,20 @@
+@use '../../styles/mixin.scss';
+
+.align_container {
+  width: 100%;
+  @include mixin.flexCenter(row);
+  padding: 60px 20px 80px;
+
+  & .container {
+    display: flex;
+    justify-content: center;
+    max-width: 1440px;
+    gap: 62px;
+    width: 100%;
+
+    & .content {
+      width: 100%;
+      max-width: 544px;
+    }
+  }
+}

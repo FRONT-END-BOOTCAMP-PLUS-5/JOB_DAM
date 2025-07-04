@@ -1,7 +1,7 @@
-@import '../../styles/mixin.scss';
+@use '../../styles/mixin.scss';
 
 .header {
-  @include flexCenter(row);
+  @include mixin.flexCenter(row);
   height: 80px;
   width: 100%;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -10,14 +10,14 @@
     max-width: 1440px;
     padding: 0 20px;
     width: 100%;
-    @include flexCenter(row);
+    @include mixin.flexCenter(row);
   }
 
   &_nav {
     width: calc(100% - (100px + 180px));
     gap: 24px;
     font-size: 14px;
-    @include flexCenter(row);
+    @include mixin.flexCenter(row);
 
     & a:hover {
       color: #667eea;
@@ -29,7 +29,7 @@
   .logo {
     width: 100px;
     height: 100%;
-    @include flexCenter(row);
+    @include mixin.flexCenter(row);
 
     & a {
       color: #667eea;
@@ -39,7 +39,7 @@
   }
 
   .user_nav {
-    @include flexCenter(row);
+    @include mixin.flexCenter(row);
     gap: 16px;
 
     & a {
@@ -50,7 +50,7 @@
       padding: 8px 16px;
       border-radius: 8px;
       max-height: 35px;
-      @include flexCenter(row);
+      @include mixin.flexCenter(row);
     }
 
     & .login {
