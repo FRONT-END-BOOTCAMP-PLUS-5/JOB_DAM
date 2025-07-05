@@ -1,10 +1,10 @@
-@import '../../styles/mixin.scss';
+@use '../../styles/mixin';
 
 .footer {
   width: 100%;
   min-height: 180px;
   height: 100%;
-  @include flexCenter(column);
+  @include mixin.flexCenter(column);
   background: #1a1a1a;
   padding: 30px 0;
 
