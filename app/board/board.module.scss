@@ -1,8 +1,9 @@
-@import "../styles/mixin.scss";
+@import "../styles/mixin";
 
 .container{
   @include flexCenter(row);
   width: 100%;
+  padding: 0 20px;
 
   &_content{
     @include flexCenter(row);
@@ -15,11 +16,11 @@
       &_top{
         @include flexCenter(column);
         background-color: red;
-        border-top-left-radius: 30px;
-        border-top-right-radius: 30px;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
         background-image: linear-gradient(90deg, #6876e0 30%, #7354ad 60%);
         color: #fff;
-        height: 120px;
+        height: 160px;
 
         h1{
           font-size: 2.2rem;
@@ -44,3 +45,38 @@
     }
   }
 }
+
+.search_box{
+  background-color: #f8f9fa;
+  height: 200px;
+  padding: 20px 20px;
+
+  &_top{
+    @include flexCenter(row);
+    justify-content: space-between;
+  }
+
+  &_middle{
+    @include flexCenter(row);
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+
+  &_bottom{
+    @include flexCenter(row);
+    justify-content: normal;
+    margin-top: 30px;
+    gap: 10px;
+  }
+
+  >span{
+    font-size: 1.02rem;
+    font-weight: 400;
+  }
+
+  &_total_question{
+    font-weight: bold !important;
+  }
+}
+
+.question_box{}
