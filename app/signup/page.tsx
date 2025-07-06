@@ -122,9 +122,7 @@ export default function SignupPage() {
           <p>(선택) 마케팅 정보 수신에 동의합니다</p>
         </div>
 
-        <Button type="submit" className={styles.signup_button}>
-          회원가입
-        </Button>
+        <Button type="submit" typeStyle="submit" text="회원가입" />
 
         <span className={styles.signup_login_link}>
           이미 회원이신가요?
