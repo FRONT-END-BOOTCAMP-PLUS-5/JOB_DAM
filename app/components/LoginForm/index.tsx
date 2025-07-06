@@ -20,6 +20,7 @@ export default function LoginForm() {
         required={true}
         name="email"
         placeholder="이메일을 입력해주세요."
+        register={register}
         className={styles.login_form_item}
       />
       <Input
@@ -28,6 +29,7 @@ export default function LoginForm() {
         required={true}
         placeholder="비밀번호를 입력해주세요."
         className={styles.login_form_item}
+        register={register}
       />
       <div className={styles.login_form_checkbox}>
         <div className={styles.login_form_checkbox_item}>
