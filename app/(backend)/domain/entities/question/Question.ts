@@ -8,6 +8,7 @@ export class Question {
         public deleted_at: string,
         public updated_at: string,
         public category_id: number,
+        public recommend: number
     ) {}
 
 }

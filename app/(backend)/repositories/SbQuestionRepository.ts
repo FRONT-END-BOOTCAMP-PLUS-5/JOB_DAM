@@ -1,5 +1,5 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import { Question } from '../domain/entities/Question';
+import { Question } from '../domain/entities/question/Question';
 import { QuestionTable } from '../domain/tables/QuestionTable';
 import { QuestionRepository } from '../domain/repositories/QuestionRepository';
 
@@ -30,10 +30,13 @@ export class SbQuestionRepository implements QuestionRepository {
         return {...question};
     }
 
-    async findAll(): Promise<Question[]> {
+    // 검색기능, 버튼 필터링 생각해서
+    async findAll(title: string='', column: string='created_at'): Promise<Question[]> {
         const { data, error } = await this.supabase
                                           .from('question')
-                                          .select("*");
+                                          .select("*")
+                                          .like('title', `%${title}%`)
+                                          .order(`${column}`, { ascending: false })
 
         if (error) throw new Error(error.message);
         return data.map((item) => this.getEntities(item)) as Question[];

@@ -1,20 +1,34 @@
 'use client'
 import style from "./board.module.scss"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Button from "../components/Button/index"
 import Input from "./index"
 /**
  * 작성자: 김동우
  * 작성일: 2025-07-04
  * */
+
+
 export default function Board(){
-    const [ getTotalQuestion ] = useState(0)
+    const [getJson, setJson] = useState([])
     const [activeBtn, setActiveBtn] = useState('latest')
 
     const handleChangeActive = (type: string) => {
         setActiveBtn(type)
     }
-    
+
+    const getboardData = async () => {
+        const res = await fetch('api/question')
+        const { result } = await res.json()
+        console.log(result, "result")
+        // const questions = result['question']
+        // setJson(questions)
+    }
+
+    useEffect(() => {
+        getboardData()
+    },[])
+
     
     
     return (
@@ -29,7 +43,7 @@ export default function Board(){
                         <section className={style.search_box}>
                             <div className={style.search_box_top}>
                                 <span>
-                                    총 <span className={style.search_box_total_question}>{getTotalQuestion}</span>개의 질문
+                                    총 <span className={style.search_box_total_question}>{0}</span>개의 질문
                                 </span>
                                 <Button type={'ask'}  text={'질문하기'} icon={'✏️'}/>
                             </div>
