@@ -1,4 +1,4 @@
-import { Question } from '../entities/Question';
+import { Question } from '../entities/question/Question';
 
 export interface QuestionRepository {
     findAll(): Promise<Question[]>

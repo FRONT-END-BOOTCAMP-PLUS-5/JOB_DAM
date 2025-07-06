@@ -25,7 +25,8 @@ export class GetQuestionUseCase {
             createdAt: item['created_at'],
             updatedAt: item['updated_at'],
             deletedAt: item['deleted_at'],
-            categoryId: item['category_id']
+            categoryId: item['category_id'],
+            recommend: item['recommend']
         }));
 
         return {
