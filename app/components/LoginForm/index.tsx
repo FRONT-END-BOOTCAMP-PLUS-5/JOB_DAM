@@ -40,7 +40,7 @@ export default function LoginForm() {
       </div>
       <input type="submit" className={styles.login_button} value="로그인" />
       <span>
-        아직 회원이 아니신가요? <Link href="/">회원기입</Link>
+        아직 회원이 아니신가요? <Link href="/signup">회원기입</Link>
       </span>
     </form>
   );
