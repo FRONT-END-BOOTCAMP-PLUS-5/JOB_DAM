@@ -1,20 +1,20 @@
-import { QuestionRepository } from '../../../domain/repositories/QuestionRepository';
-import { Question } from '../../../domain/entities/Question';
+import { Mentor } from '@/app/(backend)/domain/entities/Mentor';
+import { MentorRepository } from '@/app/(backend)/domain/repositories/MentorRepository';
 
 export class CreateMentorUseCase {
-  private repository: QuestionRepository;
+  private repository: MentorRepository;
 
-  constructor(repository: QuestionRepository) {
+  constructor(repository: MentorRepository) {
     this.repository = repository;
   }
 
-  async create(): Promise<{ question: string }> {
-    const question: Question = await this.repository.insertQuestion();
+  async create(): Promise<{ mentor: string }> {
+    const mentor: Mentor = await this.repository.insertMentor();
 
-    const success = question ? 'success' : 'fail';
+    const success = mentor ? 'success' : 'fail';
 
     return {
-      question: success,
+      mentor: success,
     };
   }
 }
