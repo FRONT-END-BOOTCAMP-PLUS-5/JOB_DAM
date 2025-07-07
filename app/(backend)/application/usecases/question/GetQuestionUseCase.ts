@@ -21,12 +21,11 @@ export class GetQuestionUseCase {
             id: item['id'],
             title: item['title'],
             content: item['content'],
-            memberId: item['member_id'],
             createdAt: item['created_at'],
-            updatedAt: item['updated_at'],
-            deletedAt: item['deleted_at'],
             categoryId: item['category_id'],
-            recommend: item['recommend']
+            recommend: item['recommend'],
+            view: item['view'],
+            member: item['member_id']
         }));
 
         return {

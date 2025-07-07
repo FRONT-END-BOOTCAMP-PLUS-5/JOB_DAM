@@ -1,7 +1,6 @@
 export class Question {
     constructor(
         public id: number,
-        public member_id: string,
         public title: string,
         public content: string,
         public created_at: string,
@@ -9,7 +8,13 @@ export class Question {
         public updated_at: string,
         public category_id: number,
         public recommend: number,
-        public view: number
+        public view: number,
+        public member: {
+            id: string,
+            name: string | null,
+            img: string | null,
+            nickname: string | null
+        }
     ) {}
 
 }

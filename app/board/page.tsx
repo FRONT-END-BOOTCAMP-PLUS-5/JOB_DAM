@@ -11,14 +11,12 @@ import usePagination from "@/app/hooks/usePagination";
  * */
 
 
-
-
 export default function Board(){
     const [getJson, setJson] = useState<JsonType[]>([])
     const [activeBtn, setActiveBtn] = useState('latest')
 
     const {
-        currentItems,
+        currentItems
     } = usePagination(getJson, 5)
 
     const handleChangeActive = (type: string) => {
@@ -28,8 +26,9 @@ export default function Board(){
 
 
     const getboardData = async () => {
-        const res = await fetch('api/question')
+        const res = await fetch('api/question', { next: { revalidate: 3600 } })
         const { result } = await res.json()
+        console.log(result, "result")
         const questions = [...result['question']]
         setJson(questions)
     }
@@ -52,7 +51,7 @@ export default function Board(){
                         <section className={style.search_box}>
                             <div className={style.search_box_top}>
                                 <span>
-                                    총 <span className={style.search_box_total_question}>{0}</span>개의 질문
+                                    총 <span className={style.search_box_total_question}>{getJson.length}</span>개의 질문
                                 </span>
                                 <Button type={'ask'}  text={'질문하기'} icon={'✏️'}/>
                             </div>
@@ -66,13 +65,21 @@ export default function Board(){
                             </div>
                         </section>
                         <section className={style.question_box}>
-                            {currentItems.map((item) => {
-                                return (
-                                    <div key={item.id}>
-                                        <p>{item.recommend}</p>
-                                    </div>
-                                )
-                            })}
+                                {currentItems.map((item:JsonType) => {
+                                    return (
+                                        <div key={item.id} className={style.question}>
+                                            <h3 className={style.question_title}>{item.title}</h3>
+                                            <div className={style.question_sub_box}>
+                                                <span>👍{item.recommend}</span>
+                                                <span>👁️{item.view}<span>조회</span></span>
+                                            </div>
+                                            <p className={style.content}>{item.content}</p>
+                                            <div className={style.question_bottom}>
+                                                <span>{item.name}</span>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
                         </section>
                     </section>
                 </section>
