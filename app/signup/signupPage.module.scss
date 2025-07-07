@@ -29,36 +29,10 @@
     }
   }
 
-  .signup_image_container {
+  .signup_container {
     margin-top: 6%;
     width: 80%;
     border-radius: 8px;
-  }
-
-  .signup_image_container_item {
-    display: flex;
-    align-items: center;
-    gap: 5%;
-
-    > div {
-      display: flex;
-      flex-direction: column;
-      width: 80%;
-      gap: 3px;
-
-      > input {
-        width: 100%;
-        padding: 12px 16px;
-        border-radius: 10px;
-        border: 1px solid #e0e0e0;
-        color: #333;
-      }
-    }
-  }
-  .signup_image {
-    border-radius: 50%;
-    border: 1px solid lightgray;
-    padding: 2%;
   }
 
   .signup_form_container {
@@ -97,8 +71,6 @@
   }
 
   .signup_form_item {
-    display: flex;
-    flex-direction: column;
     width: 100%;
     border-radius: 10px;
     padding: 12px 16px;

@@ -23,7 +23,7 @@ export default function Input<T extends FieldValues>({
   return (
     <div className={styles.input_container}>
       <label className={login_form_label}>{label}</label>
-      <input {...register(name, { required })} className={className} placeholder={placeholder} />
+      <input {...register(name)} className={className} placeholder={placeholder} />
     </div>
   );
 }

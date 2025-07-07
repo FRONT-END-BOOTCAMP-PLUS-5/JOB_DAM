@@ -1,14 +1,15 @@
 'use client';
 
-import Image from 'next/image';
 import styles from './signupPage.module.scss';
 import Input from '@/app/components/Input';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 import Button from '@/app/components/Button/index';
+import ImageForm from '../components/ImageForm';
 
 interface FormInput {
   nickname: string;
+  name: string;
   email: string;
   email_certification: string;
   password: string;
@@ -16,18 +17,31 @@ interface FormInput {
   service_terms: boolean;
   privacy_terms: boolean;
   marketing_terms: boolean;
+  profileImage?: File;
 }
 
 export default function SignupPage() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<FormInput>();
 
   const onSubmit = (data: FormInput) => {
+    const memberData = {
+      nickname: data.nickname,
+      email: data.email,
+      password: data.password,
+    };
+    console.log('🎉 onSubmit 호출됨!');
     console.log('Form data:', data);
+    console.log('Form errors:', errors);
     // 여기서 회원가입 API 호출
+    fetch('/api/member', {
+      method: 'POST',
+      body: JSON.stringify(memberData),
+    });
   };
 
   return (
@@ -37,45 +51,23 @@ export default function SignupPage() {
         <p>당신의 커리어 여정을 함께 시작하세요</p>
       </header>
 
-      <form className={styles.signup_image_container} onSubmit={handleSubmit(onSubmit)}>
-        <div className={styles.signup_image_container_item}>
-          <Image
-            src={'/images/userImage.svg'}
-            alt="유저 이미지"
-            width={70}
-            height={70}
-            className={styles.signup_image}
-          />
-          <Input
-            name="nickname"
-            label="닉네임"
-            required={true}
-            placeholder="닉네임을 입력해주세요"
-            className={styles.signup_form_item}
-            register={register}
-          />
-        </div>
-
+      <form className={styles.signup_container} onSubmit={handleSubmit(onSubmit)}>
+        <ImageForm />
         <div className={styles.signup_form_container}>
           <div className={styles.email_input_container}>
             <Input
-              name="email"
-              label="이메일"
-              required={true}
+              name="name"
+              label="이름"
               placeholder="이메일을 입력해주세요"
               className={styles.signup_form_item}
               register={register}
             />
-            <button type="button" className={styles.verification_button}>
-              인증
-            </button>
           </div>
 
           <Input
-            name="email_certification"
-            label="이메일 인증"
-            required={true}
-            placeholder="인증번호를 입력하세요"
+            name="email"
+            label="이메일"
+            placeholder="이메일을 입력해주세요"
             className={styles.signup_form_item}
             register={register}
           />
@@ -83,7 +75,6 @@ export default function SignupPage() {
           <Input
             name="password"
             label="비밀번호"
-            required={true}
             placeholder="비밀번호를 입력해주세요"
             className={styles.signup_form_item}
             register={register}
@@ -92,7 +83,6 @@ export default function SignupPage() {
           <Input
             name="password_check"
             label="비밀번호 확인"
-            required={true}
             placeholder="비밀번호를 다시 입력해주세요"
             className={styles.signup_form_item}
             register={register}
