@@ -37,20 +37,6 @@
 
   .signup_form_container {
     width: 100%;
-    margin-top: 7%;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-  }
-
-  .email_input_container {
-    display: flex;
-    gap: 10px;
-    align-items: end;
-
-    > div {
-      flex: 1;
-    }
   }
 
   .verification_button {

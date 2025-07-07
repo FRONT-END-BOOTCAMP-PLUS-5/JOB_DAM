@@ -10,11 +10,12 @@ interface Props {
   type: string;
   typeStyle?: string;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  disabled?: boolean;
 }
 
-export default function Button({ text, type, typeStyle = '', icon, onClick }: Props) {
+export default function Button({ text, type, typeStyle = '', icon, onClick, disabled = true }: Props) {
   return (
-    <button className={`${style[type]} ${style[typeStyle]}`} onClick={onClick}>
+    <button className={`${style[type]} ${style[typeStyle]}`} onClick={onClick} disabled={disabled}>
       {icon ? <span className={style.icon}>{icon}</span> : <></>}
       <span className={style.text}>{text}</span>
     </button>
