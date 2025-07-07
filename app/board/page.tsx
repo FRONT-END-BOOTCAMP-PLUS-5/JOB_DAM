@@ -1,28 +1,37 @@
 'use client'
 import style from "./board.module.scss"
 import { useEffect, useState } from "react"
+import { JsonType } from "./interface"
 import Button from "../components/Button/index"
 import Input from "./index"
+import usePagination from "@/app/hooks/usePagination";
 /**
  * 작성자: 김동우
  * 작성일: 2025-07-04
  * */
 
 
+
+
 export default function Board(){
-    const [getJson, setJson] = useState([])
+    const [getJson, setJson] = useState<JsonType[]>([])
     const [activeBtn, setActiveBtn] = useState('latest')
+
+    const {
+        currentItems,
+    } = usePagination(getJson, 5)
 
     const handleChangeActive = (type: string) => {
         setActiveBtn(type)
+        console.log(currentItems)
     }
+
 
     const getboardData = async () => {
         const res = await fetch('api/question')
         const { result } = await res.json()
-        console.log(result, "result")
-        // const questions = result['question']
-        // setJson(questions)
+        const questions = [...result['question']]
+        setJson(questions)
     }
 
     useEffect(() => {
@@ -57,7 +66,13 @@ export default function Board(){
                             </div>
                         </section>
                         <section className={style.question_box}>
-
+                            {currentItems.map((item) => {
+                                return (
+                                    <div key={item.id}>
+                                        <p>{item.recommend}</p>
+                                    </div>
+                                )
+                            })}
                         </section>
                     </section>
                 </section>
