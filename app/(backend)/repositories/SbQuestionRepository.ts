@@ -30,14 +30,29 @@ export class SbQuestionRepository implements QuestionRepository {
         return {...question};
     }
 
-    // 검색기능, 버튼 필터링 생각해서
+    // 검색기능, 버튼 필터링 생각해서 member 테이블 join
     async findAll(title: string='', column: string='created_at'): Promise<Question[]> {
         const { data, error } = await this.supabase
                                           .from('question')
-                                          .select("*")
+                                          .select(`id,
+                                                   title,
+                                                    content,
+                                                   created_at,
+                                                   deleted_at,
+                                                   updated_at,
+                                                   recommend,
+                                                   view,
+                                                   member_id(
+                                                        id,
+                                                        name,
+                                                        img,
+                                                        nickname
+                                                     )
+                                                   `)
                                           .like('title', `%${title}%`)
                                           .order(`${column}`, { ascending: false })
 
+        console.log(data,"data")
         if (error) throw new Error(error.message);
         return data.map((item) => this.getEntities(item)) as Question[];
     }
