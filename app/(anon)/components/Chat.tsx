@@ -5,6 +5,10 @@ import { createClient } from '@supabase/supabase-js'
 import type { RealtimeChannel } from '@supabase/supabase-js'
 import { useState, useEffect, useRef } from 'react'
 
+interface messageInterface {
+    content: string
+}
+
 const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -13,25 +17,28 @@ const supabase = createClient(
 const Chat = () => {
 
     const [input, setInput] = useState<string>('')
-    const [record, setRecord] = useState<string[]>([])
     const roomRef = useRef<RealtimeChannel | null>(null)
+    const [message, setMessage] = useState<messageInterface[]>([])
+
+    function messageReceived(payload:string) {
+        console.log('payload:',payload)
+    }
 
     useEffect(() => {
         const room = supabase.channel('test-channel')
         roomRef.current = room
         console.log('hey')
         room
-            .on<any>('broadcast', { event: 'shout' }, (payload: { payload: string }) => {
-                console.log('why')
-                setRecord(prev => [...prev, payload.payload])
-                console.log('payload:', payload)
-            })
+            .on('broadcast', { event: 'shout' }, (payload) => messageReceived(payload.event))
             .subscribe()
     }, [])
 
     const messageSubmission = async (e: React.FormEvent) => {
         e.preventDefault()
-        setRecord(prev => [...prev, input])
+        const {data} = await supabase.from('chat').insert([{ content: input }]).select('content')
+        if(data){
+            setMessage(prev=>[...prev,{content:input}])
+        }
         await roomRef.current?.send({
             type: 'broadcast',
             event: 'shout',
@@ -40,6 +47,16 @@ const Chat = () => {
         console.log('input:', input)
         setInput('')
     }
+
+    useEffect(() => {
+        const fetchMessages = async () => {
+            const { data: receivedData } = await supabase.from('chat').select('content');
+            if (receivedData) {
+                setMessage(receivedData as messageInterface[])
+            }
+        }
+        fetchMessages()
+    }, [])
 
     return (
         <div className={styles.all}>
@@ -90,8 +107,8 @@ const Chat = () => {
                 <div className={styles.mainChatSpace}>
                     <div className={styles.chatRecordsSpace}>
                         <div>
-                            {record.map((record, i) => (
-                                <div key={i} className={styles.message}>{record}</div>
+                            {message.map((message, i) => (
+                                <div key={i} className={styles.message}>{message.content}</div>
                             ))}
                         </div>
                     </div>
