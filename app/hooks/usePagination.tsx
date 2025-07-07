@@ -33,12 +33,12 @@ const usePagination = (data:Data[], itemsPerPage:number) => {
 
     // 다음 페이지로 이동
     const goToNextPage = () => {
-        goToPage(currentPage + 1);
+        goToPage(Math.min(currentPage + 5, totalPages));
     };
 
     // 이전 페이지로 이동
     const goToPreviousPage = () => {
-        goToPage(currentPage - 1);
+        goToPage(Math.max(currentPage - 5, 1));
     };
 
     return {

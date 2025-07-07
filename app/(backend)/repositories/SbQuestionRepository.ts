@@ -36,10 +36,11 @@ export class SbQuestionRepository implements QuestionRepository {
                                           .from('question')
                                           .select(`id,
                                                    title,
-                                                    content,
+                                                   content,
                                                    created_at,
                                                    deleted_at,
                                                    updated_at,
+                                                   category_id,
                                                    recommend,
                                                    view,
                                                    member_id(
