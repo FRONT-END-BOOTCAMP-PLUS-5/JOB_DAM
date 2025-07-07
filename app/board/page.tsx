@@ -4,7 +4,9 @@ import { useEffect, useState } from "react"
 import { JsonType } from "./interface"
 import Button from "../components/Button/index"
 import Input from "./index"
+import Profile from "../components/Profile/index"
 import usePagination from "@/app/hooks/usePagination";
+import {formatTimeAgo} from "@/app/utils/date";
 /**
  * 작성자: 김동우
  * 작성일: 2025-07-04
@@ -28,7 +30,6 @@ export default function Board(){
     const getboardData = async () => {
         const res = await fetch('api/question', { next: { revalidate: 3600 } })
         const { result } = await res.json()
-        console.log(result, "result")
         const questions = [...result['question']]
         setJson(questions)
     }
@@ -75,7 +76,11 @@ export default function Board(){
                                             </div>
                                             <p className={style.content}>{item.content}</p>
                                             <div className={style.question_bottom}>
-                                                <span>{item.name}</span>
+                                                <div>
+                                                    <Profile/>
+                                                    <span className={style.nickname}>{item.member.nickname}</span>
+                                                </div>
+                                                <span className={style.date}>{formatTimeAgo(item.createdAt)}</span>
                                             </div>
                                         </div>
                                     )
