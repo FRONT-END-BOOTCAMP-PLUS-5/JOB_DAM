@@ -23,6 +23,8 @@ export class GetQuestionUseCase {
             content: item['content'],
             createdAt: item['created_at'],
             categoryId: item['category_id'],
+            updatedAt: item['updated_at'],
+            deletedAt: item['deleted_at'],
             recommend: item['recommend'],
             view: item['view'],
             member: item['member_id']

@@ -9,4 +9,10 @@ export interface JsonType {
     categoryId: number
     recommend: number
     view: number
+    member: {
+        id: string
+        name: string | null
+        img: string | null
+        nickname: string | null
+    }
 }

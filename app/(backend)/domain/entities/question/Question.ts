@@ -9,12 +9,11 @@ export class Question {
         public category_id: number,
         public recommend: number,
         public view: number,
-        public member: {
+        public member_id: {
             id: string,
             name: string | null,
             img: string | null,
             nickname: string | null
-        }
+        },
     ) {}
-
 }

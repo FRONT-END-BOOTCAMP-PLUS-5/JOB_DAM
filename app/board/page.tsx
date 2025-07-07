@@ -1,6 +1,6 @@
 'use client'
 import style from "./board.module.scss"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { JsonType } from "./interface"
 import Button from "../components/Button/index"
 import Input from "./index"
@@ -18,12 +18,18 @@ export default function Board(){
     const [activeBtn, setActiveBtn] = useState('latest')
 
     const {
-        currentItems
+        totalPages,
+        setCurrentPage,
+        currentItems,
+        currentPage,
+        goToPage,
+        goToNextPage,
+        goToPreviousPage
     } = usePagination(getJson, 5)
+
 
     const handleChangeActive = (type: string) => {
         setActiveBtn(type)
-        console.log(currentItems)
     }
 
 
@@ -33,6 +39,7 @@ export default function Board(){
         const questions = [...result['question']]
         setJson(questions)
     }
+
 
     useEffect(() => {
         getboardData()
@@ -86,6 +93,19 @@ export default function Board(){
                                     )
                                 })}
                         </section>
+                        <div className={style.button_container}>
+                            <Button text={"<"} type={"previous"} onClick={() => goToPreviousPage()}/>
+                            {
+                                new Array(5).fill(1).map((_, idx) => (
+                                    <Button key={idx+currentPage}
+                                                text={`${idx+currentPage}`}
+                                                type={'pagination'}
+                                                onClick={() => {goToPage(idx+currentPage)}}
+                                        />
+                                ))
+                            }
+                            <Button text={">"} type={"next"} onClick={() => goToNextPage()}/>
+                        </div>
                     </section>
                 </section>
                 <aside className={style.container_content_right}>

@@ -9,6 +9,7 @@
     @include flexCenter(row);
     max-width: 1440px;
     padding: 10px 20px 0 20px;
+    margin-bottom: 100px;
 
     &_left{
       width:1000px;
@@ -35,7 +36,7 @@
       }
 
       &_bottom{
-
+        position: relative;
       }
 
     }
@@ -89,6 +90,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  width: 960px;
 }
 
 .question{
@@ -149,4 +151,10 @@
 
 .question:last-child{
   border-bottom: none;
+}
+
+.button_container{
+  position: absolute;
+  width: 100%;
+  @include flexCenter(row);
 }
