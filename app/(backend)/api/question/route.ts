@@ -11,7 +11,6 @@ export async function GET() {
         const questionRepository = new SbQuestionRepository(supabase);
         const getQuestionUseCase = new GetQuestionUseCase(questionRepository); // 가져온 데이터 가공
         const questions = await getQuestionUseCase.execute(); // 가공된 데이터 반환
-        console.log(questions, "que")
         return NextResponse.json({result: {...questions}, status: 200 });
     }catch(err){
         if(err instanceof Error){

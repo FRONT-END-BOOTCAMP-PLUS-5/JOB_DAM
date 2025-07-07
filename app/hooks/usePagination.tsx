@@ -1,9 +1,13 @@
 import { useState, useMemo } from 'react';
+import Data from "./interface"
 /**
  * 작성자: 김동우
  * 작성일: 2025-07-06
  * */
-const usePagination = (data:[], itemsPerPage:number) => {
+
+
+
+const usePagination = (data:Data[], itemsPerPage:number) => {
     const [currentPage, setCurrentPage] = useState(1);
 
     // 총 페이지 수 계산
@@ -13,7 +17,7 @@ const usePagination = (data:[], itemsPerPage:number) => {
     }, [data, itemsPerPage]);
 
     // 현재 페이지에 해당하는 데이터 반환
-    const paginatedData = useMemo(() => {
+    const currentItems = useMemo(() => {
         if (!data) return [];
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
@@ -38,9 +42,9 @@ const usePagination = (data:[], itemsPerPage:number) => {
     };
 
     return {
-        paginatedData,
         currentPage,
         totalPages,
+        currentItems,
         goToPage,
         goToNextPage,
         goToPreviousPage,
