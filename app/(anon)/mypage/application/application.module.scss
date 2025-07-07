@@ -1,3 +1,5 @@
+@use '../../../styles/mixin.scss';
+
 .user_container {
   display: flex;
   gap: 24px;
@@ -21,5 +23,23 @@
       padding: 10px;
       outline: none;
     }
+  }
+
+  .apple_button {
+    width: 200px;
+    height: 48px;
+    border-radius: 8px;
+    border: 1px solid #667eea;
+    background: #fff;
+    cursor: pointer;
+    margin-top: 40px;
+  }
+
+  .application_waiting {
+    @include mixin.flexCenter(column);
+    gap: 14px;
+    border: 1px solid #667eea;
+    border-radius: 4px;
+    padding: 40px;
   }
 }
