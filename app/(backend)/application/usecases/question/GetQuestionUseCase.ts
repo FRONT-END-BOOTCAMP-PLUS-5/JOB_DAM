@@ -5,6 +5,7 @@ import { NextRequest } from 'next/server';
 /**
  * 작성자: 김동우
  * 작성일: 2025-07-03
+ * 수정일: 2025-07-08
  * */
 export class GetQuestionUseCase {
     private repository: QuestionRepository;
@@ -14,10 +15,16 @@ export class GetQuestionUseCase {
     }
 
     async execute(request:NextRequest): Promise<{ question: QuestionDto[] }> {
-        const part = request['url'].split('=');
-        const urlData = part[part.length - 1];
+        const queryFirstRegex = /latest|popular=([^&]+)/
+        const querySecRegex = /search=(.*)/;
 
-        const questions: QuestionTable[] = await this.repository.findAll('', urlData);
+        const firMatch = request['url'].match(queryFirstRegex);
+        const secMatch = request['url'].match(querySecRegex);
+
+        const column = firMatch &&firMatch[1] || 'created_at'
+        const title = secMatch && decodeURIComponent(secMatch[1]) || ''
+
+        const questions: QuestionTable[] = await this.repository.findAll(title, column);
 
 
         const questionDtos: QuestionDto[] = questions.map((item) => ({

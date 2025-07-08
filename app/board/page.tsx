@@ -1,6 +1,6 @@
 'use client'
 import style from "./board.module.scss"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { JsonType } from "./interface"
 import Button from "../components/Button/index"
 import Input from "./index"
@@ -12,10 +12,13 @@ import {formatTimeAgo} from "@/app/utils/date";
  * 작성일: 2025-07-04
  * */
 
-
 export default function Board(){
     const [getJson, setJson] = useState<JsonType[]>([])
     const [activeBtn, setActiveBtn] = useState('latest')
+    const inputRef = useRef(null)
+    const inputValRef = useRef<string | null>('')
+    const textRef = useRef('created_at')
+
 
     const {
         currentItems,
@@ -27,17 +30,28 @@ export default function Board(){
         goToPreviousPage
     } = usePagination(getJson, 5)
 
-
-    const handleChangeActive = (type: string) => {
-        const keyword = type === 'latest' ? 'created_at' : 'recommend'
-        setActiveBtn(type)
-        getboardData(type, keyword)
+    const handleSearch = (evt:React.ChangeEvent<HTMLInputElement>) => {
+        const inputVal = evt['target']['value']
+        inputValRef['current'] = inputVal
     }
 
 
-    const getboardData = async (url: string = 'latest', keyword:string ="created_at") => {
-        console.log(url, keyword,"dddd")
-        const res = await fetch(`api/question/${url}=${keyword}`, { next: { revalidate: 3600 } })
+    const handleChangeActive = (type: string) => {
+        textRef['current'] = type === 'latest' ? 'created_at' : 'recommend'
+
+        setActiveBtn(type)
+        getboardData(type, textRef['current'])
+    }
+
+
+
+
+    const getboardData = async (url: string = 'latest', keyword:string =`${textRef['current']}`) => {
+        const hangle = inputValRef['current']
+
+        if(keyword === "recommend") url = "popular"
+
+        const res = await fetch(`api/question/${url}=${keyword}&search=${hangle}`, { next: { revalidate: 3600 } })
         const { result } = await res.json()
         const questions = [...result['question']]
         const lastPg = Math.ceil(questions['length'] / 5)
@@ -71,8 +85,12 @@ export default function Board(){
                                 <Button type={'ask'}  text={'질문하기'} icon={'✏️'}/>
                             </div>
                             <div className={style.search_box_middle}>
-                                <Input typeStyle={'search'} type={'text'} placeholder={"궁금한 것을 검색해보세요"}/>
-                                <Button type={'search'} text={'검색'} icon={'🔍'}/>
+                                <Input typeStyle={'search'}
+                                       type={'text'}
+                                       placeholder={"궁금한 내용을 검색해보세요"}
+                                       ref={inputRef}
+                                       onChange={(evt:React.ChangeEvent<HTMLInputElement>) => {handleSearch(evt)}}/>
+                                <Button type={'search'} text={'검색'} icon={'🔍'} onClick={() => {getboardData()}}/>
                             </div>
                             <div className={style.search_box_bottom}>
                                 <Button type={'tag'} typeStyle={activeBtn === 'latest' ? 'active' : ''} onClick={() => {handleChangeActive('latest')}} text={'최신순'}/>
