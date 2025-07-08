@@ -12,6 +12,7 @@ interface ClientProp {
     title?: string
     content?: string
     category_id?: number
+    url?: string
 }
 
 
@@ -53,7 +54,6 @@ export class SbQuestionRepository implements QuestionRepository {
                                           .like('title', `%${title}%`)
                                           .order(`${column}`, { ascending: false })
 
-        console.log(data,"data")
         if (error) throw new Error(error.message);
         return data.map((item) => this.getEntities(item)) as Question[];
     }

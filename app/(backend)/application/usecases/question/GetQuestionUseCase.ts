@@ -1,6 +1,7 @@
 import { QuestionRepository } from '../../../domain/repositories/QuestionRepository';
 import { QuestionTable } from '../../../domain/tables/QuestionTable';
 import { QuestionDto } from '../../dtos/QuestionDto';
+import { NextRequest } from 'next/server';
 /**
  * 작성자: 김동우
  * 작성일: 2025-07-03
@@ -12,9 +13,11 @@ export class GetQuestionUseCase {
         this.repository = repository;
     }
 
-    async execute(): Promise<{ question: QuestionDto[] }> {
+    async execute(request:NextRequest): Promise<{ question: QuestionDto[] }> {
+        const part = request['url'].split('=');
+        const urlData = part[part.length - 1];
 
-        const questions: QuestionTable[] = await this.repository.findAll();
+        const questions: QuestionTable[] = await this.repository.findAll('', urlData);
 
 
         const questionDtos: QuestionDto[] = questions.map((item) => ({
