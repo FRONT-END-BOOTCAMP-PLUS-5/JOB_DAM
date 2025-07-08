@@ -7,7 +7,6 @@ import Link from 'next/link';
 import Button from '@/app/components/Button/index';
 import ImageForm from '../components/ImageForm';
 import { useRouter } from 'next/navigation'; // Next.js 13+ App Router
-import Image from 'next/image';
 
 interface FormInput {
   name: string;
@@ -16,7 +15,7 @@ interface FormInput {
   password: string;
   password_check: string;
   service_terms: boolean;
-  privacy_terms?: boolean;
+  privacy_terms: boolean;
   marketing_terms?: boolean;
   img?: File;
   nickname: string;
@@ -45,16 +44,22 @@ export default function SignupPage() {
     handleSubmit,
     setValue,
     control,
+    getValues,
     formState: { errors },
-  } = useForm<FormInput>();
+  } = useForm<FormInput>({
+    defaultValues: {
+      service_terms: false,
+      privacy_terms: false,
+    },
+  });
+
+  const router = useRouter();
 
   const passwordValue = useWatch({ control, name: 'password' });
   const passwordCheckValue = useWatch({ control, name: 'password_check' });
 
   const passwordCheckPattern = passwordValue === passwordCheckValue;
   const isDisabled = Object.keys(errors).length > 0 || !passwordCheckPattern;
-
-  const router = useRouter();
 
   const onSubmit = (data: FormInput) => {
     const { name, email, password, nickname, img } = data;
@@ -69,8 +74,6 @@ export default function SignupPage() {
         img: img?.name || '',
       };
 
-      console.log('전송할 memberData:', memberData);
-
       signupMember(memberData).then((res) => {
         console.log(res);
         if (res.status === 500) {
@@ -82,35 +85,6 @@ export default function SignupPage() {
     }
   };
 
-  const onError = (errors: any) => {
-    console.log(errors);
-
-    // 현재 입력된 값들을 가져오기
-    const formValues = control._formValues;
-
-    // 필수 필드들이 모두 입력되어 있는지 확인
-    const hasAllRequiredFields =
-      formValues.name &&
-      formValues.email &&
-      formValues.password &&
-      formValues.password_check &&
-      formValues.nickname &&
-      passwordCheckPattern; // 비밀번호가 일치하는지도 확인
-
-    // 필수 필드가 모두 채워져 있을 때만 체크박스 관련 알림 표시
-    if (hasAllRequiredFields) {
-      if (errors.service_terms) {
-        alert('서비스 이용약관에 동의해주세요');
-        return;
-      }
-
-      if (errors.privacy_terms) {
-        alert('개인정보 처리방침에 동의해주세요');
-        return;
-      }
-    }
-  };
-
   return (
     <article className={styles.signup_page_container}>
       <header className={styles.signup_title_container}>
@@ -118,7 +92,7 @@ export default function SignupPage() {
         <p>당신의 커리어 여정을 함께 시작하세요</p>
       </header>
 
-      <form className={styles.signup_container} onSubmit={handleSubmit(onSubmit, onError)}>
+      <form className={styles.signup_container} onSubmit={handleSubmit(onSubmit)}>
         <ImageForm register={register} setValue={setValue} errors={errors} />
         <div className={styles.signup_form_container}>
           <Input
@@ -178,7 +152,6 @@ export default function SignupPage() {
             className={styles.signup_check_box}
             {...register('service_terms', {
               required: '서비스 이용약관에 동의해주세요',
-              validate: (value) => value || '서비스 이용약관에 동의해주세요',
             })}
           />
           <p>(필수) 서비스 이용약관에 동의합니다</p>
@@ -190,7 +163,6 @@ export default function SignupPage() {
             className={styles.signup_check_box}
             {...register('privacy_terms', {
               required: '개인정보 처리방침에 동의해주세요',
-              validate: (value) => value || '개인정보 처리방침에 동의해주세요',
             })}
           />
           <p>(필수) 개인정보 처리방침에 동의합니다</p>

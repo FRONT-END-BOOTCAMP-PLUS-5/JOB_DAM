@@ -24,9 +24,7 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <QueryProvider>
-          <LayoutProvider>{children}</LayoutProvider>
-        </QueryProvider>
+        <LayoutProvider>{children}</LayoutProvider>
       </body>
     </html>
   );
