@@ -2,12 +2,34 @@
 
 import styles from '../components/CreateRoom.module.scss'
 import { useState } from 'react'
+import { createClient } from '@supabase/supabase-js'
 
 const CreateRoom = () => {
     const [roomName, setRoomName] = useState<string>('');
     const [roomDescription, setRoomDescription] = useState<string>('');
-    const [mentorDescription, setMentorDescription] = useState<string>('');
     const [maxNum, setMaxNum] = useState<number>(0);
+    const [agreeTerms, setAgreeTerms] = useState<boolean>(false);
+    const [agreeTerms2, setAgreeTerms2] = useState<boolean>(false);
+
+    const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
+
+    const submitted = async () => {
+        console.log('roomName: ', roomName, ' roomDescription: ', roomDescription, ' maxNum: ', maxNum)
+        if (!agreeTerms || !agreeTerms2) {
+            alert("필수 사항에 체크해주세요.")
+        }
+        else {
+            console.log('Yes')
+            const { data } = await supabase.from('chat_room').insert([{
+                title: roomName,
+                description: roomDescription,
+                max_people: maxNum
+            }])
+        }
+    }
 
     return (
         <div className={styles.all}>
@@ -20,18 +42,36 @@ const CreateRoom = () => {
                 <p className={styles.createRoomOption}> 방 이름 </p>
                 <input onChange={(e) => setRoomName(e.target.value)} className={styles.formStyle}></input>
                 <p className={styles.createRoomOption}> 방 설명 </p>
-                <textarea className={styles.createTextarea} rows="4" cols="50"></textarea>
-                <p className={styles.createRoomOption}> 멘토 설명 </p>
-                <input onChange={(e) => setMentorDescription(e.target.value)} className={styles.formStyle}></input>
+                <textarea className={styles.createTextarea} rows="4" cols="50" onChange={(e) => setRoomDescription(e.target.value)}></textarea>
                 <div className={styles.maxNumDiv}>
                     <p className={styles.createRoomOption}> 최대 멘티 수용 인원 </p>
-                    <input type="number" className={styles.smallFormStyle}></input>
+                    <input type="number" className={styles.smallFormStyle} onChange={(e) => setMaxNum(parseInt(e.target.value))}></input>
                 </div>
-                <button className={styles.submitButton}> 
-                    <p className={styles.submitButtonP}> 방 만들기 </p> 
+                <div className={styles.checkBoxDiv}>
+                    <input
+                        type="checkbox"
+                        className={styles.checkBox}
+                        onChange={(e) => setAgreeTerms(e.target.checked)}
+                    />
+                    <label> (필수) 서비스 이용약관에 동의합니다 </label>
+                </div>
+                <div className={styles.checkBoxDiv}>
+                    <input
+                        type="checkbox"
+                        className={styles.checkBox}
+                        onChange={(e) => setAgreeTerms2(e.target.checked)}
+                    />
+                    <label> (필수) 개인정보 처리방침에 동의합니다 </label>
+                </div>
+                <div className={styles.checkBoxDiv}>
+                    <input type="checkbox" />
+                    <label> (선택) 마케팅 정보 수신에 동의합니다 </label>
+                </div>
+                <button className={styles.submitButton}>
+                    <p className={styles.submitButtonP} onClick={submitted}> 방 만들기 </p>
                 </button>
-                <button className={styles.submitButton}> 
-                    <p className={styles.submitButtonP}> 뒤로 가기 </p> 
+                <button className={styles.submitButton}>
+                    <p className={styles.submitButtonP}> 뒤로 가기 </p>
                 </button>
             </div>
         </div>
