@@ -1,0 +1,75 @@
+@font-face {
+    font-family: 'SBAggroB';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    background-color: #A06BF7;
+    margin: 0 auto;
+}
+
+.all {
+    background-color: #A06BF7;
+}
+
+.headerLogo {
+    font-family: 'SBAggroB';
+    color: white;
+    font-size: 40px;
+    margin-left: 2%;
+}
+
+.header {
+    display: flex;
+    margin-top: 2%;
+}
+
+.chatroomTitleDiv {
+    display: grid;
+    margin-left:30%;
+    text-align: center;
+}
+
+.chatroomTitle,
+.chatroomMentorTitle {
+    color: white;
+}
+
+.joinNumber {
+    border-radius: 5px;
+    background-color: rgb(255,255,255,0.5);
+    margin-left: auto;
+    padding: 4px 20px 4px 20px;
+    display: flex;
+    align-items: center;
+    margin-right: 2%;
+
+}
+
+.joinNumberP {
+    color: white;
+}
+
+.headerButton1 {
+    width: 100px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: white;
+    margin-left: 1100px;
+    margin-right: 20px;
+}
+
+.headerButton2 {
+    width: 100px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: white;
+}
+
+.main {
+    background-color: white;
+    margin-top: 15px;
+    padding-bottom: 35%;
+}

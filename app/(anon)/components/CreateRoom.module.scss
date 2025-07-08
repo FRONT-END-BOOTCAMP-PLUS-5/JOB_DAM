@@ -1,0 +1,107 @@
+@font-face {
+    font-family: 'SBAggroB';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    margin: 0 auto;
+    background-color: #A06BF7;
+}
+
+.all {
+    background-color: #A06BF7;
+}
+
+.headerLogo {
+    font-family: 'SBAggroB';
+    color: white;
+    font-size: 40px;
+    margin-left: 45%;
+}
+
+.header {
+    display: flex;
+    margin-top: 2%;
+}
+
+.chatroomTitleDiv {
+    display: grid;
+    margin-left:30%;
+    text-align: center;
+}
+
+.chatroomTitle,
+.chatroomMentorTitle {
+    color: white;
+}
+
+.joinNumber {
+    border-radius: 5px;
+    background-color: rgb(255,255,255,0.5);
+    margin-left: auto;
+    padding: 4px 20px 4px 20px;
+    display: flex;
+    align-items: center;
+    margin-right: 2%;
+
+}
+
+.joinNumberP {
+    color: white;
+}
+
+.main {
+    background-color: white;
+    margin-top: 15px;
+    margin-left: 24%;
+    margin-right: 25%;
+    border-radius: 10px;
+    padding-bottom: 3%;
+}
+
+.createRoomTitle {
+    text-align: center;
+    font-weight: bold;
+    padding-top: 10px;
+}
+
+.createRoomDescription {
+    text-align: center;
+    padding-top: 10px;
+}
+
+.createTextarea {
+    resize: none;
+    width: 85%;
+    margin-left: 7%;
+    margin-top: 15px;
+}
+
+.createRoomOption {
+    padding-left: 7%;
+    padding-top: 10px;
+}
+
+.formStyle {
+    margin-left: 7%;
+    margin-top: 10px;
+    width: 85%;
+    height: 30px;
+}
+
+.longFormStyle {
+    margin-left: 7%;
+    margin-top: 10px;
+    width: 85%;
+    height: 150px;
+}
+
+.submitButton {
+    width: 50%;
+    height: 30px;
+    margin-left: 25%;
+    margin-top: 30px;
+
+}
