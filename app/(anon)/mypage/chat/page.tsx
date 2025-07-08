@@ -1,6 +1,6 @@
 'use client';
 
-import { TEST_USER_ID } from '@/app/constants/test';
+import { TEST_MENTI_ID, TEST_MENTOR_ID } from '@/app/constants/test';
 import { chatService } from '@/app/services/mypage/chat';
 import { ChatRoom } from '@/app/types/mypage/chat';
 import { useEffect, useState } from 'react';
@@ -14,7 +14,7 @@ const ChatPage = () => {
   const { getChatRoom } = chatService();
 
   useEffect(() => {
-    getChatRoom(TEST_USER_ID).then((res) => {
+    getChatRoom(TEST_MENTI_ID).then((res) => {
       setChatRoom(res.result);
     });
   }, []);
