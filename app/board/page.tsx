@@ -1,6 +1,6 @@
 'use client'
 import style from "./board.module.scss"
-import { useEffect, useState, useMemo } from "react"
+import { useEffect, useState } from "react"
 import { JsonType } from "./interface"
 import Button from "../components/Button/index"
 import Input from "./index"
@@ -18,10 +18,10 @@ export default function Board(){
     const [activeBtn, setActiveBtn] = useState('latest')
 
     const {
-        totalPages,
-        setCurrentPage,
         currentItems,
         currentPage,
+        pageNum,
+        lastPage,
         goToPage,
         goToNextPage,
         goToPreviousPage
@@ -37,8 +37,12 @@ export default function Board(){
         const res = await fetch('api/question', { next: { revalidate: 3600 } })
         const { result } = await res.json()
         const questions = [...result['question']]
+        const lastPg = Math.ceil(questions['length'] / 5)
+        lastPage['current'] = lastPg
         setJson(questions)
     }
+
+
 
 
     useEffect(() => {
@@ -94,17 +98,34 @@ export default function Board(){
                                 })}
                         </section>
                         <div className={style.button_container}>
-                            <Button text={"<"} type={"previous"} onClick={() => goToPreviousPage()}/>
+                            <Button text={"<"}
+                                    type={"previous"}
+                                    typeStyle={"pagination"}
+                                    disabled={currentPage <= 5}
+                                    onClick={() => {
+                                        pageNum['current'] -= 5
+                                        goToPreviousPage()}}/>
                             {
-                                new Array(5).fill(1).map((_, idx) => (
-                                    <Button key={idx+currentPage}
-                                                text={`${idx+currentPage}`}
-                                                type={'pagination'}
-                                                onClick={() => {goToPage(idx+currentPage)}}
-                                        />
-                                ))
+                                new Array(5).fill(1).map((_, idx) => {
+                                    return idx + pageNum['current'] <= lastPage['current'] && (
+                                                <Button key={idx+pageNum['current']}
+                                                            text={`${idx+pageNum['current']}`}
+                                                            type={'pagination'}
+                                                            typeStyle={`${currentPage === idx+pageNum['current'] ? 'focus' : ''}`}
+                                                            onClick={() => {
+                                                                goToPage(idx+pageNum['current'])
+                                                            }}
+                                                />
+                                    )
+                                })
                             }
-                            <Button text={">"} type={"next"} onClick={() => goToNextPage()}/>
+                            <Button text={">"}
+                                    type={"next"}
+                                    typeStyle={"pagination"}
+                                    disabled={currentPage >= lastPage['current']}
+                                    onClick={() => {
+                                        pageNum['current'] += 5
+                                        goToNextPage()}}/>
                         </div>
                     </section>
                 </section>

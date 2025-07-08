@@ -154,6 +154,7 @@
 }
 
 .button_container{
+  padding-top: 20px;
   position: absolute;
   width: 100%;
   @include flexCenter(row);
