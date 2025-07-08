@@ -24,6 +24,7 @@ export class GetQuestionUseCase {
         const column = firMatch &&firMatch[1] || 'created_at'
         const title = secMatch && decodeURIComponent(secMatch[1]) || ''
 
+
         const questions: QuestionTable[] = await this.repository.findAll(title, column);
 
 
