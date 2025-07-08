@@ -55,16 +55,16 @@ body {
 .main {
     background-color: white;
     margin-top: 15px;
-    margin-left: 24%;
-    margin-right: 25%;
+    margin-left: 37%;
+    margin-right: 37%;
     border-radius: 10px;
-    padding-bottom: 3%;
+    padding-bottom: 5%;
 }
 
 .createRoomTitle {
     text-align: center;
     font-weight: bold;
-    padding-top: 10px;
+    padding-top: 30px;
 }
 
 .createRoomDescription {
@@ -74,34 +74,55 @@ body {
 
 .createTextarea {
     resize: none;
-    width: 85%;
-    margin-left: 7%;
+    width: 79%;
+    margin-left: 10%;
     margin-top: 15px;
+    background-color: #FAFAFA;
+    border-radius: 8px;
+    border-width: 1;
 }
 
 .createRoomOption {
-    padding-left: 7%;
+    padding-left: 10%;
     padding-top: 10px;
 }
 
 .formStyle {
-    margin-left: 7%;
+    margin-left: 10%;
     margin-top: 10px;
-    width: 85%;
-    height: 30px;
-}
-
-.longFormStyle {
-    margin-left: 7%;
-    margin-top: 10px;
-    width: 85%;
-    height: 150px;
+    width: 79%;
+    height: 40px;
+    border-radius: 8px;
+    border-width: 1;
+    background-color: #FAFAFA;
 }
 
 .submitButton {
-    width: 50%;
-    height: 30px;
-    margin-left: 25%;
-    margin-top: 30px;
+    width: 78%;
+    height: 40px;
+    margin-left: 10%;
+    margin-top: 4%;
+    background-color: #D1D5DC;
+    border-radius: 5px;
+    border-width: 0;
+}
 
+.submitButtonP {
+    color: white;
+    font-weight: bold;
+}
+
+.maxNumDiv {
+    display: flex;
+    margin-top: 15px;
+}
+
+.smallFormStyle {
+    width: 27%;
+    border-radius: 8px;
+    border-width: 1;
+    margin-left: 20%;
+    margin-top: 5px;
+    padding-bottom: 3%;
+    background-color: #FAFAFA;
 }
