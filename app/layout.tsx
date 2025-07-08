@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import LayoutProvider from './components/LayoutProvider';
-import QueryProvider from './components/QueryProvider';
 
 export const metadata: Metadata = {
   title: 'Create Next App',

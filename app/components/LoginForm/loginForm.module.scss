@@ -10,8 +10,11 @@
   padding-top: 5%;
 
   .login_form_item {
-    display: flex;
-    width: 100%;
+    width: 70%; // Input 컨테이너의 너비 설정
+  }
+
+  .login_form_input {
+    width: 100%; // input 태그는 컨테이너 내에서 100%
     height: 5.5vh;
     border-radius: 12px;
     padding: 10px;

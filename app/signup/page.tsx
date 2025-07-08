@@ -6,40 +6,14 @@ import { useForm, useWatch } from 'react-hook-form';
 import Link from 'next/link';
 import Button from '@/app/components/Button/index';
 import ImageForm from '../components/ImageForm';
-import { useRouter } from 'next/navigation'; // Next.js 13+ App Router
-import { toast, ToastContainer } from 'react-toastify';
-
-interface FormInput {
-  name: string;
-  email: string;
-  email_certification?: string;
-  password: string;
-  password_check: string;
-  service_terms: boolean;
-  privacy_terms: boolean;
-  marketing_terms?: boolean;
-  img?: File;
-  nickname: string;
-}
-
-// 회원가입 API 호출 함수 (JSON 방식)
-const signupMember = async (memberData: any) => {
-  const response = await fetch('/api/member', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(memberData),
-  });
-
-  if (!response.ok) {
-    throw new Error('회원가입에 실패했습니다');
-  }
-
-  return response.json();
-};
+import { ToastContainer } from 'react-toastify';
+import { sign_up_form_type } from '@/app/types/signup/signup';
+import { validation } from '@/app/utils/signup/signup';
+import { useRouter } from 'next/navigation';
 
 export default function SignupPage() {
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -47,7 +21,7 @@ export default function SignupPage() {
     control,
     getValues,
     formState: { errors },
-  } = useForm<FormInput>({
+  } = useForm<sign_up_form_type>({
     defaultValues: {
       service_terms: false,
       privacy_terms: false,
@@ -55,41 +29,14 @@ export default function SignupPage() {
     },
   });
 
-  const router = useRouter();
-
   const passwordValue = useWatch({ control, name: 'password' });
   const passwordCheckValue = useWatch({ control, name: 'password_check' });
 
   const passwordCheckPattern = passwordValue === passwordCheckValue;
 
-  const onSubmit = (data: FormInput) => {
-    const { name, email, password, nickname, img, service_terms, privacy_terms } = data;
-
-    try {
-      // JSON 데이터 생성
-      const memberData = {
-        name: name,
-        email: email,
-        password: password,
-        nickname: nickname,
-        img: img?.name || '',
-      };
-
-      signupMember(memberData).then((res) => {
-        if (service_terms && privacy_terms && res.status === 500) {
-          toast.success('회원가입에 성공했습니다!', {
-            position: 'top-left',
-          });
-          setTimeout(() => {
-            router.push('/login');
-          }, 1700);
-        } else {
-          toast.error('필수 약관에 동의해주세요!');
-        }
-      });
-    } catch (err) {
-      throw err;
-    }
+  const onSubmit = async (data: sign_up_form_type) => {
+    // ✅ 위에서 선언한 router 사용
+    await validation(data, router);
   };
 
   return (
@@ -124,6 +71,7 @@ export default function SignupPage() {
             pattern={/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}$/}
             errorMessage="이메일 형식이 올바르지 않습니다"
             required
+            type="email"
           />
 
           <Input

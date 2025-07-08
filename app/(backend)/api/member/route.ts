@@ -2,19 +2,29 @@ import { createClient } from '@/app/utils/supabase/server';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 import { SbMemberRepository } from '../../repositories/SbMemberRepository';
-import { CreateMemberUseCase } from '../../application/usecases/member/CreateMemberUseCase';
 
-export async function POST(request: NextRequest) {
-  const body = await request.json(); // 🔹 1. 클라이언트 요청 데이터 추출
-
+export async function GET(request: NextRequest) {
   try {
-    const supabase: SupabaseClient = await createClient(); // 🔹 2. 데이터베이스 연결
+    const { searchParams } = new URL(request.url);
+    const email = searchParams.get('email');
+    const password = searchParams.get('password');
 
-    const memberRepository = new SbMemberRepository(supabase, body); // 🔹 3. 인프라 계층 생성
+    // null 체크
+    if (!email || !password) {
+      return NextResponse.json({
+        message: '이메일과 패스워드가 필요합니다.',
+        status: 400,
+      });
+    }
 
-    const member = await new CreateMemberUseCase(memberRepository).create(); // 🔹 4. 비즈니스 로직 실행
+    const supabase: SupabaseClient = await createClient();
 
-    return NextResponse.json({ result: member, status: 200 }); // 🔹 5. 응답 반환
+    // clientData 없이 Repository 생성 (로그인용)
+    const memberRepository = new SbMemberRepository(supabase);
+
+    const memberData = await memberRepository.findOne(email, password);
+
+    return NextResponse.json({ result: memberData, status: 200 });
   } catch (err) {
     if (err instanceof Error) {
       return NextResponse.json({ message: err.message, status: 500 });

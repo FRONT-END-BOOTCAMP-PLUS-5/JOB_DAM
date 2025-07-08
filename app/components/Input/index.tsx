@@ -9,6 +9,7 @@ interface InputProps<T extends FieldValues> {
   name: Path<T>;
   placeholder: string;
   className: string;
+  containerClassName?: string; // 컨테이너 스타일링용 추가
   register: UseFormRegister<T>;
   errors?: any;
   pattern?: RegExp;
@@ -23,6 +24,7 @@ export default function Input<T extends FieldValues>({
   required = false,
   placeholder,
   className,
+  containerClassName = '', // 기본값 설정
   register,
   errors,
   pattern,
@@ -46,7 +48,7 @@ export default function Input<T extends FieldValues>({
   const inputType = type === 'password' && showPassword ? 'text' : type;
 
   return (
-    <div className={`${styles.input_container} ${styles[name]}`}>
+    <div className={`${styles.input_container} ${styles[name]} ${containerClassName}`}>
       <label className={login_form_label}>{label}</label>
       <div className={styles.input_wrapper}>
         <input {...register(name, validationRules)} className={className} placeholder={placeholder} type={inputType} />
