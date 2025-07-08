@@ -2,7 +2,7 @@ import Link from 'next/link';
 import styles from './mypageSnb.module.scss';
 
 const MYPAGE_SNB = [
-  { name: '계정', links: [{ text: '내 정보 보기', href: '/' }] },
+  { name: '계정', links: [{ text: '내 정보 보기', href: '/mypage' }] },
   {
     name: '나의 질문',
     links: [
@@ -13,7 +13,7 @@ const MYPAGE_SNB = [
   {
     name: '멘토 정보',
     links: [
-      { text: '멘토 신청하기', href: '/' },
+      { text: '멘토 신청하기', href: '/mypage/application' },
       { text: '작성한 리뷰', href: '/' },
       { text: '좋아요 누른 멘토', href: '/' },
     ],
