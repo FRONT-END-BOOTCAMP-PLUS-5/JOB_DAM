@@ -7,6 +7,7 @@ import Link from 'next/link';
 import Button from '@/app/components/Button/index';
 import ImageForm from '../components/ImageForm';
 import { useRouter } from 'next/navigation'; // Next.js 13+ App Router
+import { toast, ToastContainer } from 'react-toastify';
 
 interface FormInput {
   name: string;
@@ -50,6 +51,7 @@ export default function SignupPage() {
     defaultValues: {
       service_terms: false,
       privacy_terms: false,
+      marketing_terms: false, // 추가
     },
   });
 
@@ -59,10 +61,9 @@ export default function SignupPage() {
   const passwordCheckValue = useWatch({ control, name: 'password_check' });
 
   const passwordCheckPattern = passwordValue === passwordCheckValue;
-  const isDisabled = Object.keys(errors).length > 0 || !passwordCheckPattern;
 
   const onSubmit = (data: FormInput) => {
-    const { name, email, password, nickname, img } = data;
+    const { name, email, password, nickname, img, service_terms, privacy_terms } = data;
 
     try {
       // JSON 데이터 생성
@@ -75,9 +76,15 @@ export default function SignupPage() {
       };
 
       signupMember(memberData).then((res) => {
-        console.log(res);
-        if (res.status === 500) {
-          router.push('/login');
+        if (service_terms && privacy_terms && res.status === 500) {
+          toast.success('회원가입에 성공했습니다!', {
+            position: 'top-left',
+          });
+          setTimeout(() => {
+            router.push('/login');
+          }, 1700);
+        } else {
+          toast.error('필수 약관에 동의해주세요!');
         }
       });
     } catch (err) {
@@ -147,24 +154,12 @@ export default function SignupPage() {
         </div>
 
         <div className={styles.signup_check_box_container}>
-          <input
-            type="checkbox"
-            className={styles.signup_check_box}
-            {...register('service_terms', {
-              required: '서비스 이용약관에 동의해주세요',
-            })}
-          />
+          <input type="checkbox" className={styles.signup_check_box} {...register('service_terms', {})} />
           <p>(필수) 서비스 이용약관에 동의합니다</p>
         </div>
 
         <div className={styles.signup_check_box_container}>
-          <input
-            type="checkbox"
-            className={styles.signup_check_box}
-            {...register('privacy_terms', {
-              required: '개인정보 처리방침에 동의해주세요',
-            })}
-          />
+          <input type="checkbox" className={styles.signup_check_box} {...register('privacy_terms', {})} />
           <p>(필수) 개인정보 처리방침에 동의합니다</p>
         </div>
 
@@ -173,12 +168,13 @@ export default function SignupPage() {
           <p>(선택) 마케팅 정보 수신에 동의합니다</p>
         </div>
 
-        <Button type="submit" typeStyle="submit" text="회원가입" disabled={isDisabled} />
+        <Button type="submit" typeStyle="submit" text="회원가입" />
 
         <span className={styles.signup_login_link}>
           이미 회원이신가요?
           <Link href="/login">로그인</Link>
         </span>
+        <ToastContainer autoClose={1000} role="alert" />
       </form>
     </article>
   );

@@ -13,9 +13,9 @@ interface Props {
   disabled?: boolean;
 }
 
-export default function Button({ text, type, typeStyle = '', icon, onClick, disabled = true }: Props) {
+export default function Button({ text, type, typeStyle = '', icon, onClick }: Props) {
   return (
-    <button className={`${style[type]} ${style[typeStyle]}`} onClick={onClick} disabled={disabled}>
+    <button className={`${style[type]} ${style[typeStyle]}`} onClick={onClick}>
       {icon ? <span className={style.icon}>{icon}</span> : <></>}
       <span className={style.text}>{text}</span>
     </button>
