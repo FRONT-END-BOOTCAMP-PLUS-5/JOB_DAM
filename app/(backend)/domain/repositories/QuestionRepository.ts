@@ -1,6 +1,6 @@
 import { Question } from '../entities/question/Question';
 
 export interface QuestionRepository {
-    findAll(): Promise<Question[]>
+    findAll(title:string, column:string): Promise<Question[]>
     insertQuestion(): Promise<Question>
 }

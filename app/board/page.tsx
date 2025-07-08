@@ -29,12 +29,15 @@ export default function Board(){
 
 
     const handleChangeActive = (type: string) => {
+        const keyword = type === 'latest' ? 'created_at' : 'recommend'
         setActiveBtn(type)
+        getboardData(type, keyword)
     }
 
 
-    const getboardData = async () => {
-        const res = await fetch('api/question', { next: { revalidate: 3600 } })
+    const getboardData = async (url: string = 'latest', keyword:string ="created_at") => {
+        console.log(url, keyword,"dddd")
+        const res = await fetch(`api/question/${url}=${keyword}`, { next: { revalidate: 3600 } })
         const { result } = await res.json()
         const questions = [...result['question']]
         const lastPg = Math.ceil(questions['length'] / 5)
