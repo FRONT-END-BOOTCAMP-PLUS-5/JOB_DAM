@@ -1,5 +1,5 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import { Category } from '../domain/entities/Category';
+import { Category } from '../domain/entities/category/Category';
 import { CategoryTable } from '../domain/tables/CategoryTable';
 import { CategoryRepository } from '../domain/repositories/CategoryRepository';
 
