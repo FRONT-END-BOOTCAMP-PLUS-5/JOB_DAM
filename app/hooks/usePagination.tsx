@@ -55,7 +55,6 @@ const usePagination = (data:Data[], itemsPerPage:number) => {
         pageNum,
         lastPage,
         currentPage,
-        totalPages,
         currentItems,
         bottomToTop,
         goToPage,

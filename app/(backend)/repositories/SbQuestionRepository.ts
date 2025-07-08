@@ -32,7 +32,7 @@ export class SbQuestionRepository implements QuestionRepository {
     }
 
     // 검색기능, 버튼 필터링 생각해서 member 테이블 join
-    async findAll(title: string='', column: string='created_at'): Promise<Question[]> {
+    async findAll(title: string, column: string): Promise<Question[]> {
         const { data, error } = await this.supabase
                                           .from('question')
                                           .select(`id,
