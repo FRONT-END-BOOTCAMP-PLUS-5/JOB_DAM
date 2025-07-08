@@ -88,7 +88,9 @@ const Chat = () => {
                     <div className={styles.mentorBadgeDiv}>
                         <p> 김현직 </p>
                         <div className={styles.mentorBadge}>
-                            <div className={styles.mentorBadgeCircle}> 멘토 </div>
+                            <div className={styles.mentorBadgeCircle}> 
+                                <p className={styles.mentorBadgeCircleP}>멘토</p> 
+                            </div>
                         </div>
                     </div>
                     <div className={styles.mentorBadgeDiv}>
