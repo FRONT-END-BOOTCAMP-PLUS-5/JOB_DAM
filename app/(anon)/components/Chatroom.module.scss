@@ -28,7 +28,7 @@ body {
 
 .chatroomTitleDiv {
     display: grid;
-    margin-left:30%;
+    margin-left: 30%;
     text-align: center;
 }
 
@@ -39,7 +39,7 @@ body {
 
 .joinNumber {
     border-radius: 5px;
-    background-color: rgb(255,255,255,0.5);
+    background-color: rgb(255, 255, 255, 0.5);
     margin-left: auto;
     padding: 4px 20px 4px 20px;
     display: flex;
@@ -70,6 +70,42 @@ body {
 
 .main {
     background-color: white;
+    padding-bottom: 30%;
+}
+
+.recentChat {
     margin-top: 15px;
-    padding-bottom: 35%;
+    background-color: #F9FAFB;
+    height: 50px;
+    border: 1px solid black;
+}
+
+.recentChatH {
+    font-weight: bold;
+    padding-top: 10px;
+    padding-left: 30px;
+}
+
+.bottom {
+    background-color: #F5F7FF;
+    display: flex;
+    padding-bottom: 1%;
+    border: 1px solid black;
+}
+
+.bottomBox {
+    background-color: white;
+    width: 42%;
+    margin-top: 2%;
+    margin-left: 5.5%;
+    border: 1px solid black;
+    border-radius: 5px;
+    text-align: center;
+    height: 130px;
+}
+
+.bottomNum {
+    font-weight: bold;
+    padding-top: 25px;
+    color: #8B5CF6;
 }

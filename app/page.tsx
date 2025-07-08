@@ -4,6 +4,6 @@ import { CreateRoom } from "../app/(anon)/components/CreateRoom";
 
 export default function Home() {
   // return(<Chat/>);
-  // return(<Chatroom/>);
-  return(<CreateRoom/>);
+  return(<Chatroom/>);
+  // return(<CreateRoom/>);
 }
