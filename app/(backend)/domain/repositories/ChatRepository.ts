@@ -1,5 +1,5 @@
-import { ChatMember } from '../entities/ChatMember';
+import { ChatRoom } from '../entities/ChatRoom';
 
 export interface ChatRepository {
-  findById(member_id: string): Promise<ChatMember[]>;
+  findById(member_id: string): Promise<ChatRoom[]>;
 }
