@@ -7,6 +7,9 @@
 
   &_content{
     @include flexCenter(row);
+    align-items: flex-start;
+    gap: 80px;
+
     max-width: 1440px;
     padding: 10px 20px 0 20px;
     margin-bottom: 100px;
@@ -42,8 +45,14 @@
     }
 
     &_right{
-      width: 440px;
-      background-color: #667eea;
+      @include flexCenter(column);
+      justify-content: flex-start;
+      gap: 14px;
+
+      width: 280px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      border-radius: 15px;
+      padding: 10px;
     }
   }
 }

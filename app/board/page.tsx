@@ -7,6 +7,7 @@ import Input from "./index"
 import Profile from "../components/Profile/index"
 import Skeleton from "../components/Skeleton/index"
 import NonData from '@/app/components/NonData';
+import Aside from '@/app/board/(aside)';
 import usePagination from "@/app/hooks/usePagination";
 import {formatTimeAgo} from "@/app/utils/date";
 import { getFirstName } from '@/app/utils/name';
@@ -195,7 +196,7 @@ export default function Board(){
                     </section>
                 </section>
                 <aside className={style.container_content_right}>
-                    2
+                    <Aside />
                 </aside>
             </div>
         </main>

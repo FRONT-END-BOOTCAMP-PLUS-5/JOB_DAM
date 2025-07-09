@@ -14,6 +14,6 @@ export class Question {
             name: string | null,
             img: string | null,
             nickname: string | null
-        },
+        }[],
     ) {}
 }
