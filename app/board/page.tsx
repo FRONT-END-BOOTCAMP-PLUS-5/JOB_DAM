@@ -5,8 +5,12 @@ import { JsonType } from "./interface"
 import Button from "../components/Button/index"
 import Input from "./index"
 import Profile from "../components/Profile/index"
+import Skeleton from "../components/Skeleton/index"
+import NonData from '@/app/components/NonData';
 import usePagination from "@/app/hooks/usePagination";
 import {formatTimeAgo} from "@/app/utils/date";
+import { getFirstName } from '@/app/utils/name';
+
 /**
  * 작성자: 김동우
  * 작성일: 2025-07-04
@@ -15,6 +19,7 @@ import {formatTimeAgo} from "@/app/utils/date";
 export default function Board(){
     const [getJson, setJson] = useState<JsonType[]>([])
     const [activeBtn, setActiveBtn] = useState('latest')
+    const [loading, setLoading] = useState(true)
     const inputRef = useRef(null)
     const inputValRef = useRef<string | null>('')
     const textRef = useRef('created_at')
@@ -35,6 +40,7 @@ export default function Board(){
         pageNum['current'] = 1
         lastPage['current'] = 5
         setJson([])
+        setLoading(true)
         goToPage(pageNum['current'])
     }
 
@@ -44,6 +50,14 @@ export default function Board(){
         inputValRef['current'] = inputVal
     }
 
+    const handleKeyPress = (evt:React.KeyboardEvent<HTMLInputElement>) => {
+        if(evt.code === 'Enter') handleInput()
+    }
+
+    const handleInput = () => {
+        init()
+        getboardData()
+    }
 
     // 최신순,인기순 버튼 누를때 style 하고 api 실행해서 해당 페이지 데이터 보여줌
     const handleChangeActive = (type: string) => {
@@ -65,10 +79,10 @@ export default function Board(){
         const questions = [...result['question']]
         const lastPg = Math.ceil(questions['length'] / 5)
         lastPage['current'] = lastPg
+
         setJson(questions)
+        setLoading(false)
     }
-
-
 
 
     useEffect(() => {
@@ -81,6 +95,7 @@ export default function Board(){
         <main className={style.container}>
             <div className={style.container_content}>
                 <section className={style.container_content_left}>
+
                     <section className={style.container_content_left_top}>
                         <h1>Q&A 커뮤니티</h1>
                         <sub>현직자들과 함께 취업 고민을 해결해보세요</sub>
@@ -98,14 +113,13 @@ export default function Board(){
                                        type={'text'}
                                        placeholder={"궁금한 내용을 검색해보세요"}
                                        ref={inputRef}
-                                       onChange={(evt:React.ChangeEvent<HTMLInputElement>) => {handleSearch(evt)}}/>
+                                       onChange={(evt:React.ChangeEvent<HTMLInputElement>) => {handleSearch(evt)}}
+                                       onKeyPress={(evt: React.KeyboardEvent<HTMLInputElement>) => {handleKeyPress(evt)}}
+                                />
                                 <Button type={'search'}
                                         text={'검색'}
                                         icon={'🔍'}
-                                        onClick={() => {
-                                            init()
-                                            getboardData()
-                                            }}/>
+                                        onClick={() => {handleInput()}}/>
                             </div>
                             <div className={style.search_box_bottom}>
                                 <Button type={'tag'} typeStyle={activeBtn === 'latest' ? 'active' : ''} onClick={() => {handleChangeActive('latest')}} text={'최신순'}/>
@@ -113,34 +127,47 @@ export default function Board(){
                             </div>
                         </section>
                         <section className={style.question_box}>
-                                {currentItems.map((item:JsonType) => {
+                                {loading  && new Array(5).fill(1).map((_, idx) => {
                                     return (
-                                        <div key={item.id} className={style.question}>
-                                            <h3 className={style.question_title}>{item.title}</h3>
-                                            <div className={style.question_sub_box}>
-                                                <span>👍{item.recommend}</span>
-                                                <span>👁️{item.view}<span>조회</span></span>
-                                            </div>
-                                            <p className={style.content}>{item.content}</p>
-                                            <div className={style.question_bottom}>
-                                                <div>
-                                                    <Profile/>
-                                                    <span className={style.nickname}>{item.member.nickname}</span>
-                                                </div>
-                                                <span className={style.date}>{formatTimeAgo(item.createdAt)}</span>
-                                            </div>
+                                      <Skeleton key={idx}
+                                                top={true}
+                                                middle={true}
+                                                bottom={true}
+                                                profile={true}
+                                                containerName={'board_container'}
+                                                typeStyle={'board'}/>
+                                      )
+                                    })
+                                }
+                                {!loading && currentItems.length ? currentItems.map((item:JsonType) => {
+                                    return (
+                                      <div key={item.id} className={style.question}>
+                                        <h3 className={style.question_title}>{item.title}</h3>
+                                        <div className={style.question_sub_box}>
+                                          <span>👍{item.recommend}</span>
+                                          <span>👁️{item.view}<span>조회</span></span>
                                         </div>
+                                        <p className={style.content}>{item.content}</p>
+                                        <div className={style.question_bottom}>
+                                          <div className={style.profile_box}>
+                                            <Profile text={getFirstName(item.member.nickname as string)}/>
+                                            <span className={style.nickname}>{item.member.nickname}</span>
+                                          </div>
+                                          <span className={style.date}>{formatTimeAgo(item.createdAt)}</span>
+                                        </div>
+                                      </div>
                                     )
-                                })}
+                                }) : <NonData/>}
                         </section>
                         <div className={style.button_container}>
-                            <Button text={"<"}
-                                    type={"previous"}
-                                    typeStyle={"pagination"}
-                                    disabled={currentPage <= 5}
-                                    onClick={() => {
-                                        pageNum['current'] -= 5
-                                        goToPreviousPage()}}/>
+                            {currentItems.length != 0 && <Button text={"<"}
+                                                               type={"previous"}
+                                                               typeStyle={"pagination"}
+                                                               disabled={currentPage <= 5}
+                                                               onClick={() => {
+                                                                   pageNum['current'] -= 5
+                                                                   goToPreviousPage()}}/>
+                            }
                             {
                                 new Array(5).fill(1).map((_, idx) => {
                                     return idx + pageNum['current'] <= lastPage['current'] && (
@@ -155,13 +182,15 @@ export default function Board(){
                                     )
                                 })
                             }
-                            <Button text={">"}
-                                    type={"next"}
-                                    typeStyle={"pagination"}
-                                    disabled={pageNum['current']+5 > lastPage['current']}
-                                    onClick={() => {
-                                        pageNum['current'] += 5
-                                        goToNextPage()}}/>
+                            {currentItems.length != 0 && <Button text={">"}
+                                                            type={"next"}
+                                                            typeStyle={"pagination"}
+                                                            disabled={pageNum['current']+5 > lastPage['current']}
+                                                            onClick={() => {
+                                                                pageNum['current'] += 5
+                                                                goToNextPage()}}/>
+
+                            }
                         </div>
                     </section>
                 </section>

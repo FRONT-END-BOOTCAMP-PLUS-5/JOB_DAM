@@ -1,4 +1,4 @@
-export default interface Profile{
-    img: string
+export default interface Props{
+    img?: string
     text?: string
 }

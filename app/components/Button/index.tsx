@@ -1,18 +1,11 @@
 'use client'
 import style from "./button.module.scss"
+import Props from "./interface"
 /**
  * 작성자: 김동우
  * 작성일: 2025-07-05
  * */
-interface Props{
-    text: string
-    icon?: string
-    type: string
-    typeStyle?: string
-    disabled?: boolean
-    onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void
 
-}
 
 export default function Button({ text, type, typeStyle='', icon, disabled, onClick }: Props){
 
