@@ -3,8 +3,12 @@
 import styles from '../createRoom/createRoom.module.scss'
 import { useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
+import { useRouter } from 'next/navigation'
 
 const CreateRoom = () => {
+
+    const router = useRouter()
+
     const [roomName, setRoomName] = useState<string>('');
     const [roomDescription, setRoomDescription] = useState<string>('');
     const [maxNum, setMaxNum] = useState<number>(0);
@@ -27,6 +31,7 @@ const CreateRoom = () => {
                 max_people: maxNum
             }])
             alert('방을 만들었습니다.')
+            router.push('./chatroom')
         }
     }
 
@@ -69,7 +74,7 @@ const CreateRoom = () => {
                 <button className={styles.submitButton}>
                     <p className={styles.submitButtonP} onClick={submitted}> 방 만들기 </p>
                 </button>
-                <button className={styles.submitButton}>
+                <button className={styles.submitButton} onClick={()=>router.push('./chatroom')}>
                     <p className={styles.submitButtonP}> 뒤로 가기 </p>
                 </button>
             </div>

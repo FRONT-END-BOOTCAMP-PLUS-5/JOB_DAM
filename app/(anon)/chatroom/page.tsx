@@ -3,6 +3,7 @@
 import styles from '../chatroom/chatroom.module.scss'
 import { useState, useEffect } from 'react'
 import { createClient } from '@supabase/supabase-js'
+import { useRouter } from 'next/navigation'
 
 const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -27,6 +28,8 @@ interface mentorName {
 }
 
 const Chatroom = () => {
+
+    const router = useRouter()
 
     const [member, setMember] = useState<any | null>(null)
     const [chatRooms, setChatRooms] = useState<ChatRoom[]>([])
@@ -113,7 +116,7 @@ const Chatroom = () => {
         <div className={styles.all}>
             <div className={styles.header}>
                 <p className={styles.headerLogo}> Job담 </p>
-                <button className={styles.headerButton1}> + </button>
+                <button className={styles.headerButton1} onClick={()=>{router.push('/createRoom')}}> + </button>
                 <button className={styles.headerButton2}> 마이페이지 </button>
             </div>
             <div className={styles.recentChat}>
