@@ -1,11 +1,12 @@
 'use client';
 
+import Title from '@/app/components/Title';
 import styles from './mypage.module.scss';
 
 const Mypage = () => {
   return (
     <section className={styles.user_container}>
-      <h4>개인정보</h4>
+      <Title text="멘토 신청하기" />
       <div className={styles.user_image}>
         <h5>이미지</h5>
       </div>

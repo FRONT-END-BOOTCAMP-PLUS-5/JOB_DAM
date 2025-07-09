@@ -1,0 +1,42 @@
+.section {
+  & .review_item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border: 1px solid #667eea;
+    border-radius: 4px;
+    padding: 24px 16px;
+    margin-top: 24px;
+
+    & .review_title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    & .review_date {
+      color: #555;
+      font-size: 12px;
+    }
+
+    & .content {
+      font-size: 14px;
+    }
+
+    & .mentor {
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+
+      &_name {
+        font-weight: 600;
+      }
+
+      & .chat_room_date {
+        font-size: 12px;
+        color: #555;
+      }
+    }
+  }
+}
