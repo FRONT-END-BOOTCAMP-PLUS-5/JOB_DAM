@@ -12,12 +12,18 @@ const supabase = createClient(
 interface ChatRoom {
     id: number
     title: string,
-    created_member_id: string
+    created_member_id: string,
+    description: string
 }
 
 interface mentorInfo {
+    member_id: string,
     company: string,
     level: string
+}
+
+interface mentorName {
+    name: string
 }
 
 const Chatroom = () => {
@@ -26,6 +32,8 @@ const Chatroom = () => {
     const [chatRooms, setChatRooms] = useState<ChatRoom[]>([])
     const [mentorId, setMentorId] = useState<string[] | null>([])
     const [mentor, setMentor] = useState<mentorInfo[] | null>(null)
+    const [mentorName, setMentorName] = useState<mentorName[] | null>(null)
+    const [roomSumNum, setRoomSumNum] = useState<number>(0)
 
     useEffect(() => {
         if (typeof window != undefined) {
@@ -59,7 +67,7 @@ const Chatroom = () => {
             const roomId = chatMember?.map(m => m.chat_room_id) || []
             const { data: roomData } = await supabase
                 .from('chat_room')
-                .select('id,title,created_member_id')
+                .select('id,title,created_member_id,description')
                 .in('id', roomId)
             setChatRooms(roomData || [])
         }
@@ -68,7 +76,6 @@ const Chatroom = () => {
 
     useEffect(() => {
         const findChatroomInfo = async () => {
-            const chatRoomIds = chatRooms.map(r => r.id)
             const mentorIds = chatRooms.map(room => room.created_member_id)
             setMentorId(mentorIds || [])
         }
@@ -82,11 +89,22 @@ const Chatroom = () => {
             }
             const { data: mentorData } = await supabase
                 .from('mentor_application')
-                .select('company,level')
+                .select('member_id,company,level')
                 .in('member_id', mentorId)
             setMentor(mentorData)
         }
+        const findMentorName = async () => {
+            if (!mentorId) {
+                return
+            }
+            const { data: findMentorName } = await supabase
+                .from('member')
+                .select('name')
+                .in('id', mentorId)
+            setMentorName(findMentorName)
+        }
         findMentorId()
+        findMentorName()
     }, [mentorId])
 
 
@@ -101,23 +119,28 @@ const Chatroom = () => {
             <div className={styles.recentChat}>
                 <h3 className={styles.recentChatH}> 최근 채팅 </h3>
             </div>
-            <div>
-                {chatRooms.map((room,index) => (
-                    <div key={room.id}>
-                        <button>
-                            <h3>{room.title} {mentor?.[index]?.company}</h3>
-                        </button>
-                    </div>
-                ))}
+            <div className={styles.main}>
+                <div className={styles.roomDiv}>
+                    {chatRooms.map((room, index) => (
+                        <div key={room.id}>
+                            <button className={styles.roomButtons}>
+                                <div className={styles.mentorInfo2}>
+                                    <h3 className={styles.roomTitle}> {mentorName?.[index]?.name} 멘토님의 {room.title} </h3>
+                                    <h3 className={styles.mentorCompany}> {mentor?.[index]?.company} </h3>
+                                </div>
+                                <h4 className={styles.roomDescription}>{chatRooms?.[index]?.description}</h4>
+                            </button>
+                        </div>
+                    ))}
+                </div>
             </div>
-            <div className={styles.main}></div>
             <div className={styles.bottom}>
                 <div className={styles.bottomBox}>
-                    <h1 className={styles.bottomNum}> 24 </h1>
+                    <h1 className={styles.bottomNum}> {mentorName?.length} </h1>
                     <p> 총 채팅방 </p>
                 </div>
                 <div className={styles.bottomBox}>
-                    <h1 className={styles.bottomNum}> 12 </h1>
+                    <h1 className={styles.bottomNum}> 0 </h1>
                     <p> 활성 멘토 </p>
                 </div>
             </div>
