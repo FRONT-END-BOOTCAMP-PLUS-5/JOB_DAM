@@ -20,6 +20,7 @@ const TOAST_MESSAGES = {
   GENERAL_ERROR: '회원가입에 실패했습니다.',
   TERMS_ERROR: '필수 약관에 동의해주세요!',
   NETWORK_ERROR: '회원가입 중 오류가 발생했습니다.',
+  DUPLICATE_ERROR: '이미 존재하는 회원입니다.',
 } as const;
 
 const FORM_DEFAULT_VALUES = {

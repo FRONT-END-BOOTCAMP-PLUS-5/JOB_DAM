@@ -8,37 +8,20 @@ export const validation = async (data: sign_up_form_type, router: any) => {
   const { name, email, password, nickname, img } = data;
 
   const memberData = data;
+  console.log(memberData);
 
   const signUpResponse = await signUpService(memberData);
   const takeMember = signUpResponse.data?.result;
-
-  if (!data.service_terms || !data.privacy_terms) {
-    toast.error(TOAST_MESSAGES.TERMS_ERROR);
-    return false;
-  }
+  console.log(signUpResponse);
 
   if (signUpResponse.status === 200) {
-    if (takeMember) {
-      if (takeMember.members?.email === email) {
-        toast.error(TOAST_MESSAGES.DUPLICATE_EMAIL);
-        return false;
-      }
-      if (takeMember.members?.nickname === nickname) {
-        toast.error(TOAST_MESSAGES.DUPLICATE_NICKNAME);
-        return false;
-      }
-      if (takeMember.members?.name === name) {
-        toast.error(TOAST_MESSAGES.DUPLICATE_NAME);
-        return false;
-      }
+    if (signUpResponse.data.message) {
+      toast.error(signUpResponse.data.message);
+      return false;
     } else {
       toast.success(TOAST_MESSAGES.SUCCESS);
-      setTimeout(() => {
-        router.push('/login');
-      }, 2000);
+      return true;
     }
-  } else {
-    toast.error(TOAST_MESSAGES.GENERAL_ERROR);
   }
 
   return true;
