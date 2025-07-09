@@ -14,7 +14,7 @@ export class QuestionDto {
             name: string | null,
             img: string | null,
             nickname: string | null
-        }
+        }[]
     ) {}
 
 }

@@ -14,6 +14,34 @@
 
 
 
+.aside_container{
+  width: 100%;
+  .top > .aside::after{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, #f2f2f2, #c9c6c6, #f2f2f2);
+    animation: loading 2s infinite linear;
+  }
+
+  .top{
+    @include flexCenter(column);
+    .aside{
+      width: 95%;
+      height: 34px;
+      background-color: #f2f2f2;
+
+      overflow: hidden;
+      position: relative;
+
+      border-radius:8px;
+    }
+  }
+}
+
 
 .board_container{
   width: 100%;

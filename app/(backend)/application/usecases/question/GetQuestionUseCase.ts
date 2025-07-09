@@ -28,6 +28,7 @@ export class GetQuestionUseCase {
         const questions: QuestionTable[] = await this.repository.findAll(title, column);
 
 
+
         const questionDtos: QuestionDto[] = questions.map((item) => ({
             id: item['id'],
             title: item['title'],

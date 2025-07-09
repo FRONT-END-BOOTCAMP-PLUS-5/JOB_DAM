@@ -68,4 +68,5 @@ export class SbQuestionRepository implements QuestionRepository {
         if (error) throw new Error(error.message)
         return data as Question
     }
+
 }
