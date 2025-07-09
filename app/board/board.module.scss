@@ -96,6 +96,7 @@
 .question{
   padding: 10px 20px 10px 20px;
   cursor: pointer;
+  height: 174px;
 
   &_title{
     font-weight: bold;
@@ -132,10 +133,15 @@
     @include flexCenter(row);
     justify-content: space-between;
 
-    .nickname{
-      color: #8e8e8e;
-      font-size: 13px;
+    .profile_box{
+      @include flexCenter(row);
+      gap: 10px;
+      .nickname{
+        color: #8e8e8e;
+        font-size: 13px;
+      }
     }
+
 
     .date{
       color: #8e8e8e;
@@ -145,8 +151,8 @@
 }
 
 .question:nth-child(2n-1){
-  border-top: 1px solid #b8b8b8;
-  border-bottom: 1px solid #b8b8b8;
+  border-top: 1px solid #dddfe2;
+  border-bottom: 1px solid #dddfe2;
 }
 
 .question:last-child{
