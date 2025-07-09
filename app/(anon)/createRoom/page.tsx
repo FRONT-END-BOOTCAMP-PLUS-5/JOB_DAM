@@ -5,6 +5,11 @@ import { useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import { useRouter } from 'next/navigation'
 
+const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
+
 const CreateRoom = () => {
 
     const router = useRouter()
@@ -15,24 +20,23 @@ const CreateRoom = () => {
     const [agreeTerms, setAgreeTerms] = useState<boolean>(false);
     const [agreeTerms2, setAgreeTerms2] = useState<boolean>(false);
 
-    const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    )
-
     const submitted = async () => {
         if (!agreeTerms || !agreeTerms2) {
             alert("필수 사항에 체크해주세요.")
         }
         else {
-            const { data } = await supabase.from('chat_room').insert([{
-                title: roomName,
-                description: roomDescription,
-                max_people: maxNum
-            }])
+            sendToSupabase()
             alert('방을 만들었습니다.')
             router.push('./chatroom')
         }
+    }
+
+    const sendToSupabase = async() => {
+        const {data} = await supabase.from('chat_room').insert([{
+            title: roomName,
+            description: roomDescription,
+            max_people: maxNum
+        }])
     }
 
     return (
