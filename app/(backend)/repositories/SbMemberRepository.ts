@@ -1,27 +1,13 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Member } from '../domain/entities/Member';
 import { MemberRepository } from '../domain/repositories/MemberRepository';
-
-interface ClientProp {
-  id?: string;
-  name?: string;
-  email?: string;
-  password?: string;
-  created_at?: string;
-  updated_at?: string;
-  img?: string;
-  nickname: string;
-  grade?: number;
-  point?: number;
-  type?: number;
-  deleted_at?: string;
-}
+import { sign_up_form_type } from '@/app/types/signup/signup';
 
 export class SbMemberRepository implements MemberRepository {
   private supabase;
-  private clientData?: ClientProp;
+  private clientData?: sign_up_form_type;
 
-  constructor(supabase: SupabaseClient, clientData?: ClientProp) {
+  constructor(supabase: SupabaseClient, clientData?: sign_up_form_type) {
     this.supabase = supabase;
     this.clientData = clientData;
   }

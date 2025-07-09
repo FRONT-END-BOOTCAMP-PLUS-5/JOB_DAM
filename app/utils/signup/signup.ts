@@ -20,6 +20,7 @@ export const validation = async (data: sign_up_form_type, router: any) => {
       return false;
     } else {
       toast.success(TOAST_MESSAGES.SUCCESS);
+      router.push('/login');
       return true;
     }
   }
