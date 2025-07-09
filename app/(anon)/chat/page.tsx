@@ -1,6 +1,6 @@
 "use client"
 
-import styles from '../components/Chat.module.scss'
+import styles from '../chat/chat.module.scss'
 import { createClient } from '@supabase/supabase-js'
 import type { RealtimeChannel } from '@supabase/supabase-js'
 import { useState, useEffect, useRef } from 'react'
@@ -14,14 +14,44 @@ const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
+interface userInfo {
+    id: string,
+    name: string,
+    email: string,
+    password: string,
+    img: string,
+    nickname: string
+}
+
 const Chat = () => {
 
+    const [user, setUser] = useState<userInfo | null>(null)
     const [input, setInput] = useState<string>('')
     const roomRef = useRef<RealtimeChannel | null>(null)
     const [message, setMessage] = useState<messageInterface[]>([])
 
-    function messageReceived(payload:string) {
-        console.log('payload:',payload)
+    if (typeof window != 'undefined') {
+        localStorage.setItem('user', JSON.stringify({
+            id: 'f5ead8bd-1c10-4d7f-bc47-122aa60ed262',
+            name: 'ㅁㅇㅁㄴㅇ',
+            email: 'ㄴㅁㅇㅁㅇ',
+            password: 'ㅁㄴㅇㅁㅇㄴ',
+            img: 'KakaoTalk_Photo_2025-06-25-11-19-21.jpeg',
+            nickname: 'ㄴㅁㅇ'
+        }))
+    }
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const storedUser = localStorage.getItem('user');
+            if (storedUser) {
+                setUser(JSON.parse(storedUser));
+            }
+        }
+    }, [])
+
+    function messageReceived(payload: string) {
+        console.log('payload:', payload)
     }
 
     useEffect(() => {
@@ -29,15 +59,22 @@ const Chat = () => {
         roomRef.current = room
         console.log('hey')
         room
-            .on('broadcast', { event: 'shout' }, (payload) => messageReceived(payload.event))
+            .on('broadcast', { event: 'shout' }, (payload) => messageReceived(payload.payload))
             .subscribe()
     }, [])
 
     const messageSubmission = async (e: React.FormEvent) => {
         e.preventDefault()
-        const {data} = await supabase.from('chat').insert([{ content: input }]).select('content')
-        if(data){
-            setMessage(prev=>[...prev,{content:input}])
+        if (!user) {
+            alert('유저가 없습니다.')
+            return
+        }
+        const { data } = await supabase.from('chat').insert([{
+            content: input,
+            member_id: user.id
+        }]).select('content')
+        if (data) {
+            setMessage(prev => [...prev, { content: input }])
         }
         await roomRef.current?.send({
             type: 'broadcast',
@@ -88,8 +125,8 @@ const Chat = () => {
                     <div className={styles.mentorBadgeDiv}>
                         <p> 김현직 </p>
                         <div className={styles.mentorBadge}>
-                            <div className={styles.mentorBadgeCircle}> 
-                                <p className={styles.mentorBadgeCircleP}>멘토</p> 
+                            <div className={styles.mentorBadgeCircle}>
+                                <p className={styles.mentorBadgeCircleP}>멘토</p>
                             </div>
                         </div>
                     </div>
@@ -110,7 +147,7 @@ const Chat = () => {
                     <div className={styles.chatRecordsSpace}>
                         <div>
                             {message.map((message, i) => (
-                                <div key={i} className={styles.message}>{message.content}</div>
+                                <div key={i} className={styles.message}>{`${user?.name}`}{message.content}</div>
                             ))}
                         </div>
                     </div>
@@ -124,4 +161,5 @@ const Chat = () => {
     );
 };
 
-export { Chat };
+export default Chat;
+export { Chat }

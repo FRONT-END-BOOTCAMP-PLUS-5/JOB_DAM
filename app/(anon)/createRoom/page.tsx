@@ -1,6 +1,6 @@
 "use client"
 
-import styles from '../components/CreateRoom.module.scss'
+import styles from '../createRoom/createRoom.module.scss'
 import { useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
 
@@ -17,17 +17,16 @@ const CreateRoom = () => {
     )
 
     const submitted = async () => {
-        console.log('roomName: ', roomName, ' roomDescription: ', roomDescription, ' maxNum: ', maxNum)
         if (!agreeTerms || !agreeTerms2) {
             alert("필수 사항에 체크해주세요.")
         }
         else {
-            console.log('Yes')
             const { data } = await supabase.from('chat_room').insert([{
                 title: roomName,
                 description: roomDescription,
                 max_people: maxNum
             }])
+            alert('방을 만들었습니다.')
         }
     }
 
@@ -78,4 +77,5 @@ const CreateRoom = () => {
     )
 }
 
+export default CreateRoom
 export { CreateRoom }
