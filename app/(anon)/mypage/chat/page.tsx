@@ -7,11 +7,27 @@ import { useEffect, useState } from 'react';
 
 import styles from './chatPage.module.scss';
 import dayjs from 'dayjs';
+import ReviewModal from './ReviewModal';
 
 const ChatPage = () => {
   const [chatRoom, setChatRoom] = useState<ChatRoom[]>([]);
+  const [reviewOpen, setReviewOpen] = useState(false);
+  const [rating, setRating] = useState<number | null>(0);
+  const [content, setContent] = useState('');
+  const [reviewMentorName, setReviewMentorName] = useState<string | undefined>('');
 
   const { getChatRoom } = chatService();
+
+  const handleReviewModalShow = (status: boolean, mentorName?: string) => {
+    setReviewOpen(status);
+    setReviewMentorName(mentorName);
+
+    if (!status) {
+      setContent('');
+      setRating(0);
+      setReviewMentorName('');
+    }
+  };
 
   useEffect(() => {
     getChatRoom(TEST_MENTI_ID).then((res) => {
@@ -37,11 +53,21 @@ const ChatPage = () => {
               <span className={styles.created_date}>{dayjs(item?.createdAt).format('YYYY.MM.DD')}</span>
             </div>
             <div className={styles.button_wrap}>
-              <button>리뷰쓰기</button>
+              <button onClick={() => handleReviewModalShow(true, item?.createMember?.name)}>리뷰 쓰기</button>
             </div>
           </li>
         ))}
       </ul>
+
+      <ReviewModal
+        mentorName={reviewMentorName}
+        content={content}
+        rating={rating}
+        reviewOpen={reviewOpen}
+        setRating={setRating}
+        setContent={setContent}
+        handleModalShow={handleReviewModalShow}
+      />
     </section>
   );
 };
