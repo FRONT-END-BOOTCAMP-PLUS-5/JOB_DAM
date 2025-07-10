@@ -163,8 +163,23 @@ body {
     border-radius: 25px;
     padding: 2px 10px 2px 10px;
     border: 1px solid black;
+    margin-top: 15px;
 }
 
 .onlineOrNot {
     color: #54C497;
+}
+
+.mem {
+    display: flex;
+}
+
+.menteeBadgeDiv {
+    display: grid;
+    margin-left: 15px;
+}
+
+.memberName {
+    display: flex;
+    align-items: center;
 }
