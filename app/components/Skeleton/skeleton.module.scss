@@ -1,4 +1,4 @@
-@import  "../../styles/mixin";
+@use  "../../styles/mixin";
 
 @keyframes loading {
   0% {
@@ -28,7 +28,7 @@
   }
 
   .top{
-    @include flexCenter(column);
+    @include mixin.flexCenter(column);
     .aside{
       width: 95%;
       height: 34px;
@@ -62,7 +62,7 @@
   }
 
   .top{
-    @include flexCenter(row);
+    @include mixin.flexCenter(row);
     margin-top: 10px;
     margin-bottom: 10px;
     .board{
@@ -89,7 +89,7 @@
   }
 
   .middle{
-    @include flexCenter(row);
+    @include mixin.flexCenter(row);
     .board{
       width: 95%;
       height: 75px;
@@ -128,7 +128,7 @@
   }
 
   .bottom{
-    @include flexCenter(row);
+    @include mixin.flexCenter(row);
     justify-content: space-between;
     padding: 0 23px;
     margin-top: 4px;

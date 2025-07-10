@@ -1,6 +1,5 @@
 import { QuestionRepository } from '../../../domain/repositories/QuestionRepository';
 import { Question } from '../../../domain/entities/question/Question';
-import { QuestionDto } from '../../dtos/QuestionDto';
 /**
  * 작성자: 김동우
  * 작성일: 2025-07-04

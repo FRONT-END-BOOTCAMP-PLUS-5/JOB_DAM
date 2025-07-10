@@ -1,10 +1,10 @@
+'use client'
 import { useState, useEffect } from "react"
 import { JsonType } from './interface';
 import style from "./aside.module.scss"
 import { getLastName } from '@/app/utils/name';
 import Profile from '@/app/components/Profile';
 import Skeleton from '@/app/components/Skeleton';
-
 /**
  * 작성자: 김동우
  * 작성일: 2025-07-09
@@ -24,7 +24,7 @@ export default function Aside(){
 
   useEffect(() => {
     getAllMemberData()
-  }, [])
+  },[])
 
   return (
     <>

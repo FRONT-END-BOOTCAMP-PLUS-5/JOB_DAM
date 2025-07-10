@@ -1,3 +1,4 @@
+'use client'
 import style from "./nondata.module.scss"
 /**
  * 작성자: 김동우

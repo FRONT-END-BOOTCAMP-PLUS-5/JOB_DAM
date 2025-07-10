@@ -1,12 +1,12 @@
-@import "../../styles/mixin";
+@use "../../styles/mixin";
 
 .container{
-  @include flexCenter(row);
+  @include mixin.flexCenter(row);
   width: 100%;
   padding: 0 20px;
 
   &_content{
-    @include flexCenter(row);
+    @include mixin.flexCenter(row);
     align-items: flex-start;
     gap: 80px;
 
@@ -19,7 +19,7 @@
       box-shadow: 0 3px 3px rgba(0,0,0,0.2);
 
       &_top{
-        @include flexCenter(column);
+        @include mixin.flexCenter(column);
         background-color: red;
         border-top-left-radius: 15px;
         border-top-right-radius: 15px;
@@ -45,7 +45,7 @@
     }
 
     &_right{
-      @include flexCenter(column);
+      @include mixin.flexCenter(column);
       justify-content: flex-start;
       gap: 14px;
 
@@ -63,18 +63,18 @@
   padding: 20px 20px;
 
   &_top{
-    @include flexCenter(row);
+    @include mixin.flexCenter(row);
     justify-content: space-between;
   }
 
   &_middle{
-    @include flexCenter(row);
+    @include mixin.flexCenter(row);
     justify-content: space-between;
     margin-top: 20px;
   }
 
   &_bottom{
-    @include flexCenter(row);
+    @include mixin.flexCenter(row);
     justify-content: normal;
     margin-top: 30px;
     gap: 10px;
@@ -139,11 +139,11 @@
   }
 
   &_bottom{
-    @include flexCenter(row);
+    @include mixin.flexCenter(row);
     justify-content: space-between;
 
     .profile_box{
-      @include flexCenter(row);
+      @include mixin.flexCenter(row);
       gap: 10px;
       .nickname{
         color: #8e8e8e;
@@ -172,5 +172,5 @@
   padding-top: 20px;
   position: absolute;
   width: 100%;
-  @include flexCenter(row);
+  @include mixin.flexCenter(row);
 }

@@ -1,7 +1,7 @@
-@import "../../styles/mixin";
+@use "../../styles/mixin";
 
 .container{
-  @include flexCenter(column);
+  @include mixin.flexCenter(column);
   width: 100%;
   min-width: 1000px;
   padding: 0 20px;

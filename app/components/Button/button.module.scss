@@ -1,8 +1,8 @@
-@import '../../styles/mixin';
+@use '../../styles/mixin';
 
 .ask {
-  @include customButton();
-  @include flexCenter(row);
+  @include mixin.customButton();
+  @include mixin.flexCenter(row);
   background-image: linear-gradient(40deg, #6876e0 40%, #7354ad 80%);
 
   > .icon {
@@ -16,8 +16,8 @@
 }
 
 .search {
-  @include customButton(60px, 30px);
-  @include flexCenter(row);
+  @include mixin.customButton(60px, 30px);
+  @include mixin.flexCenter(row);
   border: 2px solid #667eea;
   color: #667eea;
   padding: 3px 4px;
@@ -34,7 +34,7 @@
 }
 
 .tag {
-  @include customButton(60px, 30px);
+  @include mixin.customButton(60px, 30px);
   border: 2px solid #eaecef;
   background-color: #fff;
   color: #414141;

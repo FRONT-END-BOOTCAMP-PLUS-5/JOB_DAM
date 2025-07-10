@@ -1,4 +1,4 @@
-@import "../../../styles/mixin";
+@use "../../../../styles/mixin";
 
 .title{
   font-weight: bold;
@@ -6,13 +6,13 @@
 }
 
 .container{
-  @include flexCenter(row);
+  @include mixin.flexCenter(row);
   width: 100%;
   gap: 17px;
 }
 
 .name{
-  @include flexCenter(row);
+  @include mixin.flexCenter(row);
   gap: 5px;
 
   .badge{
@@ -26,7 +26,7 @@
   }
 }
 .company{
-  @include flexCenter(column);
+  @include mixin.flexCenter(column);
   align-items: flex-start;
   font-size: 13px;
 
