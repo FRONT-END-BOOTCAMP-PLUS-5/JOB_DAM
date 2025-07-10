@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import styles from './application.module.scss';
 import { mentorService } from '@/app/services/mypage/mentor';
+import Title from '@/app/components/Title';
 
 const Application = () => {
   const [company, setCompany] = useState('');
@@ -43,7 +44,7 @@ const Application = () => {
 
   return (
     <section className={styles.user_container}>
-      <h3>멘토 신청하기</h3>
+      <Title text="멘토 신청하기" />
       {isApplication && (
         <>
           <div className={styles.input_box}>

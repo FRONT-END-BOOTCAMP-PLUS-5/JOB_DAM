@@ -1,18 +1,18 @@
 export interface ChatRoom {
-  id: string;
+  id: number;
   createdAt: string;
-  updatedAt: string;
-  deletedAt: string | null;
+  updatedAt?: string;
+  deletedAt?: string | null;
   title: string;
   chatMember: ChatMember[];
   createMember: {
-    id: string;
+    id: number;
     name: string;
     email: string;
   };
 }
 
 interface ChatMember {
-  chatRoomId: string;
+  chatRoomId: number;
   memberId: string;
 }

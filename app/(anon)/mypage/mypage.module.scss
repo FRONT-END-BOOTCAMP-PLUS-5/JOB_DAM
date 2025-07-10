@@ -13,12 +13,6 @@
     @include mixin.flexCenter(row);
   }
 
-  & h4 {
-    font-size: 20px;
-    color: #667eea;
-    font-weight: 600;
-  }
-
   & .user_info {
     display: flex;
     gap: 12px;

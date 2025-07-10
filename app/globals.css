@@ -30,3 +30,9 @@ a {
 ul li {
   list-style: none;
 }
+
+button {
+  outline: none;
+  cursor: pointer;
+  border: none;
+}
