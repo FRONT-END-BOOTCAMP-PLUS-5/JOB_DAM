@@ -29,15 +29,17 @@ const Chat = () => {
     const [input, setInput] = useState<string>('')
     const roomRef = useRef<RealtimeChannel | null>(null)
     const [message, setMessage] = useState<messageInterface[]>([])
+    const [roomName, setRoomName] = useState<string | null>(null);
+    const [roomId, setRoomId] = useState<number | null>(null)
 
     if (typeof window != 'undefined') {
         localStorage.setItem('user', JSON.stringify({
-            id: 'f5ead8bd-1c10-4d7f-bc47-122aa60ed262',
-            name: 'ㅁㅇㅁㄴㅇ',
-            email: 'ㄴㅁㅇㅁㅇ',
-            password: 'ㅁㄴㅇㅁㅇㄴ',
-            img: 'KakaoTalk_Photo_2025-06-25-11-19-21.jpeg',
-            nickname: 'ㄴㅁㅇ'
+            id: 'f6d4945a-2251-4284-bed5-327f44bc2c7f',
+            name: '승주',
+            email: '승주@gmail.com',
+            password: 'seungjoo',
+            img: 'https://yqutjsbcupbfpphjmaax.supabase.co/storage/v1/object/public/user-profile-image/1752045446080_wig2gl.jpeg',
+            nickname: '승쥬'
         }))
     }
 
@@ -55,13 +57,42 @@ const Chat = () => {
     }
 
     useEffect(() => {
-        const room = supabase.channel('test-channel')
+        const query = new URLSearchParams(window.location.search);
+        const room = query.get('room');
+        console.log('room: ',room)
+        if (room) {
+            setRoomName(room);
+        }
+    }, []);
+
+    useEffect(() => {
+        if(!roomName) {
+            return
+        }
+        const room = supabase.channel(roomName)
         roomRef.current = room
-        console.log('hey')
+        console.log('room: ',room)
         room
-            .on('broadcast', { event: 'shout' }, (payload) => messageReceived(payload.payload))
+            .on('broadcast', { event: 'shout' }, (payload) => {messageReceived(payload.payload); console.log('payload.payload: ',payload.payload)})
             .subscribe()
     }, [])
+
+    useEffect(()=>{
+        if(!roomName) {
+            return
+        }
+        const findChatroomId = async() => {
+            const {data:roomIdNum} = await supabase
+                .from('chat_room')
+                .select('id')
+                .in('title',[roomName])
+            if(!roomIdNum) {
+                return
+            }
+            setRoomId(roomIdNum[0].id)
+        }
+        findChatroomId()
+    })
 
     const messageSubmission = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -71,7 +102,8 @@ const Chat = () => {
         }
         const { data } = await supabase.from('chat').insert([{
             content: input,
-            member_id: user.id
+            member_id: user.id,
+            chat_room_id: roomId
         }]).select('content')
         if (data) {
             setMessage(prev => [...prev, { content: input }])
@@ -86,14 +118,18 @@ const Chat = () => {
     }
 
     useEffect(() => {
+        if(!roomId) {
+            return
+        }
         const fetchMessages = async () => {
-            const { data: receivedData } = await supabase.from('chat').select('content');
+            const { data: receivedData } = await supabase.from('chat').select('content').in('chat_room_id', [roomId]);
+            console.log('receivedData: ', receivedData)
             if (receivedData) {
                 setMessage(receivedData as messageInterface[])
             }
         }
         fetchMessages()
-    }, [])
+    }, [roomId])
 
     return (
         <div className={styles.all}>

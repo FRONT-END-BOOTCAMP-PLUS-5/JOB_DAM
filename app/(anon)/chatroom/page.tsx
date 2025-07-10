@@ -126,7 +126,7 @@ const Chatroom = () => {
                 <div className={styles.roomDiv}>
                     {chatRooms.map((room, index) => (
                         <div key={room.id}>
-                            <button className={styles.roomButtons}>
+                            <button className={styles.roomButtons} onClick={() => router.push(`/chat?room=${room.title}`)} >
                                 <div className={styles.mentorInfo2}>
                                     <h3 className={styles.roomTitle}> {mentorName?.[index]?.name} 멘토님의 {room.title} </h3>
                                     <h3 className={styles.mentorCompany}> {mentor?.[index]?.company} </h3>
