@@ -1,0 +1,45 @@
+@use '../../styles/mixin';
+
+.user_container {
+  display: flex;
+  gap: 24px;
+  flex-direction: column;
+
+  & .input_box {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    & h4 {
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    & input {
+      width: 200px;
+      border-radius: 4px;
+      height: 38px;
+      border: 1px solid #667eea;
+      padding: 10px;
+      outline: none;
+    }
+  }
+
+  .apple_button {
+    width: 200px;
+    height: 48px;
+    border-radius: 8px;
+    border: 1px solid #667eea;
+    background: #fff;
+    cursor: pointer;
+    margin-top: 40px;
+  }
+
+  .application_waiting {
+    @include mixin.flexCenter(column);
+    gap: 14px;
+    border: 1px solid #667eea;
+    border-radius: 4px;
+    padding: 40px;
+  }
+}
