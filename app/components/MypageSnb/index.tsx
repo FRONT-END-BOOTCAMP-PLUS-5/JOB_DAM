@@ -20,7 +20,7 @@ const MYPAGE_SNB = [
   },
   {
     name: '나눴던 채팅',
-    links: [{ text: '채팅방 보기', href: '/' }],
+    links: [{ text: '채팅방 보기', href: '/chat' }],
   },
 ];
 
