@@ -1,6 +1,5 @@
 'use client';
 
-import styles from '@/app/components/common/SignupForm/signupForm.module.scss';
 import Input from '@/app/components/common/Input';
 import { useForm, useWatch } from 'react-hook-form';
 import Link from 'next/link';
@@ -10,6 +9,7 @@ import { ToastContainer } from 'react-toastify';
 import { sign_up_form_type } from '@/app/types/signup/signup';
 import { validation } from '@/app/utils/signup/signup';
 import { useRouter } from 'next/navigation';
+import styles from './signupPage.module.scss';
 
 export default function SignupPage() {
   const router = useRouter();
