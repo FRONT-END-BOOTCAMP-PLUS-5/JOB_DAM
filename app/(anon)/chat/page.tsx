@@ -4,6 +4,7 @@ import styles from '../chat/chat.module.scss'
 import { createClient } from '@supabase/supabase-js'
 import type { RealtimeChannel } from '@supabase/supabase-js'
 import { useState, useEffect, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 
 interface messageInterface {
     content: string
@@ -39,6 +40,8 @@ interface memInfo {
 }
 
 const Chat = () => {
+
+    const router = useRouter()
 
     const [user, setUser] = useState<userInfo | null>(null)
     const [input, setInput] = useState<string>('')
@@ -239,6 +242,7 @@ const Chat = () => {
                                 <p className={styles.mentorRole}> {mentor?.[0]?.level} </p>
                             </div>
                             <p className={styles.onlineOrNot}> 온라인(임시) </p>
+                            <button className={styles.goToChattingRooms} onClick={()=>{router.push('/chatroom')}}> 채팅방 화면으로 가기 </button>
                         </div>
                     </div>
                     <div className={styles.memberNumberDiv}>
