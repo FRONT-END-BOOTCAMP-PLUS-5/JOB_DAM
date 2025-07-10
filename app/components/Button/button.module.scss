@@ -66,3 +66,18 @@
   cursor: not-allowed !important;
   pointer-events: none;
 }
+
+.pagination {
+  width: 30px;
+  height: 30px;
+  margin-right: 7px;
+  border-radius: 6px;
+  background-color: #fff;
+  border: 1px solid #eaecef;
+  cursor: pointer;
+}
+
+.focus {
+  background-image: linear-gradient(90deg, #6876e0 30%, #7354ad 60%);
+  color: #fff;
+}
