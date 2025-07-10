@@ -6,22 +6,19 @@ import { QuestionDto } from '../../dtos/QuestionDto';
  * 작성일: 2025-07-04
  * */
 export class CreateQuestionUseCase {
-    private repository: QuestionRepository;
+  private repository: QuestionRepository;
 
-    constructor(repository: QuestionRepository) {
-        this.repository = repository;
-    }
+  constructor(repository: QuestionRepository) {
+    this.repository = repository;
+  }
 
-    async create(): Promise<{ question: string }> {
+  async create(): Promise<{ question: string }> {
+    const question: Question = await this.repository.insertQuestion();
 
-        const question: Question = await this.repository.insertQuestion();
+    const success = question ? 'success' : 'fail';
 
-        const success = question ? "success" : "fail"
-
-
-        return {
-            question: success,
-        };
-    }
-
+    return {
+      question: success,
+    };
+  }
 }

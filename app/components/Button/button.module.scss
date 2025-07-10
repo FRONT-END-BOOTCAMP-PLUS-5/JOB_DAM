@@ -1,40 +1,39 @@
-@import "../../styles/mixin";
+@import '../../styles/mixin';
 
-
-.ask{
+.ask {
   @include customButton();
   @include flexCenter(row);
   background-image: linear-gradient(40deg, #6876e0 40%, #7354ad 80%);
 
-  > .icon{
+  > .icon {
     margin-right: 3px;
     font-size: 14px;
   }
 
-  > .text{
+  > .text {
     font-size: 15px;
   }
 }
 
-.search{
+.search {
   @include customButton(60px, 30px);
   @include flexCenter(row);
   border: 2px solid #667eea;
   color: #667eea;
   padding: 3px 4px;
 
-  > .icon{
+  > .icon {
     margin-right: 3px;
     font-size: 14px;
   }
 
-  > .text{
+  > .text {
     font-size: 14px;
     font-weight: bold;
   }
 }
 
-.tag{
+.tag {
   @include customButton(60px, 30px);
   border: 2px solid #eaecef;
   background-color: #fff;
@@ -51,9 +50,24 @@
   }
 }
 
+.submit {
+  width: 100%;
+  margin-top: 5%;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: none;
+  background-color: #333;
+  color: white;
+  cursor: pointer;
+}
 
+.disabled {
+  opacity: 0.6;
+  cursor: not-allowed !important;
+  pointer-events: none;
+}
 
-.pagination{
+.pagination {
   width: 30px;
   height: 30px;
   margin-right: 7px;
@@ -63,7 +77,7 @@
   cursor: pointer;
 }
 
-.focus{
+.focus {
   background-image: linear-gradient(90deg, #6876e0 30%, #7354ad 60%);
   color: #fff;
 }
