@@ -16,10 +16,10 @@ const Header = () => {
           <Link href="/">채팅하기</Link>
         </nav>
         <div className={styles.user_nav}>
-          <Link className={`${styles.button} ${styles.login}`} href="/">
+          <Link className={`${styles.button} ${styles.login}`} href="/login">
             로그인
           </Link>
-          <Link className={`${styles.button} ${styles.signup}`} href="/">
+          <Link className={`${styles.button} ${styles.signup}`} href="/signup">
             회원가입
           </Link>
         </div>
