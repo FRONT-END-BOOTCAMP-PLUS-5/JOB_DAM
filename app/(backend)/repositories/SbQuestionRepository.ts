@@ -9,33 +9,32 @@ import { QuestionRepository } from '../domain/repositories/QuestionRepository';
  * */
 
 interface ClientProp {
-    title?: string
-    content?: string
-    category_id?: number
-    url?: string
+  title?: string;
+  content?: string;
+  category_id?: number;
+  url?: string;
 }
 
-
 export class SbQuestionRepository implements QuestionRepository {
-    private supabase
-    private clientData
+  private supabase;
+  private clientData;
 
-    constructor(supabase: SupabaseClient, clientData: ClientProp = {}) {
-        this.supabase = supabase
-        this.clientData = clientData
-    }
+  constructor(supabase: SupabaseClient, clientData: ClientProp = {}) {
+    this.supabase = supabase;
+    this.clientData = clientData;
+  }
 
+  // 데이터베이스 데이터를 도메인 엔티티로 변환
+  private getEntities(question: QuestionTable): Question {
+    return { ...question };
+  }
 
-    // 데이터베이스 데이터를 도메인 엔티티로 변환
-    private getEntities(question: QuestionTable): Question {
-        return {...question};
-    }
-
-    // 검색기능, 버튼 필터링 생각해서 member 테이블 join
-    async findAll(title: string, column: string): Promise<Question[]> {
-        const { data, error } = await this.supabase
-                                          .from('question')
-                                          .select(`id,
+  // 검색기능, 버튼 필터링 생각해서 member 테이블 join
+  async findAll(title: string, column: string): Promise<Question[]> {
+    const { data, error } = await this.supabase
+      .from('question')
+      .select(
+        `id,
                                                    title,
                                                    content,
                                                    created_at,
@@ -50,23 +49,19 @@ export class SbQuestionRepository implements QuestionRepository {
                                                         img,
                                                         nickname
                                                      )
-                                                   `)
-                                          .like('title', `%${title}%`)
-                                          .order(`${column}`, { ascending: false })
+                                                   `,
+      )
+      .like('title', `%${title}%`)
+      .order(`${column}`, { ascending: false });
 
-        if (error) throw new Error(error.message);
-        return data.map((item) => this.getEntities(item)) as Question[];
-    }
+    if (error) throw new Error(error.message);
+    return data.map((item) => this.getEntities(item)) as Question[];
+  }
 
-    async insertQuestion(): Promise<Question> {
-        const { data, error } = await this.supabase
-                                     .from('question')
-                                     .insert([this.clientData])
-                                     .select("*")
-                                     .single()
+  async insertQuestion(): Promise<Question> {
+    const { data, error } = await this.supabase.from('question').insert([this.clientData]).select('*').single();
 
-        if (error) throw new Error(error.message)
-        return data as Question
-    }
-
+    if (error) throw new Error(error.message);
+    return data as Question;
+  }
 }

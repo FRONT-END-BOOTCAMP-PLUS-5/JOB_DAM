@@ -1,6 +1,6 @@
 import { MemberRepository } from '../../../domain/repositories/MemberRepository';
 import { MemberTable } from '../../../domain/tables/MemberTable';
-import { MemberDto } from '../../dtos/MemberDto';
+import { MemberDTO } from '../../dtos/MemberDTO';
 /**
  * 작성자: 김동우
  * 작성일: 2025-07-09
@@ -12,11 +12,10 @@ export class GetMemberListUsecase {
     this.repository = repository;
   }
 
-  async execute(): Promise<{ member: MemberDto[] }> {
+  async execute(): Promise<{ member: MemberDTO[] }> {
     const members: MemberTable[] = await this.repository.findTopGradeMembers();
 
-
-    const memberDtos: MemberDto[] = members.map((item) => ({
+    const memberDtos: MemberDTO[] = members.map((item) => ({
       id: item['id'],
       name: item['name'],
       email: item['email'],
@@ -27,12 +26,12 @@ export class GetMemberListUsecase {
       img: item['img'],
       grade: item['grade'],
       point: item['point'],
-      type: item['type']
+      type: item['type'],
+      nickname: item['nickname'],
     }));
 
     return {
       member: memberDtos,
     };
   }
-
 }

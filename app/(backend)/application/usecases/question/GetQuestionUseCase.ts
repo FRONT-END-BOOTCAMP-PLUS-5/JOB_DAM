@@ -8,43 +8,39 @@ import { NextRequest } from 'next/server';
  * 수정일: 2025-07-08
  * */
 export class GetQuestionUseCase {
-    private repository: QuestionRepository;
+  private repository: QuestionRepository;
 
-    constructor(repository: QuestionRepository) {
-        this.repository = repository;
-    }
+  constructor(repository: QuestionRepository) {
+    this.repository = repository;
+  }
 
-    async execute(request:NextRequest): Promise<{ question: QuestionDto[] }> {
-        const queryFirstRegex = /latest|popular=([^&]+)/
-        const querySecRegex = /search=(.*)/;
+  async execute(request: NextRequest): Promise<{ question: QuestionDto[] }> {
+    const queryFirstRegex = /latest|popular=([^&]+)/;
+    const querySecRegex = /search=(.*)/;
 
-        const firMatch = request['url'].match(queryFirstRegex);
-        const secMatch = request['url'].match(querySecRegex);
+    const firMatch = request['url'].match(queryFirstRegex);
+    const secMatch = request['url'].match(querySecRegex);
 
-        const column = firMatch &&firMatch[1] || 'created_at'
-        const title = secMatch && decodeURIComponent(secMatch[1]) || ''
+    const column = (firMatch && firMatch[1]) || 'created_at';
+    const title = (secMatch && decodeURIComponent(secMatch[1])) || '';
 
+    const questions: QuestionTable[] = await this.repository.findAll(title, column);
 
-        const questions: QuestionTable[] = await this.repository.findAll(title, column);
+    const questionDtos: QuestionDto[] = questions.map((item) => ({
+      id: item['id'],
+      title: item['title'],
+      content: item['content'],
+      createdAt: item['created_at'],
+      categoryId: item['category_id'],
+      updatedAt: item['updated_at'],
+      deletedAt: item['deleted_at'],
+      recommend: item['recommend'],
+      view: item['view'],
+      member: item['member_id'],
+    }));
 
-
-
-        const questionDtos: QuestionDto[] = questions.map((item) => ({
-            id: item['id'],
-            title: item['title'],
-            content: item['content'],
-            createdAt: item['created_at'],
-            categoryId: item['category_id'],
-            updatedAt: item['updated_at'],
-            deletedAt: item['deleted_at'],
-            recommend: item['recommend'],
-            view: item['view'],
-            member: item['member_id']
-        }));
-
-        return {
-            question: questionDtos,
-        };
-    }
-
+    return {
+      question: questionDtos,
+    };
+  }
 }
