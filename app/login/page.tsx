@@ -1,7 +1,7 @@
 'use client';
 
 import styles from './loginPage.module.scss';
-import LoginForm from '@/app/components/LoginForm';
+import LoginForm from '@/app/components/common/LoginForm';
 
 function LoginPage() {
   return (

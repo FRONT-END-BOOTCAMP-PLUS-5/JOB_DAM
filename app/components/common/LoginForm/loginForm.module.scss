@@ -1,0 +1,69 @@
+@use '@/app/styles/mixin';
+
+.login_form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  height: 100%;
+  padding-top: 5%;
+
+  .login_form_item {
+    width: 70%; // Input 컨테이너의 너비 설정
+  }
+
+  .login_form_input {
+    width: 100%; // input 태그는 컨테이너 내에서 100%
+    height: 5.5vh;
+    border-radius: 12px;
+    padding: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: 1px solid lightgray;
+
+    &::placeholder {
+      color: gray;
+    }
+  }
+
+  .login_button {
+    width: 70%;
+    height: 5.5vh;
+    border-radius: 12px;
+    padding: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    background-color: #6b70d6;
+    color: white;
+    margin-top: 5%;
+    cursor: pointer;
+  }
+
+  .login_form_checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 70%;
+    height: 5.5vh;
+    padding: 10px;
+  }
+
+  .login_form_checkbox_item {
+    display: flex;
+    gap: 10px;
+  }
+
+  span {
+    margin-top: auto;
+    margin-bottom: 20%;
+    font-size: 1.125rem;
+  }
+
+  a {
+    font-weight: 400;
+    color: blue;
+  }
+}

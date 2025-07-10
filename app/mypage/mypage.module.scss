@@ -1,0 +1,33 @@
+@use '../styles/mixin';
+
+.user_container {
+  display: flex;
+  gap: 24px;
+  flex-direction: column;
+
+  & .user_image {
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    @include mixin.flexCenter(row);
+  }
+
+  & .user_info {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+
+    & h5 {
+      font-weight: 400;
+      width: 100px;
+      font-size: 14px;
+      color: #918cdb;
+    }
+
+    & p {
+      font-weight: 400;
+      font-size: 14px;
+    }
+  }
+}
