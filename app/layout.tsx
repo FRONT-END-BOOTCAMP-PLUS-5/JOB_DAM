@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import LayoutProvider from './components/LayoutProvider';
+import LayoutProvider from './components/common/LayoutProvider';
 
 export const metadata: Metadata = {
   title: 'JOB DAM',
