@@ -116,11 +116,16 @@ const Chatroom = () => {
         <div className={styles.all}>
             <div className={styles.header}>
                 <p className={styles.headerLogo}> Job담 </p>
-                <button className={styles.headerButton1} onClick={()=>{router.push('/createRoom')}}> + </button>
+                <button className={styles.headerButton1} onClick={() => { router.push('/createRoom') }}> + </button>
                 <button className={styles.headerButton2}> 마이페이지 </button>
             </div>
-            <div className={styles.recentChat}>
-                <h3 className={styles.recentChatH}> 최근 채팅 </h3>
+            <div className={styles.recentChatHDiv}>
+                <div className={styles.recentChat}>
+                    <h3 className={styles.recentChatH}> 내가 멘티인 채팅방 </h3>
+                </div>
+                <div className={styles.recentChat}>
+                    <h3 className={styles.recentChatH}> 내가 멘토인 채팅방 </h3>
+                </div>
             </div>
             <div className={styles.main}>
                 <div className={styles.roomDiv}>
@@ -147,7 +152,7 @@ const Chatroom = () => {
                     <p> 활성 멘토 </p>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 

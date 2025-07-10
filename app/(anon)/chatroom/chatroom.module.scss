@@ -80,12 +80,20 @@ body {
     background-color: #F9FAFB;
     height: 50px;
     border: 1px solid black;
+    width: 50%;
 }
 
 .recentChatH {
     font-weight: bold;
     padding-top: 10px;
+    padding-bottom: 11px;
     padding-left: 30px;
+    width: 100%;
+    border:1px solid black;
+}
+
+.recentChatHDiv {
+    display: flex;
 }
 
 .bottom {
@@ -126,7 +134,7 @@ body {
 
 .mentorInfo2 {
     display:flex;
-    margin-left: 2%;
+    margin-left: 4%;
 }
 
 .mentorCompany {
@@ -140,5 +148,9 @@ body {
 .roomDescription {
     text-align: left;
     color: gray;
-    margin-left: 2%;
+    margin-left: 4%;
+}
+
+.roomDiv {
+    width: 50%;
 }

@@ -200,7 +200,6 @@ const Chat = () => {
                 .select('nickname')
                 .in('id',[chatMemberId])
             const chatMemberName = findChatMemName?.map((name)=>name.nickname)
-            // console.log('chatMemberName: ',chatMemberName)
             setChatMemberName(chatMemberName as string[])
         }
         findChatMemberName()
