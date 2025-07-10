@@ -56,6 +56,8 @@ const Chat = () => {
     const [mentorName, setMentorName] = useState<mentorName[] | null>(null)
     const [memberNumInfo, setMemberNumInfo] = useState<string[] | null>(null)
     const [memberInfo, setMemberInfo] = useState<memInfo[] | null>(null)
+    const [chatMemberId, setChatMemberId] = useState<string[] | null>(null)
+    const [chatMemberName, setChatMemberName] = useState<string[] | null>(null)
 
     if (typeof window != 'undefined') {
         localStorage.setItem('user', JSON.stringify({
@@ -84,7 +86,6 @@ const Chat = () => {
     useEffect(() => {
         const query = new URLSearchParams(window.location.search);
         const room = query.get('room');
-        console.log('room: ', room)
         if (room) {
             setRoomName(room);
         }
@@ -96,9 +97,8 @@ const Chat = () => {
         }
         const room = supabase.channel(roomName)
         roomRef.current = room
-        console.log('room: ', room)
         room
-            .on('broadcast', { event: 'shout' }, (payload) => { messageReceived(payload.payload); console.log('payload.payload: ', payload.payload) })
+            .on('broadcast', { event: 'shout' }, (payload) => { messageReceived(payload.payload); })
             .subscribe()
     }, [])
 
@@ -138,7 +138,6 @@ const Chat = () => {
             event: 'shout',
             payload: input
         })
-        console.log('input:', input)
         setInput('')
     }
 
@@ -148,7 +147,6 @@ const Chat = () => {
         }
         const fetchMessages = async () => {
             const { data: receivedData } = await supabase.from('chat').select('content').in('chat_room_id', [roomId]);
-            console.log('receivedData: ', receivedData)
             if (receivedData) {
                 setMessage(receivedData as messageInterface[])
             }
@@ -162,7 +160,6 @@ const Chat = () => {
                 .from('chat_room')
                 .select('created_member_id')
                 .in('id', [roomId])
-            console.log('findCreatedId: ', findCreatedId)
             setCreatedMemberId(findCreatedId?.[0].created_member_id)
         }
         findCreatedMemberId()
@@ -174,7 +171,6 @@ const Chat = () => {
                 .from('chat_member')
                 .select('member_id')
                 .in('chat_room_id', [roomId])
-            console.log('findMemberNum: ', findMemberNum)
             const memberNum = findMemberNum?.map(m => m.member_id) || []
             setMemberNumInfo(memberNum)
         }
@@ -182,12 +178,40 @@ const Chat = () => {
     }, [roomId])
 
     useEffect(() => {
+        const findMemId = async () => {
+            console.log('message: ', message)
+            const messageContents = message?.map((m) => m.content)
+            console.log('messageContents: ', messageContents)
+            const { data: findMemberId } = await supabase
+                .from('chat')
+                .select('member_id')
+                .in('content', [messageContents])
+            const chatMembersId = findMemberId?.map((m) => m.member_id)
+            console.log('chatMembersId: ', chatMembersId)
+            setChatMemberId(chatMembersId as string[])
+        }
+        findMemId()
+    }, [message])
+
+    useEffect(()=>{
+        const findChatMemberName = async() => {
+            const {data: findChatMemName} = await supabase
+                .from('member')
+                .select('nickname')
+                .in('id',[chatMemberId])
+            const chatMemberName = findChatMemName?.map((name)=>name.nickname)
+            // console.log('chatMemberName: ',chatMemberName)
+            setChatMemberName(chatMemberName as string[])
+        }
+        findChatMemberName()
+    }, [chatMemberId])
+
+    useEffect(() => {
         const findMemberInfo = async () => {
             const { data: findMemberInformation } = await supabase
                 .from('member')
                 .select('img,nickname')
                 .in('id', [memberNumInfo])
-            console.log('memberInfo: ', findMemberInformation)
             setMemberInfo(findMemberInformation)
         }
         findMemberInfo()
@@ -202,7 +226,6 @@ const Chat = () => {
                 .from('mentor_application')
                 .select('member_id,company,level')
                 .in('member_id', [createdMemberId])
-            console.log('mentorData: ', mentorData)
             setMentor(mentorData)
         }
         const findMentorName = async () => {
@@ -214,11 +237,48 @@ const Chat = () => {
                 .select('name')
                 .in('id', [createdMemberId])
             setMentorName(findMentorName)
-            console.log('findMentorName: ', findMentorName)
         }
         findMentorId()
         findMentorName()
     }, [createdMemberId])
+
+
+
+
+
+    const chatUI = (i: number) => {
+        console.log('mentorId: ', createdMemberId)
+        console.log('menteeId: ', chatMemberId?.[i])
+        if (createdMemberId === chatMemberId?.[i]) {
+            return (
+                <div>
+                    <div className={styles.menteeUp}>
+                        <p className={styles.usernameForMessage}> {mentorName?.[0]?.name} </p>
+                        <div className={styles.roleForMentor}> 
+                            <p> 멘토 </p>
+                        </div>
+                    </div>
+                    <div key={i} className={styles.message}>
+                        {message?.[i]?.content}</div>
+                </div>
+            )
+        }
+        else {
+            return (
+                <div>
+                    <div className={styles.menteeUp}>
+                        <p className={styles.usernameForMessage}> {chatMemberName?.[i]} </p>
+                        <div className={styles.menteeRole}> 
+                            <p> 멘티 </p>
+                        </div>
+                    </div>
+                    <div key={i} className={styles.message}>
+                        <div className={styles.questionIcon}> 질문 </div>
+                        {message?.[i]?.content}</div>
+                </div>
+            )
+        }
+    }
 
     return (
         <div className={styles.all}>
@@ -242,7 +302,7 @@ const Chat = () => {
                                 <p className={styles.mentorRole}> {mentor?.[0]?.level} </p>
                             </div>
                             <p className={styles.onlineOrNot}> 온라인(임시) </p>
-                            <button className={styles.goToChattingRooms} onClick={()=>{router.push('/chatroom')}}> 채팅방 화면으로 가기 </button>
+                            <button className={styles.goToChattingRooms} onClick={() => { router.push('/chatroom') }}> 채팅방 화면으로 가기 </button>
                         </div>
                     </div>
                     <div className={styles.memberNumberDiv}>
@@ -258,7 +318,7 @@ const Chat = () => {
                     </div>
                     <div className={styles.menteeBadgeDiv}>
                         {memberInfo?.map((member, index) => (
-                            <div className={styles.mem}>
+                            <div className={styles.mem} key={index}>
                                 <div key={index} className={styles.memberName}>{memberInfo?.[index]?.nickname}</div>
                                 <div className={styles.mentorBadge}>
                                     <p className={styles.menteeBadgeCircle}> 멘티 </p>
@@ -271,7 +331,9 @@ const Chat = () => {
                     <div className={styles.chatRecordsSpace}>
                         <div>
                             {message.map((message, i) => (
-                                <div key={i} className={styles.message}>{`${user?.name}`}{message.content}</div>
+                                <div key={i}>
+                                    {chatUI(i)}
+                                </div>
                             ))}
                         </div>
                     </div>

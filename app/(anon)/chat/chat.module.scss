@@ -102,13 +102,23 @@ body {
 }
 
 .message {
-    background-color: #d6befb;
-    padding: 5px 10px 5px 10px;
+    background-color: white;
+    padding: 15px 15px 15px 15px;
     margin-top:8px;
     border-radius: 7px;
-    border: 1px solid black;
+    border: 0.3px solid black;
     display: block;
     width: max-content;
+    display: flex;
+}
+
+.questionIcon {
+    background-color: #DBE9FE;
+    border-radius: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    color: #1D40B0;
+    margin-right: 5px;
 }
 
 .mentorProfile {
@@ -184,8 +194,34 @@ body {
     align-items: center;
 }
 
+.usernameForMessage {
+    font-weight: bold;
+    margin-top: 15px;
+}
+
 .goToChattingRooms {
     border:0.5px solid black;
     padding: 3px 5px 3px 5px;
     margin-top: 5px;
+}
+
+.menteeUp {
+    display: flex;
+}
+
+.menteeRole {
+    margin-top: 15px;
+    margin-left: 10px;
+    background-color: #F1F5F9;
+    border-radius: 10px;
+    padding: 0px 5px 0px 5px;
+}
+
+.roleForMentor {
+    margin-top: 15px;
+    margin-left: 10px;
+    background-color: #FEF3C7;
+    border-radius: 10px;
+    padding: 0px 5px 0px 5px;
+    color: #DA790D;
 }
