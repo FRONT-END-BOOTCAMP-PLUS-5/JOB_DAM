@@ -1,7 +1,7 @@
 import { createClient } from '@/app/utils/supabase/server';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
-import { SbMemberRepository } from '../../../backend/repositories/SbMemberRepository';
+import { SbMemberRepository } from '../../../backend/members/repositories/SbMemberRepository';
 
 export async function GET(request: NextRequest) {
   try {
