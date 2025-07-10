@@ -10,7 +10,6 @@ export class MemberDto {
     public img: string | null,
     public grade: number,
     public point: number | null,
-    public type: number
+    public type: number,
   ) {}
-
 }
