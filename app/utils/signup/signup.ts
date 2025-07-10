@@ -28,9 +28,9 @@ export const validation = async (data: sign_up_form_type, router: AppRouterInsta
     } else {
       // 회원가입 성공
       toast.success(TOAST_MESSAGES.SUCCESS);
-      // setTimeout(() => {
-      //   router.push('/login');
-      // }, 1000);
+      setTimeout(() => {
+        router.push('/login');
+      }, 1000);
     }
   } else {
     // 서버 에러 처리
