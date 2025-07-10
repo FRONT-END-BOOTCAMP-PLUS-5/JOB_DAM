@@ -14,7 +14,7 @@ export default function Aside(){
   const [loading, setLoading] = useState(true)
 
   const getAllMemberData = async () => {
-    const res = await fetch('api/member', { next: { revalidate: 3600 } })
+    const res = await fetch('api/member/rank', { next: { revalidate: 3600 } })
     const { result } = await res.json()
     const members = [...result['member']]
 

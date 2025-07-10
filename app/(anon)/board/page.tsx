@@ -2,12 +2,12 @@
 import style from "./board.module.scss"
 import { useEffect, useState, useRef } from "react"
 import { JsonType } from "./interface"
-import Button from "../components/Button/index"
+import Button from "../../components/Button"
 import Input from "./index"
-import Profile from "../components/Profile/index"
-import Skeleton from "../components/Skeleton/index"
+import Profile from "../../components/Profile"
+import Skeleton from "../../components/Skeleton"
 import NonData from '@/app/components/NonData';
-import Aside from '@/app/board/(aside)';
+import Aside from '@/app/(anon)/board/(aside)';
 import usePagination from "@/app/hooks/usePagination";
 import {formatTimeAgo} from "@/app/utils/date";
 import { getLastName } from '@/app/utils/name';
