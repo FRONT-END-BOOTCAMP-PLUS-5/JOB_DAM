@@ -6,7 +6,7 @@ import styles from './mypage.module.scss';
 const Mypage = () => {
   return (
     <section className={styles.user_container}>
-      <Title text="멘토 신청하기" />
+      <Title text="내 정보 보기" />
       <div className={styles.user_image}>
         <h5>이미지</h5>
       </div>
