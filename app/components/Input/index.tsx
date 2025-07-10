@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import styles from './input.module.scss';
-import { Path, UseFormRegister, FieldValues } from 'react-hook-form';
+import { Path, UseFormRegister, FieldValues, FieldErrors, RegisterOptions } from 'react-hook-form';
 import Image from 'next/image';
 
 interface InputProps<T extends FieldValues> {
@@ -11,7 +11,7 @@ interface InputProps<T extends FieldValues> {
   className: string;
   containerClassName?: string; // 컨테이너 스타일링용 추가
   register: UseFormRegister<T>;
-  errors?: any;
+  errors?: FieldErrors<T>;
   pattern?: RegExp;
   errorMessage?: string;
   passwordCheckPattern?: boolean;
@@ -36,7 +36,7 @@ export default function Input<T extends FieldValues>({
   const [showPassword, setShowPassword] = useState(false);
 
   // 검증 규칙 동적 생성
-  const validationRules: any = {};
+  const validationRules: RegisterOptions<T, Path<T>> = {};
   if (required) validationRules.required = `${label}을 입력해주세요`;
 
   // pattern이 RegExp인 경우
@@ -67,7 +67,11 @@ export default function Input<T extends FieldValues>({
           </button>
         )}
       </div>
-      {errors?.[name] && <span className={styles.error_message}>{errors[name].message}</span>}
+      {errors?.[name]?.message && (
+        <span className={styles.error_message}>
+          {typeof errors[name].message === 'string' ? errors[name].message : '입력값을 확인해주세요.'}
+        </span>
+      )}
       {name === 'password_check' && passwordCheckPattern === false && !errors?.[name] && (
         <span className={styles.error_message}>{errorMessage}</span>
       )}

@@ -1,4 +1,4 @@
-export class MemberDTO {
+export class MemberDto {
   constructor(
     public id: string,
     public name: string,
@@ -11,6 +11,6 @@ export class MemberDTO {
     public grade: number | null,
     public point: number | null,
     public type: number | null,
-    public deletedAt: string | null
+    public deletedAt: string | null,
   ) {}
 }

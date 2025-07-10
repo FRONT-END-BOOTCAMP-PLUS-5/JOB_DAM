@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
   try {
     const supabase: SupabaseClient = await createClient(); // 🔹 2. 데이터베이스 연결
 
-    const memberRepository: any = new SbMemberRepository(supabase, memberData); // 🔹 3. 인프라 계층 생성
+    const memberRepository = new SbMemberRepository(supabase, memberData); // 🔹 3. 인프라 계층 생성
 
     // 🔹 중복 체크를 try-catch로 감싸기
     try {
@@ -28,9 +28,9 @@ export async function POST(request: NextRequest) {
       if (member) {
         return NextResponse.json({ message: '이미 존재하는 회원입니다.', status: 409 });
       }
-    } catch (duplicateCheckError) {
+    } catch (error) {
       // 회원이 없음 = 정상적으로 회원가입 진행
-      console.log('중복 체크 완료 - 새 회원 가입 진행');
+      console.log('중복 체크 완료 - 새 회원 가입 진행', error);
     }
 
     // 🔹 중복이 없으므로 회원가입 진행

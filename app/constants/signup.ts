@@ -1,17 +1,3 @@
-import { sign_up_form_type } from '../types/signup/signup';
-
-interface FormInput {
-  name: string;
-  email: string;
-  email_certification?: string;
-  password: string;
-  nickname: string;
-  img?: File;
-  password_check?: string;
-  service_terms?: boolean;
-  privacy_terms?: boolean;
-}
-
 const TOAST_MESSAGES = {
   SUCCESS: '회원가입에 성공했습니다!',
   DUPLICATE_EMAIL: '이미 존재하는 이메일입니다.',
@@ -29,14 +15,4 @@ const FORM_DEFAULT_VALUES = {
   marketing_terms: false,
 } as const;
 
-const memberDataType = (data: sign_up_form_type) => {
-  return {
-    name: data.name,
-    email: data.email,
-    password: data.password,
-    nickname: data.nickname,
-    img: data.img?.name || '',
-  };
-};
-
-export { TOAST_MESSAGES, FORM_DEFAULT_VALUES, memberDataType };
+export { TOAST_MESSAGES, FORM_DEFAULT_VALUES };

@@ -1,16 +1,6 @@
 import { MemberRepository } from '@/app/(backend)/domain/repositories/MemberRepository';
-import { MemberDTO } from '../../dtos/MemberDTO';
+import { MemberDto } from '../../dtos/MemberDTO';
 import { MemberTable } from '@/app/(backend)/domain/tables/MemberTable';
-
-interface MemberData {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-  createdAt: string;
-  img: string;
-  nickname: string;
-}
 
 export class GetMemberUseCase {
   private repository: MemberRepository;
@@ -19,11 +9,11 @@ export class GetMemberUseCase {
     this.repository = repository;
   }
 
-  async execute(): Promise<{ members: MemberDTO[] }> {
+  async execute(): Promise<{ members: MemberDto[] }> {
     const member: MemberTable[] = await this.repository.findAll();
 
     // Fix: Map to MemberDTO, not MemberData, and include all required properties
-    const memberDTOs: MemberDTO[] = member.map((member) => ({
+    const memberDtos: MemberDto[] = member.map((member) => ({
       id: member.id,
       name: member.name,
       email: member.email,
@@ -35,10 +25,11 @@ export class GetMemberUseCase {
       grade: member.grade,
       point: member.point,
       type: member.type,
+      deletedAt: member.deleted_at,
     }));
 
     return {
-      members: memberDTOs,
+      members: memberDtos,
     };
   }
 }

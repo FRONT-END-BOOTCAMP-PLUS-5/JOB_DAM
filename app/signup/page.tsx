@@ -19,7 +19,6 @@ export default function SignupPage() {
     handleSubmit,
     setValue,
     control,
-    getValues,
     formState: { errors },
   } = useForm<sign_up_form_type>({
     defaultValues: {

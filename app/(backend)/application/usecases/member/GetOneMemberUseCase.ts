@@ -1,5 +1,4 @@
 import { MemberRepository } from '@/app/(backend)/domain/repositories/MemberRepository';
-import { MemberDTO } from '../../dtos/MemberDTO';
 import { MemberTable } from '@/app/(backend)/domain/tables/MemberTable';
 
 interface MemberData {
@@ -8,8 +7,12 @@ interface MemberData {
   email: string;
   password: string;
   createdAt: string;
-  img: string;
+  img: string | null;
   nickname: string;
+  grade: number;
+  point: number;
+  type: number | null;
+  deletedAt: string | null;
 }
 
 export class GetOneMemberUseCase {
@@ -31,6 +34,10 @@ export class GetOneMemberUseCase {
       createdAt: member.created_at,
       img: member.img,
       nickname: member.nickname,
+      grade: member.grade,
+      point: member.point,
+      type: member.type,
+      deletedAt: member.deleted_at,
     };
 
     return {

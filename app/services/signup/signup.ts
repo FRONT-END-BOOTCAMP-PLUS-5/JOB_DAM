@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { sign_up_form_type } from '@/app/types/signup/signup';
 
 // 회원가입 API 호출 함수 (올바른 axios 방식)
-export const signUpService = async (memberData: any) => {
+export const signUpService = async (memberData: sign_up_form_type) => {
   try {
     let imageUrl = null;
 
