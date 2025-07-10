@@ -1,5 +1,5 @@
 import { MemberRepository } from '@/backend/domain/repositories/MemberRepository';
-import { MemberTable } from '@/backend/domain/tables/MemberTable';
+import { Member } from '@/backend/domain/entities/Member';
 
 interface MemberData {
   id: string;
@@ -10,7 +10,7 @@ interface MemberData {
   img: string | null;
   nickname: string;
   grade: number;
-  point: number;
+  point: number | null;
   type: number | null;
   deletedAt: string | null;
 }
@@ -23,7 +23,7 @@ export class GetOneMemberUseCase {
   }
 
   async execute(email: string, password: string) {
-    const member: MemberTable = await this.repository.findOne(email, password);
+    const member: Member = await this.repository.findOne(email, password);
 
     // Fix: Map to MemberDto, not MemberData, and include all required properties
     const memberDto: MemberData = {
@@ -35,7 +35,7 @@ export class GetOneMemberUseCase {
       img: member.img,
       nickname: member.nickname,
       grade: member.grade,
-      point: member.point,
+      point: member.point ?? 0,
       type: member.type,
       deletedAt: member.deleted_at,
     };

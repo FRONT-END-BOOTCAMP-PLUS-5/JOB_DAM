@@ -1,6 +1,6 @@
 import { MemberRepository } from '@/backend/domain/repositories/MemberRepository';
 import { MemberDto } from '../../dtos/MemberDto';
-import { MemberTable } from '@/backend/domain/tables/MemberTable';
+import { Member } from '@/backend/domain/entities/Member';
 
 export class GetMemberUseCase {
   private repository: MemberRepository;
@@ -10,10 +10,10 @@ export class GetMemberUseCase {
   }
 
   async execute(): Promise<{ members: MemberDto[] }> {
-    const member: MemberTable[] = await this.repository.findAll();
+    const members: Member[] = await this.repository.findAll();
 
-    // Fix: Map to MemberDTO, not MemberData, and include all required properties
-    const memberDtos: MemberDto[] = member.map((member) => ({
+    // Fix: Map to MemberDto, not MemberData, and include all required properties
+    const memberDtos: MemberDto[] = members.map((member) => ({
       id: member.id,
       name: member.name,
       email: member.email,

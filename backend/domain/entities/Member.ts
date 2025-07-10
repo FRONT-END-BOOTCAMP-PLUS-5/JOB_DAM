@@ -8,6 +8,7 @@ export class Member {
     public updated_at: string | null,
     public deleted_at: string | null,
     public img: string | null,
+    public nickname: string,
     public grade: number,
     public point: number | null,
     public type: number,
