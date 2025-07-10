@@ -1,15 +1,16 @@
-export class MemberDto {
+export class MemberDTO {
   constructor(
     public id: string,
     public name: string,
     public email: string,
-    public password: string,
+    // public password: string,
     public createdAt: string,
-    public updatedAt: string | null,
-    public deletedAt: string | null,
-    public img: string | null,
+    public updatedAt: string,
+    public img: string,
+    public nickname: string,
     public grade: number,
-    public point: number | null,
+    public point: number,
     public type: number,
+    // public deleted_at: string,
   ) {}
 }
