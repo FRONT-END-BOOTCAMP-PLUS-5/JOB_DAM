@@ -21,7 +21,7 @@ export class SbMemberRepository implements MemberRepository {
         return {...member};
     }
 
-    // not null 기능으로 포인트가 상위 4명만 가져오기
+    // not null 기능으로 포인트가 상위 5명만 가져오기
     async findTopGradeMembers(): Promise<Member[]> {
         const { data, error } = await this.supabase
                                           .from('member')

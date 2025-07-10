@@ -10,7 +10,7 @@ import NonData from '@/app/components/NonData';
 import Aside from '@/app/board/(aside)';
 import usePagination from "@/app/hooks/usePagination";
 import {formatTimeAgo} from "@/app/utils/date";
-import { getFirstName } from '@/app/utils/name';
+import { getLastName } from '@/app/utils/name';
 
 /**
  * 작성자: 김동우
@@ -151,7 +151,7 @@ export default function Board(){
                                         <p className={style.content}>{item.content}</p>
                                         <div className={style.question_bottom}>
                                           <div className={style.profile_box}>
-                                            <Profile text={getFirstName(item.member.nickname as string)}/>
+                                            <Profile text={getLastName(item.member.nickname as string)}/>
                                             <span className={style.nickname}>{item.member.nickname}</span>
                                           </div>
                                           <span className={style.date}>{formatTimeAgo(item.createdAt)}</span>

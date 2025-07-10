@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { JsonType } from './interface';
 import style from "./aside.module.scss"
-import { getFirstName } from '@/app/utils/name';
+import { getLastName } from '@/app/utils/name';
 import Profile from '@/app/components/Profile';
 import Skeleton from '@/app/components/Skeleton';
 
@@ -14,7 +14,7 @@ export default function Aside(){
   const [loading, setLoading] = useState(true)
 
   const getAllMemberData = async () => {
-    const res = await fetch('api/members', { next: { revalidate: 3600 } })
+    const res = await fetch('api/member', { next: { revalidate: 3600 } })
     const { result } = await res.json()
     const members = [...result['member']]
 
@@ -45,7 +45,7 @@ export default function Aside(){
           return (
             <div className={style.container} key={item.id}>
               <span>
-                <Profile text={getFirstName(item.name as string)}/>
+                <Profile text={getLastName(item.name as string)}/>
               </span>
               <div className={style.company}>
                 <span className={style.name}>
