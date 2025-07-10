@@ -1,10 +1,10 @@
 import { createClient } from '@/app/utils/supabase/server';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
-import { SbMentorRepository } from '../../../backend/repositories/SbMentorRepository';
-import { GetMentorUseCase } from '../../../backend/application/usecases/mypage/GetMentorUseCase';
-import { CreateMentorUseCase } from '../../../backend/application/usecases/mypage/CreateMentorUseCase';
-import { GetOneMentorUseCase } from '../../../backend/application/usecases/mypage/GetOneMentorUseCase';
+import { SbMentorRepository } from '../../../backend/mentors/repositories/SbMentorRepository';
+import { GetMentorUseCase } from '../../../backend/mentors/application/usecases/GetMentorUseCase';
+import { CreateMentorUseCase } from '../../../backend/users/application/usecases/CreateMentorUseCase';
+import { GetOneMentorUseCase } from '../../../backend/users/application/usecases/GetOneMentorUseCase';
 
 export async function POST(request: NextRequest) {
   try {

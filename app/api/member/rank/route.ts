@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { createClient } from '@/app/utils/supabase/server';
-import { SbMemberRepository } from '@/backend/repositories/SbMemberRepository';
-import { GetMemberListUsecase } from '@/backend/application/usecases/member/GetMemberListUsecase';
+import { SbMemberRepository } from '@/backend/members/repositories/SbMemberRepository';
+import { GetMemberListUsecase } from '@/backend/members/application/usecases/GetMemberListUsecase';
 
 export async function GET() {
   try{

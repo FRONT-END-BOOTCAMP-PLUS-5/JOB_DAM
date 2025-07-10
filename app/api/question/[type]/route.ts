@@ -2,9 +2,9 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { NextResponse, NextRequest } from 'next/server';
 
 import { createClient } from '@/app/utils/supabase/server';
-import { CreateQuestionUseCase } from '@/backend/application/usecases/question/CreateQuestionUseCase';
-import { SbQuestionRepository } from '@/backend/repositories/SbQuestionRepository';
-import { GetQuestionUseCase } from '@/backend/application/usecases/question/GetQuestionUseCase';
+import { CreateQuestionUseCase } from '@/backend/questions/application/usecases/CreateQuestionUseCase';
+import { SbQuestionRepository } from '@/backend/questions/repositories/SbQuestionRepository';
+import { GetQuestionUseCase } from '@/backend/questions/application/usecases/GetQuestionUseCase';
 
 export async function GET(request: NextRequest) {
   try {
