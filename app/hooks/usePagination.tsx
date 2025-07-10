@@ -1,12 +1,30 @@
 import { useState, useMemo, useRef } from 'react';
-import Data from "./interface"
 /**
  * 작성자: 김동우
  * 작성일: 2025-07-06
  * 수정일: 2025-07-08
  * */
 
-const usePagination = (data:Data[], itemsPerPage:number) => {
+interface IProps {
+    id: number
+    memberId: string
+    title: string
+    content: string
+    createdAt: string
+    deletedAt?: string
+    updatedAt?: string
+    categoryId: number
+    recommend: number
+    view: number
+    member: {
+        id: string
+        name: string | null
+        img: string | null
+        nickname: string | null
+    }
+}
+
+const usePagination = (data:IProps[], itemsPerPage:number) => {
     const pageNum = useRef(1) // 1~5 6~10 11 ~ 20 일때 패턴
     const lastPage = useRef(5) // 버튼 5개만 보여줄꺼
     

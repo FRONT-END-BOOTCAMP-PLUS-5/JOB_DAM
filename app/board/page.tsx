@@ -15,6 +15,7 @@ import { getLastName } from '@/app/utils/name';
  * 작성자: 김동우
  * 작성일: 2025-07-04
  * */
+
 export interface IProps {
     id: number
     memberId: string
