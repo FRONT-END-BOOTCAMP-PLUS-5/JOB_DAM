@@ -1,7 +1,7 @@
 import { createAdminClient } from '@/app/utils/supabase/server';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
-import { SbStorageRepository } from '../../../backend/repositories/SbStorageRepository';
+import { SbStorageRepository } from '../../../backend/storages/repositories/SbStorageRepository';
 
 export async function POST(request: NextRequest) {
   try {
