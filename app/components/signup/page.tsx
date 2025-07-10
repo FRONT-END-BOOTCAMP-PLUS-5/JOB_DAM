@@ -1,11 +1,11 @@
 'use client';
 
-import styles from './signupPage.module.scss';
+import styles from '@/app/components/common/SignupForm/signupForm.module.scss';
 import Input from '@/app/components/common/Input';
 import { useForm, useWatch } from 'react-hook-form';
 import Link from 'next/link';
 import Button from '@/app/components/common/Button/index';
-import ImageForm from '../common/ImageForm';
+import ImageForm from '@/app/components/common/ImageForm';
 import { ToastContainer } from 'react-toastify';
 import { sign_up_form_type } from '@/app/types/signup/signup';
 import { validation } from '@/app/utils/signup/signup';
@@ -28,8 +28,8 @@ export default function SignupPage() {
     },
   });
 
-  const passwordValue = useWatch({ control, name: 'password' });
-  const passwordCheckValue = useWatch({ control, name: 'password_check' });
+  const passwordValue = useWatch<sign_up_form_type>({ control, name: 'password' });
+  const passwordCheckValue = useWatch<sign_up_form_type>({ control, name: 'password_check' });
 
   const passwordCheckPattern = passwordValue === passwordCheckValue;
 
