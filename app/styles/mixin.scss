@@ -11,3 +11,16 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+// custom button component mixin
+// @param $width, $height
+// 작성자: 김동우
+@mixin customButton($width: 90px, $height: 34px) {
+  all: unset;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 5px;
+  width: $width;
+  height: $height;
+  padding: 2px;
+}
