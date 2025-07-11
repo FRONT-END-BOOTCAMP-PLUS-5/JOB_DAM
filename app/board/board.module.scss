@@ -1,12 +1,12 @@
-@import "../styles/mixin";
+@use '../styles/mixin';
 
-.container{
-  @include flexCenter(row);
+.container {
+  @include mixin.flexCenter(row);
   width: 100%;
   padding: 0 20px;
 
-  &_content{
-    @include flexCenter(row);
+  &_content {
+    @include mixin.flexCenter(row);
     align-items: flex-start;
     gap: 80px;
 
@@ -14,12 +14,12 @@
     padding: 10px 20px 0 20px;
     margin-bottom: 100px;
 
-    &_left{
-      width:1000px;
-      box-shadow: 0 3px 3px rgba(0,0,0,0.2);
+    &_left {
+      width: 1000px;
+      box-shadow: 0 3px 3px rgba(0, 0, 0, 0.2);
 
-      &_top{
-        @include flexCenter(column);
+      &_top {
+        @include mixin.flexCenter(column);
         background-color: red;
         border-top-left-radius: 15px;
         border-top-right-radius: 15px;
@@ -27,25 +27,24 @@
         color: #fff;
         height: 160px;
 
-        h1{
+        h1 {
           font-size: 2.2rem;
           font-weight: bold;
           margin-bottom: 10px;
         }
 
-        sub{
+        sub {
           font-weight: 300;
         }
       }
 
-      &_bottom{
+      &_bottom {
         position: relative;
       }
-
     }
 
-    &_right{
-      @include flexCenter(column);
+    &_right {
+      @include mixin.flexCenter(column);
       justify-content: flex-start;
       gap: 14px;
 
@@ -57,43 +56,43 @@
   }
 }
 
-.search_box{
+.search_box {
   background-color: #f8f9fa;
   height: 200px;
   padding: 20px 20px;
 
-  &_top{
-    @include flexCenter(row);
+  &_top {
+    @include mixin.flexCenter(row);
     justify-content: space-between;
   }
 
-  &_middle{
-    @include flexCenter(row);
+  &_middle {
+    @include mixin.flexCenter(row);
     justify-content: space-between;
     margin-top: 20px;
   }
 
-  &_bottom{
-    @include flexCenter(row);
+  &_bottom {
+    @include mixin.flexCenter(row);
     justify-content: normal;
     margin-top: 30px;
     gap: 10px;
   }
 
-  >span{
+  > span {
     font-size: 1.02rem;
     font-weight: 400;
   }
 
-  &_total_question{
+  &_total_question {
     font-weight: bold !important;
   }
 }
 
-.question_box{
+.question_box {
 }
 
-.question_title{
+.question_title {
   margin-bottom: 3px;
   height: 30px;
   overflow: hidden;
@@ -102,32 +101,32 @@
   width: 960px;
 }
 
-.question{
+.question {
   padding: 10px 20px 10px 20px;
   cursor: pointer;
   height: 174px;
 
-  &_title{
+  &_title {
     font-weight: bold;
   }
 
-  &_sub_box{
+  &_sub_box {
     margin-top: 10px;
     margin-bottom: 10px;
-    span{
+    span {
       color: #696969;
       font-size: 14px;
       font-weight: bold;
       margin-right: 20px;
 
-      >span{
+      > span {
         font-weight: 400;
         margin-left: 4px;
       }
     }
   }
 
-  .content{
+  .content {
     height: 50px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -138,39 +137,38 @@
     font-size: 14px;
   }
 
-  &_bottom{
-    @include flexCenter(row);
+  &_bottom {
+    @include mixin.flexCenter(row);
     justify-content: space-between;
 
-    .profile_box{
-      @include flexCenter(row);
+    .profile_box {
+      @include mixin.flexCenter(row);
       gap: 10px;
-      .nickname{
+      .nickname {
         color: #8e8e8e;
         font-size: 13px;
       }
     }
 
-
-    .date{
+    .date {
       color: #8e8e8e;
       font-size: 13px;
     }
   }
 }
 
-.question:nth-child(2n-1){
+.question:nth-child(2n-1) {
   border-top: 1px solid #dddfe2;
   border-bottom: 1px solid #dddfe2;
 }
 
-.question:last-child{
+.question:last-child {
   border-bottom: none;
 }
 
-.button_container{
+.button_container {
   padding-top: 20px;
   position: absolute;
   width: 100%;
-  @include flexCenter(row);
+  @include mixin.flexCenter(row);
 }

@@ -5,10 +5,17 @@
   flex-direction: $direction;
 }
 
+@mixin positionCenter($position: absolute) {
+  position: $position;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 // custom button component mixin
 // @param $width, $height
 // 작성자: 김동우
-@mixin customButton($width: 90px, $height: 34px){
+@mixin customButton($width: 90px, $height: 34px) {
   all: unset;
   color: #fff;
   cursor: pointer;
