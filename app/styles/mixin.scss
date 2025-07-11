@@ -12,9 +12,7 @@
   transform: translate(-50%, -50%);
 }
 
-// custom button component mixin
-// @param $width, $height
-// 작성자: 김동우
+
 @mixin customButton($width: 90px, $height: 34px) {
   all: unset;
   color: #fff;
@@ -23,4 +21,19 @@
   width: $width;
   height: $height;
   padding: 2px;
+}
+
+$breakpoint-tablet: 768px;
+$breakpoint-desktop: 1024px;
+
+@mixin tablet {
+  @media (min-width: $breakpoint-tablet) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: $breakpoint-desktop) {
+    @content;
+  }
 }

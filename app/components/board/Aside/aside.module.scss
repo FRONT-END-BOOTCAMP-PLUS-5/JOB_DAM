@@ -29,6 +29,10 @@
   @include mixin.flexCenter(column);
   align-items: flex-start;
   font-size: 13px;
+  width: 120px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 
   .position{
     color: #8a8a8a;

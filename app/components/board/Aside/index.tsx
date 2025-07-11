@@ -1,6 +1,5 @@
 'use client'
 import { useState, useEffect } from "react"
-import { JsonType } from './interface';
 import style from "./aside.module.scss"
 import { getLastName } from '@/app/utils/name';
 import Profile from '@/app/components/common/Profile';
@@ -9,6 +8,17 @@ import Skeleton from '@/app/components/common/Skeleton';
  * 작성자: 김동우
  * 작성일: 2025-07-09
  * */
+interface JsonType {
+  id: number
+  name: string
+  img: string | null
+  grade: number
+  nickname: string
+  member: {
+    company: string
+    level: string
+  }
+}
 export default function Aside(){
   const [getJson, setJson] = useState<JsonType[]>([])
   const [loading, setLoading] = useState(true)
@@ -17,7 +27,6 @@ export default function Aside(){
     const res = await fetch('api/member/rank', { next: { revalidate: 3600 } })
     const { result } = await res.json()
     const members = [...result['member']]
-
     setJson(members)
     setLoading(false)
   }
@@ -52,9 +61,9 @@ export default function Aside(){
                   {item.name}
                   <span className={style.badge}>멘토</span>
                 </span>
-                <span className={style.position}>네이버 - 시니어 개발자</span>
+                <span className={style.position}>{item.member.company}-{item.member.level}</span>
               </div>
-              <span className={style.grade}>{item.grade}</span>
+              <span className={style.grade}>{item.grade}P</span>
             </div>
           )
         })

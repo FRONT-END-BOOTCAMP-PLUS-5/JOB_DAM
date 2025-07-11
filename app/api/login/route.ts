@@ -1,5 +1,5 @@
 import { generateAccessToken, generateRefreshToken } from '@/app/utils/signup/token';
-import { verifyAccessToken, verifyRefreshToken } from '@/app/utils/signup/tokenVerify';
+import { verifyAccessToken } from '@/app/utils/signup/tokenVerify';
 import { createClient } from '@/app/utils/supabase/server';
 import { SbMemberRepository } from '@/backend/members/repositories/SbMemberRepository';
 import { NextRequest, NextResponse } from 'next/server';
@@ -84,9 +84,11 @@ export async function GET(request: NextRequest) {
       status: 200,
     });
   } catch (error) {
-    return NextResponse.json({
-      message: '인증 실패',
-      status: 401,
-    });
+    if (error instanceof Error){
+      return NextResponse.json({
+        message: '인증 실패',
+        status: 401,
+      });
+    }
   }
 }

@@ -146,7 +146,7 @@ export default function Board(){
                             </div>
                         </section>
                         <section className={style.question_box}>
-                                {loading  && new Array(5).fill(1).map((_, idx) => {
+                                {loading ? new Array(5).fill(1).map((_, idx) => {
                                     return (
                                       <Skeleton key={idx}
                                                 top={true}
@@ -156,27 +156,27 @@ export default function Board(){
                                                 containerName={'board_container'}
                                                 typeStyle={'board'}/>
                                       )
-                                    })
-                                }
-                                {!loading && currentItems.length ? currentItems.map((item:IProps) => {
-                                    return (
-                                      <div key={item.id} className={style.question}>
-                                        <h3 className={style.question_title}>{item.title}</h3>
-                                        <div className={style.question_sub_box}>
-                                          <span>👍{item.recommend}</span>
-                                          <span>👁️{item.view}<span>조회</span></span>
-                                        </div>
-                                        <p className={style.content}>{item.content}</p>
-                                        <div className={style.question_bottom}>
-                                          <div className={style.profile_box}>
-                                            <Profile text={getLastName(item.member.nickname as string)}/>
-                                            <span className={style.nickname}>{item.member.nickname}</span>
-                                          </div>
-                                          <span className={style.date}>{formatTimeAgo(item.createdAt)}</span>
-                                        </div>
-                                      </div>
-                                    )
-                                }) : <NonData/>}
+                                    }) : currentItems.length ? (
+                                      currentItems.map((item:IProps) => {
+                                          return (
+                                            <div key={item.id} className={style.question}>
+                                                <h3 className={style.question_title}>{item.title}</h3>
+                                                <div className={style.question_sub_box}>
+                                                    <span>👍{item.recommend}</span>
+                                                    <span>👁️{item.view}<span>조회</span></span>
+                                                </div>
+                                                <p className={style.content}>{item.content}</p>
+                                                <div className={style.question_bottom}>
+                                                    <div className={style.profile_box}>
+                                                        <Profile text={getLastName(item.member.nickname as string)}/>
+                                                        <span className={style.nickname}>{item.member.nickname}</span>
+                                                    </div>
+                                                    <span className={style.date}>{formatTimeAgo(item.createdAt)}</span>
+                                                </div>
+                                            </div>
+                                          )
+                                      })
+                                ): <NonData/>}
                         </section>
                         <div className={style.button_container}>
                             {currentItems.length != 0 && <Button text={"<"}
