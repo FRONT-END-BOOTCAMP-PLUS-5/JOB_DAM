@@ -12,7 +12,11 @@ interface FormInput {
 }
 
 export default function LoginForm() {
-  const { register, handleSubmit } = useForm<FormInput>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormInput>();
   const onSubmit: SubmitHandler<FormInput> = (data) => {
     loginMember(data)
       .then((res) => {
@@ -35,9 +39,9 @@ export default function LoginForm() {
       .catch((error) => {
         console.error('로그인 오류:', error);
         if (error.response?.data?.status === 401) {
-          alert(error.response.data.message || '이메일 또는 비밀번호가 일치하지 않습니다.');
+          toast.error(error.response.data.message || '이메일 또는 비밀번호가 일치하지 않습니다.');
         } else {
-          alert('로그인 중 오류가 발생했습니다.');
+          toast.error('로그인 중 오류가 발생했습니다.');
         }
       });
   };
@@ -53,6 +57,9 @@ export default function LoginForm() {
         register={register}
         className={styles.login_form_input}
         containerClassName={styles.login_form_item}
+        pattern={/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/}
+        errorMessage="이메일 형식이 올바르지 않습니다."
+        errors={errors}
       />
       <Input
         label="비밀번호"
@@ -63,6 +70,9 @@ export default function LoginForm() {
         className={styles.login_form_input}
         containerClassName={styles.login_form_item}
         register={register}
+        pattern={/^(?=.*[!@#$%^&+])[a-zA-Z0-9!@#$%^&+]{8,20}$/}
+        errorMessage="비밀번호는 특수문자 포함해서 8글자이상 20이하로  작성해주세요."
+        errors={errors}
       />
       <div className={styles.login_form_checkbox}>
         <div className={styles.login_form_checkbox_item}>

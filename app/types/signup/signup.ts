@@ -4,7 +4,7 @@ export interface sign_up_input_type {
   email: string;
   password: string;
   nickname: string;
-  img?: File;
+  img?: File | null;
 }
 
 export interface sign_up_form_type extends sign_up_input_type {

@@ -8,9 +8,8 @@
   .uploadImageContainer {
     display: flex;
     flex-direction: row;
-    gap: 10px;
     align-items: center;
-    width: 15%;
+    width: 20%;
     position: relative;
 
     .signup_image {
@@ -42,7 +41,8 @@
       width: 100%;
       border: 1px solid lightgray;
       border-radius: 8px;
-      padding: 10px 12px;
+      height: 4.5vh;
+      padding-inline: 10px;
       font-size: 14px;
       font-weight: 500;
       color: #333;

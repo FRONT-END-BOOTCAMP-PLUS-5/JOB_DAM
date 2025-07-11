@@ -59,23 +59,19 @@ export class SbMemberRepository implements MemberRepository {
   }
 
   async findOne(email: string, password: string): Promise<Member> {
-    const { data, error } = await this.supabase
+    const { data } = await this.supabase
       .from('member')
       .select('*')
       .eq('email', email)
       .eq('password', password)
       .single();
 
-    if (error) {
-      if (error.code === 'PGRST116') {
-        // No rows found
-        throw new Error('이메일 또는 비밀번호가 일치하지 않습니다.');
-      }
-      throw new Error(error.message);
+    if (!data?.email) {
+      throw new Error('이메일이 일치하지 않습니다.');
     }
 
-    if (!data) {
-      throw new Error('이메일 또는 비밀번호가 일치하지 않습니다.');
+    if (!data?.password) {
+      throw new Error('비밀번호가 일치하지 않습니다.');
     }
 
     return data as Member;
