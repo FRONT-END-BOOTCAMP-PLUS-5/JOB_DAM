@@ -9,7 +9,7 @@ export class MemberTable {
     public deleted_at: string | null,
     public img: string | null,
     public grade: number,
-    public point: number,
+    public point: number | null,
     public type: number,
     public nickname: string,
   ) {}
