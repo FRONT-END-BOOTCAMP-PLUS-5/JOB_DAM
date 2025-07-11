@@ -1,0 +1,16 @@
+@use '../styles/mixin';
+
+.chat_container {
+  @include mixin.flexCenter(row);
+  width: 100%;
+  height: 70vh;
+
+  & .chat_section {
+    @include mixin.flexCenter(column);
+    gap: 40px;
+  }
+
+  & .chat_enter {
+    display: flex;
+  }
+}
