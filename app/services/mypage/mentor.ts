@@ -28,8 +28,19 @@ export const mentorService = () => {
     };
   };
 
+  const getMentorList = async () => {
+    const { data, error } = await axios.get('/api/mentor/search').catch((error) => error);
+
+    if (error) throw new Error(error.message);
+
+    return {
+      data,
+    };
+  };
+
   return {
     applicationMentor,
     getMentorApplication,
+    getMentorList,
   };
 };

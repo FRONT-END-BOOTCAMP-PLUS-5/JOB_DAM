@@ -1,0 +1,23 @@
+@use '../styles/mixin';
+
+.container {
+  width: 100%;
+  padding: 40px 0;
+  @include mixin.flexCenter(column);
+
+  & .contnet {
+    @include mixin.flexCenter(row);
+    gap: 24px;
+  }
+
+  & .apply_button {
+    width: 100%;
+    background: #667eea;
+    color: #fff;
+    height: 36px;
+    border-radius: 8px;
+    @include mixin.flexCenter(row);
+    font-size: 14px;
+    margin-top: 16px;
+  }
+}
