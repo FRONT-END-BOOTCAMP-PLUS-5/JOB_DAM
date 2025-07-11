@@ -8,7 +8,7 @@ export const generateAccessToken = (userId: string) => {
 
   return jwt.sign(
     { userId },
-    process.env.JWT_ACCESS_SECRET as string, // ✅ 타입 캐스팅
+    process.env.JWT_ACCESS_SECRET, // ✅ 타입 캐스팅
     { expiresIn: '15m' },
   );
 };
@@ -20,7 +20,7 @@ export const generateRefreshToken = (userId: string) => {
 
   return jwt.sign(
     { userId },
-    process.env.JWT_REFRESH_SECRET as string, // ✅ 타입 캐스팅 추가
+    process.env.JWT_REFRESH_SECRET, // ✅ 타입 캐스팅 추가
     { expiresIn: '7d' },
   );
 };
