@@ -17,9 +17,9 @@ const Footer = () => {
         </div>
 
         <nav className={styles.footer_nav}>
-          <Link href="/public">멘토찾기</Link>
-          <Link href="/public">커뮤니티</Link>
-          <Link href="/public">채팅하기</Link>
+          <Link href="/">멘토찾기</Link>
+          <Link href="/">커뮤니티</Link>
+          <Link href="/">채팅하기</Link>
         </nav>
       </section>
       <h3 className={styles.copyright}>jobdam @ 2025. All rights reserved </h3>

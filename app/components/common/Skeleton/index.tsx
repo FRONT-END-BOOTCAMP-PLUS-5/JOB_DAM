@@ -1,10 +1,18 @@
 import style from "./skeleton.module.scss"
-import Props from '@/app/components/common/Skeleton/interface';
 /**
  * 작성자: 김동우
  * 작성일: 2025-07-08
  * */
-export default function Skeleton ({ top, middle, bottom, profile, typeStyle, containerName }: Props) {
+interface IProps{
+  top: boolean
+  middle: boolean
+  bottom: boolean
+  profile: boolean
+  typeStyle: string
+  containerName: string
+}
+
+export default function Skeleton ({ top, middle, bottom, profile, typeStyle, containerName }: IProps) {
   return (
     <main className={style[`${containerName}`]}>
       {

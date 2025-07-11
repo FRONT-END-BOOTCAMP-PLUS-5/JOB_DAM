@@ -2,7 +2,8 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { Member } from '../domain/entities/Member';
 import { MemberRepository } from '../domain/repositories/MemberRepository';
 import { sign_up_form_type } from '@/app/types/signup/signup';
-import { MemberTable } from '../domain/table/MemberTable';
+import { MemberMentorRank } from '@/backend/members/domain/entities/MemberMentorRank';
+import { MemberMentorApplicationJoinTable } from '@/backend/members/domain/table/MemberMentorApplicationJoinTable';
 
 export class SbMemberRepository implements MemberRepository {
   private supabase;
@@ -13,20 +14,23 @@ export class SbMemberRepository implements MemberRepository {
     this.clientData = clientData;
   }
 
-  private getEntities(member: MemberTable): Member {
-    return { ...member };
+  // 엔티티 타입인자 제네릭 추가, 예시 getEntities<MemberTable>, MemberMentorApplicationJoinTable... 등
+  // T는 table,  K는 엔티티
+  // board에서도 사용하기 때문에 이와 같이수정함
+  private getEntities<T,K extends T>(member: T): K{
+    return { ...member } as K;
   }
 
   // not null 기능으로 포인트가 상위 5명만 가져오기
-  async findTopGradeMembers(): Promise<Member[]> {
+  async findTopGradeMembers(): Promise<MemberMentorRank[]> {
     const { data, error } = await this.supabase
       .from('member')
-      .select(`*`)
+      .select('id, name, img, grade, nickname, mentor_application!inner (company,level)')
       .order('grade', { ascending: false })
       .limit(5);
 
     if (error) throw new Error(error.message);
-    return data.map((item) => this.getEntities(item)) as Member[];
+    return data.map((item) => this.getEntities<MemberMentorApplicationJoinTable,MemberMentorRank>(item)) as MemberMentorRank[];
   }
 
   async insertMember(): Promise<Member> {
