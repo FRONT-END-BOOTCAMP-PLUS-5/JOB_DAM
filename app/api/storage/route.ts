@@ -1,4 +1,4 @@
-import { createAdminClient, createClient } from '@/app/utils/supabase/server';
+import { createAdminClient } from '@/app/utils/supabase/server';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 import { SbStorageRepository } from '../../../backend/storages/repositories/SbStorageRepository';

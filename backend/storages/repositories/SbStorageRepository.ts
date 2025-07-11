@@ -36,16 +36,4 @@ export class SbStorageRepository implements StorageRepository {
 
     return publicData.publicUrl; // 공개 URL 반환
   }
-
-  async deleteFile(fileUrl: string): Promise<void> {
-    // URL에서 파일 경로 추출
-    // const fileName = fileUrl.split('/').pop();
-    // if (!fileName) {
-    //   throw new Error('잘못된 파일 URL입니다.');
-    // }
-    // const { error } = await this.supabase.storage.from('user-profile-image').remove([fileName]);
-    // if (error) {
-    //   throw new Error(`파일 삭제 실패: ${error.message}`);
-    // }
-  }
 }

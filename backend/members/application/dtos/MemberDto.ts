@@ -9,8 +9,8 @@ export class MemberDto {
     public img: string | null,
     public nickname: string,
     public grade: number | null,
-    public point: number | null,
+    public point: number,
     public type: number | null,
-    public deletedAt: string | null
+    public deletedAt: string | null,
   ) {}
 }
