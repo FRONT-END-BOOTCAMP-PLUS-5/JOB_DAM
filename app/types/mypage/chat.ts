@@ -29,6 +29,16 @@ export interface Chat {
   chatRoomId: number;
   memberId: string;
   createdAt: string;
-  deletedAt: string;
-  updatedAt: string;
+  deletedAt?: string;
+  updatedAt?: string;
+}
+
+export interface PayloadChat {
+  chat_room_id: number;
+  content: string;
+  created_at: string;
+  deleted_at?: string;
+  id: number;
+  member_id: string;
+  updated_at?: string;
 }
