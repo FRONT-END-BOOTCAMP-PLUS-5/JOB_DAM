@@ -3,7 +3,9 @@ import axios from 'axios';
 
 export const chatService = {
   getChatRoom: async (memberId: string) => {
-    const { data, error } = await axios.get<{ result: ChatRoom[] }>(`/api/chat?id=${memberId}`).catch((error) => error);
+    const { data, error } = await axios
+      .get<{ result: ChatRoom[] }>(`/api/user/chat?id=${memberId}`)
+      .catch((error) => error);
 
     if (error) throw new Error(error.message);
 
