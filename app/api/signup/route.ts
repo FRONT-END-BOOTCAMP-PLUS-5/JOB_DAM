@@ -13,6 +13,9 @@ export async function POST(request: NextRequest) {
     email: body.email,
     password: body.password,
     img: body.img || null,
+    type: body.type,
+    grade: body.grade,
+    point: body.point,
   };
 
   try {

@@ -8,8 +8,8 @@ export interface sign_up_input_type {
 }
 
 export interface sign_up_form_type extends sign_up_input_type {
-  service_terms: boolean;
-  privacy_terms: boolean;
+  service_terms?: boolean;
+  privacy_terms?: boolean;
   marketing_terms?: boolean;
   password_check?: string;
 }

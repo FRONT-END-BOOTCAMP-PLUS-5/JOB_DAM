@@ -82,7 +82,7 @@ export default function SignupPage() {
               className={styles.signup_form_item}
               register={register}
               errors={errors}
-              pattern={/^[a-zA-Z0-9!@#$%^&*]{8,20}$/}
+              pattern={/^(?=.*[!@#$%^&+])[a-zA-Z0-9]{8,20}$/}
               errorMessage="비밀번호는 특수문자 포함 8자 이상 20자 이하이어야 합니다"
               required
               type="password"

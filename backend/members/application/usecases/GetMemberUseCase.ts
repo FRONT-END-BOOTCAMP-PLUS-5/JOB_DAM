@@ -23,7 +23,7 @@ export class GetMemberUseCase {
       password: member.password,
       updatedAt: member.updated_at,
       grade: member.grade,
-      point: member.point,
+      point: member.point ?? 0,
       type: member.type,
       deletedAt: member.deleted_at,
     }));
