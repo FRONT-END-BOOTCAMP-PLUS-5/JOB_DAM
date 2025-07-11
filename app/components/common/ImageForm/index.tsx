@@ -1,12 +1,12 @@
 import Image from 'next/image';
 import React, { useRef, useState } from 'react';
 import styles from './imageForm.module.scss';
-import { UseFormRegister, UseFormSetValue, FieldValues, Path } from 'react-hook-form';
+import { UseFormRegister, UseFormSetValue, FieldValues, Path, FieldErrors, PathValue } from 'react-hook-form';
 
 interface ImageFormProps<T extends FieldValues> {
   register?: UseFormRegister<T>;
   setValue?: UseFormSetValue<T>;
-  errors?: any;
+  errors?: FieldErrors<T>;
 }
 
 export default function ImageForm<T extends FieldValues>({ register, setValue, errors }: ImageFormProps<T>) {
@@ -45,7 +45,7 @@ export default function ImageForm<T extends FieldValues>({ register, setValue, e
 
         // ✅ React Hook Form에 파일 등록 파일 객체로 저장
         if (setValue) {
-          setValue('img' as Path<T>, file as any);
+          setValue('img' as Path<T>, file as PathValue<T, Path<T>>);
         }
       }
     };
@@ -108,7 +108,7 @@ export default function ImageForm<T extends FieldValues>({ register, setValue, e
             },
           }) || {})}
         />
-        {errors?.nickname && <span className={styles.error_message}>{errors.nickname.message}</span>}
+        {errors?.nickname && <span className={styles.error_message}>{errors?.nickname.message as string}</span>}
       </div>
     </div>
   );
