@@ -8,12 +8,12 @@ const Header = () => {
     <header className={styles.header}>
       <section className={styles.header_container}>
         <div className={styles.logo}>
-          <Link href="/public">JOB담</Link>
+          <Link href="/">JOB담</Link>
         </div>
         <nav className={styles.header_nav}>
-          <Link href="/public">멘토 찾기</Link>
+          <Link href="/">멘토 찾기</Link>
           <Link href="/board">커뮤니티</Link>
-          <Link href="/public">채팅하기</Link>
+          <Link href="/">채팅하기</Link>
         </nav>
         <div className={styles.user_nav}>
           <Link className={`${styles.button} ${styles.login}`} href="/login">
