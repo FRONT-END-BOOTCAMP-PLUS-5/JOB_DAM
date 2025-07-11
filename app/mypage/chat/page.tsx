@@ -1,6 +1,6 @@
 'use client';
 
-import { TEST_MENTI_ID, TEST_MENTOR_ID } from '@/app/constants/test';
+import { TEST_MENTI_ID } from '@/app/constants/test';
 import { chatService } from '@/app/services/mypage/chat';
 import { ChatRoom } from '@/app/types/mypage/chat';
 import { useEffect, useState } from 'react';
@@ -35,16 +35,16 @@ const ChatPage = () => {
     if (!status) reviewReset();
   };
 
-  const onClickAddReview = (chatRoomId: number) => {
+  const onClickAddReview = async (chatRoomId: number) => {
     const reviewData = {
       chat_room_id: chatRoomId,
       content: content,
       rating: rating || 0,
     };
 
-    addReview(reviewData).then((res) => {
-      reviewReset();
-    });
+    const result = await addReview(reviewData);
+
+    if (result) reviewReset();
   };
 
   useEffect(() => {

@@ -1,9 +1,9 @@
 import { createClient } from '@/app/utils/supabase/server';
+import { CreateReviewUseCase } from '@/backend/reviews/application/usecases/CreateReviewUseCase';
+import { SbReviewRepository } from '@/backend/reviews/repositories/SbReviewRepository';
+import { GetReviewUseCase } from '@/backend/users/application/usecases/GetReviewUseCase';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
-import { GetReviewUseCase } from '../../../backend/users/application/usecases/GetReviewUseCase';
-import { SbReviewRepository } from '../../../backend/reviews/repositories/SbReviewRepository';
-import { CreateReviewUseCase } from '../../../backend/reviews/application/usecases/CreateReviewUseCase';
 
 export async function GET(request: NextRequest) {
   const url: URL = new URL(request.url);
