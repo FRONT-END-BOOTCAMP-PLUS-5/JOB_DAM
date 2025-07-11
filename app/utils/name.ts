@@ -1,3 +1,3 @@
-export function getLastName(fullName: string){
-  return fullName[0]
+export function getLastName(fullName: string) {
+  return fullName[0];
 }

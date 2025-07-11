@@ -76,4 +76,10 @@ export class SbMemberRepository implements MemberRepository {
 
     return data as Member;
   }
+
+  async findById(userId: string): Promise<Member> {
+    const { data } = await this.supabase.from('member').select('*').eq('userId', userId).single();
+
+    return data as Member;
+  }
 }
