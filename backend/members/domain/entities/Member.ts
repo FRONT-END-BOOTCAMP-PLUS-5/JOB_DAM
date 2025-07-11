@@ -11,6 +11,6 @@ export class Member {
     public grade: number,
     public point: number | null,
     public type: number,
-    public nickname: string
-  ){}
+    public nickname: string,
+  ) {}
 }
