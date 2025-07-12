@@ -4,7 +4,9 @@ import styles from './loginForm.module.scss';
 import Input from '@/app/components/common/Input';
 import Link from 'next/link';
 import { toast, ToastContainer } from 'react-toastify';
-import { loginMember } from '@/app/services/login/login';
+import { handleLogin, loginMember } from '@/app/services/login/login';
+import { useDispatch } from 'react-redux';
+import { setLoginState } from '@/app/store/isLogin/loginSlice';
 
 interface FormInput {
   email: string;
@@ -17,33 +19,22 @@ export default function LoginForm() {
     handleSubmit,
     formState: { errors },
   } = useForm<FormInput>();
-  const onSubmit: SubmitHandler<FormInput> = (data) => {
-    loginMember(data)
-      .then((res) => {
-        console.log(res);
-        if (res.data.status === 200) {
-          toast.success('로그인 성공!', {
-            position: 'top-left',
-            autoClose: 2000,
-          });
-          console.log('사용자 정보:', res.data.result);
-          // 로그인 성공 후 원하는 페이지로 이동
-          // router.push('/board');
-        } else {
-          toast.error(res.data.message, {
-            position: 'top-left',
-            autoClose: 2000,
-          });
+
+  const onSubmit: SubmitHandler<FormInput> = async (data) => {
+    const dispatch = useDispatch();
+
+    try {
+      const response = await loginMember(data);
+
+      if (response.data.status === 200) {
+        const userResponse = await handleLogin();
+        if (userResponse.data.status === 200) {
+          dispatch(setLoginState.setLoginMemberData(userResponse.data.result));
         }
-      })
-      .catch((error) => {
-        console.error('로그인 오류:', error);
-        if (error.response?.data?.status === 401) {
-          toast.error(error.response.data.message || '이메일 또는 비밀번호가 일치하지 않습니다.');
-        } else {
-          toast.error('로그인 중 오류가 발생했습니다.');
-        }
-      });
+      }
+    } catch (error) {
+      toast.error('로그인 실패');
+    }
   };
 
   return (

@@ -20,9 +20,11 @@ export default function LayoutProvider({ children }: { children: React.ReactNode
 
   return (
     <>
-      <Header />
-      <Container>{children}</Container>
-      <Footer />
+      <>
+        <Header />
+        <Container>{children}</Container>
+        <Footer />
+      </>
     </>
   );
 }
