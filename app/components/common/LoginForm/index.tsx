@@ -61,8 +61,8 @@ export default function LoginForm() {
         className={styles.login_form_input}
         containerClassName={styles.login_form_item}
         register={register}
-        pattern={/^(?=.*[!@#$%^&+])[a-zA-Z0-9!@#$%^&+]{8,20}$/}
-        errorMessage="비밀번호는 특수문자 포함해서 8글자이상 20이하로  작성해주세요."
+        pattern={/^(?=.*[!@#$%&*])[a-zA-Z0-9!@#$%&*]{8,15}$/}
+        errorMessage="비밀번호는 특수문자 포함해서 8글자이상 15이하로 작성해주세요."
         errors={errors}
       />
       <div className={styles.login_form_checkbox}>
