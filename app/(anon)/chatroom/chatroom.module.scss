@@ -73,12 +73,14 @@ body {
     padding-bottom: 10%;
     max-height: 453px;
     overflow-y: scroll;
+    display: flex;
+    width: 100%;
 }
 
 .recentChat {
     margin-top: 15px;
     background-color: #F9FAFB;
-    height: 50px;
+    max-height: 487px;
     border: 1px solid black;
     width: 50%;
 }
@@ -97,10 +99,12 @@ body {
 }
 
 .bottom {
+    position:fixed;
+    bottom:0;
     background-color: #F5F7FF;
     display: flex;
-    padding-bottom: 1%;
-    border: 1px solid black;
+    width: 100%;
+    padding-bottom: 30px;
 }
 
 .bottomBox {
@@ -126,6 +130,7 @@ body {
     height: 91px;
     background-color: white;
     border: 0.5px solid gray;
+    box-sizing: border-box;
 }
 
 .roomTitle {
@@ -152,5 +157,13 @@ body {
 }
 
 .roomDiv {
-    width: 50.5%;
+    width: 100%;
+}
+
+.mainSide {
+    display: flex;
+}
+
+.myMentorRoomDiv {
+    width:49%;
 }

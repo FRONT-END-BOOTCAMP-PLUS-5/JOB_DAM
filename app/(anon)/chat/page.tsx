@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 
 interface messageInterface {
     content: string
+    member_id: string
 }
 
 const supabase = createClient(
@@ -52,26 +53,24 @@ const Chat = () => {
     const [createdMemberId, setCreatedMemberId] = useState<string | null>(null)
 
     const [mentorId, setMentorId] = useState<string[] | null>([])
-    const [mentor, setMentor] = useState<mentorInfo[] | null>(null)
-    const [mentorName, setMentorName] = useState<mentorName[] | null>(null)
+    const [mentor, setMentor] = useState<mentorInfo | null>(null)
+    const [mentorName, setMentorName] = useState<mentorName | null>(null)
     const [memberNumInfo, setMemberNumInfo] = useState<string[] | null>(null)
     const [memberInfo, setMemberInfo] = useState<memInfo[] | null>(null)
     const [chatMemberId, setChatMemberId] = useState<string[] | null>(null)
     const [chatMemberName, setChatMemberName] = useState<string[] | null>(null)
 
-    if (typeof window != 'undefined') {
-        localStorage.setItem('user', JSON.stringify({
-            id: 'f6d4945a-2251-4284-bed5-327f44bc2c7f',
-            name: '승주',
-            email: '승주@gmail.com',
-            password: 'seungjoo',
-            img: 'https://yqutjsbcupbfpphjmaax.supabase.co/storage/v1/object/public/user-profile-image/1752045446080_wig2gl.jpeg',
-            nickname: '승쥬'
-        }))
-    }
-
     useEffect(() => {
         if (typeof window !== 'undefined') {
+            localStorage.setItem('user', JSON.stringify({
+                id: 'f6d4945a-2251-4284-bed5-327f44bc2c7f',
+                name: '승주',
+                email: '승주@gmail.com',
+                password: 'seungjoo',
+                img: 'https://yqutjsbcupbfpphjmaax.supabase.co/storage/v1/object/public/user-profile-image/1752045446080_wig2gl.jpeg',
+                nickname: '승쥬'
+            }))
+            
             const storedUser = localStorage.getItem('user');
             if (storedUser) {
                 setUser(JSON.parse(storedUser));
@@ -81,6 +80,7 @@ const Chat = () => {
 
     function messageReceived(payload: string) {
         console.log('payload:', payload)
+        setMessage(prev => [...prev, { content: payload, member_id: '' }])
     }
 
     useEffect(() => {
@@ -100,7 +100,7 @@ const Chat = () => {
         room
             .on('broadcast', { event: 'shout' }, (payload) => { messageReceived(payload.payload); })
             .subscribe()
-    }, [])
+    }, [roomName])
 
     useEffect(() => {
         if (!roomName) {
@@ -110,28 +110,28 @@ const Chat = () => {
             const { data: roomIdNum } = await supabase
                 .from('chat_room')
                 .select('id')
-                .in('title', [roomName])
-            if (!roomIdNum) {
+                .eq('title', roomName)
+            if (!roomIdNum || roomIdNum.length === 0) {
                 return
             }
             setRoomId(roomIdNum[0].id)
         }
         findChatroomId()
-    })
+    }, [roomName])
 
     const messageSubmission = async (e: React.FormEvent) => {
         e.preventDefault()
-        if (!user) {
-            alert('유저가 없습니다.')
+        if (!user || !input.trim()) {
+            alert('유저가 없거나 메시지가 비어있습니다.')
             return
         }
         const { data } = await supabase.from('chat').insert([{
             content: input,
             member_id: user.id,
             chat_room_id: roomId
-        }]).select('content')
+        }]).select('content, member_id')
         if (data) {
-            setMessage(prev => [...prev, { content: input }])
+            setMessage(prev => [...prev, { content: input, member_id: user.id }])
         }
         await roomRef.current?.send({
             type: 'broadcast',
@@ -146,7 +146,11 @@ const Chat = () => {
             return
         }
         const fetchMessages = async () => {
-            const { data: receivedData } = await supabase.from('chat').select('content').in('chat_room_id', [roomId]);
+            const { data: receivedData } = await supabase
+                .from('chat')
+                .select('content, member_id')
+                .eq('chat_room_id', roomId)
+                .order('created_at', { ascending: true });
             if (receivedData) {
                 setMessage(receivedData as messageInterface[])
             }
@@ -155,22 +159,30 @@ const Chat = () => {
     }, [roomId])
 
     useEffect(() => {
+        if (!roomId) {
+            return
+        }
         const findCreatedMemberId = async () => {
             const { data: findCreatedId } = await supabase
                 .from('chat_room')
                 .select('created_member_id')
-                .in('id', [roomId])
-            setCreatedMemberId(findCreatedId?.[0].created_member_id)
+                .eq('id', roomId)
+            if (findCreatedId && findCreatedId.length > 0) {
+                setCreatedMemberId(findCreatedId[0].created_member_id)
+            }
         }
         findCreatedMemberId()
     }, [roomId])
 
     useEffect(() => {
+        if (!roomId) {
+            return
+        }
         const findMemberNumber = async () => {
             const { data: findMemberNum } = await supabase
                 .from('chat_member')
                 .select('member_id')
-                .in('chat_room_id', [roomId])
+                .eq('chat_room_id', roomId)
             const memberNum = findMemberNum?.map(m => m.member_id) || []
             setMemberNumInfo(memberNum)
         }
@@ -178,72 +190,66 @@ const Chat = () => {
     }, [roomId])
 
     useEffect(() => {
-        const findMemId = async () => {
-            console.log('message: ', message)
-            const messageContents = message?.map((m) => m.content)
-            console.log('messageContents: ', messageContents)
-            const { data: findMemberId } = await supabase
-                .from('chat')
-                .select('member_id')
-                .in('content', [messageContents])
-            const chatMembersId = findMemberId?.map((m) => m.member_id)
-            console.log('chatMembersId: ', chatMembersId)
-            setChatMemberId(chatMembersId as string[])
+        if (!createdMemberId) {
+            return
         }
-        findMemId()
-    }, [message])
-
-    useEffect(()=>{
-        const findChatMemberName = async() => {
-            const {data: findChatMemName} = await supabase
+        const findMentorInfo = async () => {
+            const { data: mentorData } = await supabase
+                .from('mentor_application')
+                .select('member_id,company,level')
+                .eq('member_id', createdMemberId)
+                .single()
+            setMentor(mentorData)
+            
+            const { data: mentorNameData } = await supabase
                 .from('member')
-                .select('nickname')
-                .in('id',[chatMemberId])
-            const chatMemberName = findChatMemName?.map((name)=>name.nickname)
-            setChatMemberName(chatMemberName as string[])
+                .select('name')
+                .eq('id', createdMemberId)
+                .single()
+            setMentorName(mentorNameData)
         }
-        findChatMemberName()
-    }, [chatMemberId])
+        findMentorInfo()
+    }, [createdMemberId])
 
     useEffect(() => {
+        if (!memberNumInfo || memberNumInfo.length === 0) {
+            return
+        }
         const findMemberInfo = async () => {
             const { data: findMemberInformation } = await supabase
                 .from('member')
                 .select('img,nickname')
-                .in('id', [memberNumInfo])
+                .in('id', memberNumInfo)
             setMemberInfo(findMemberInformation)
         }
         findMemberInfo()
     }, [memberNumInfo])
 
     useEffect(() => {
-        const findMentorId = async () => {
-            if (!mentorId) {
-                return
-            }
-            const { data: mentorData } = await supabase
-                .from('mentor_application')
-                .select('member_id,company,level')
-                .in('member_id', [createdMemberId])
-            setMentor(mentorData)
+        if (!message || message.length === 0) {
+            return
         }
-        const findMentorName = async () => {
-            if (!mentorId) {
-                return
-            }
-            const { data: findMentorName } = await supabase
+        const findChatMemberInfo = async () => {
+            const memberIds = message.map(m => m.member_id).filter(id => id)
+            const uniqueMemberIds = [...new Set(memberIds)]
+            
+            if (uniqueMemberIds.length === 0) return
+            
+            const { data: memberData } = await supabase
                 .from('member')
-                .select('name')
-                .in('id', [createdMemberId])
-            setMentorName(findMentorName)
+                .select('id, nickname')
+                .in('id', uniqueMemberIds)
+            
+            const chatMemberNames = message.map(msg => {
+                const memberInfo = memberData?.find(m => m.id === msg.member_id)
+                return memberInfo?.nickname || '알 수 없음'
+            })
+            
+            setChatMemberName(chatMemberNames)
+            setChatMemberId(message.map(m => m.member_id))
         }
-        findMentorId()
-        findMentorName()
-    }, [createdMemberId])
-
-
-
-
+        findChatMemberInfo()
+    }, [message])
 
     const chatUI = (i: number) => {
         console.log('mentorId: ', createdMemberId)
@@ -252,7 +258,7 @@ const Chat = () => {
             return (
                 <div>
                     <div className={styles.menteeUp}>
-                        <p className={styles.usernameForMessage}> {mentorName?.[0]?.name} </p>
+                        <p className={styles.usernameForMessage}> {mentorName?.name} </p>
                         <div className={styles.roleForMentor}> 
                             <p> 멘토 </p>
                         </div>
@@ -285,7 +291,7 @@ const Chat = () => {
                 <p className={styles.headerLogo}> Job담 </p>
                 <div className={styles.chatroomTitleDiv}>
                     <p className={styles.chatroomTitle}> {roomName} </p>
-                    <p className={styles.chatroomMentorTitle}> {mentorName?.[0]?.name} {mentor?.[0]?.level}와의 실시간 Q&A </p>
+                    <p className={styles.chatroomMentorTitle}> {mentorName?.name} {mentor?.level}와의 실시간 Q&A </p>
                 </div>
                 <div className={styles.joinNumber}>
                     <p className={styles.joinNumberP}> {memberNumInfo?.length}명 참여 중 </p>
@@ -294,21 +300,21 @@ const Chat = () => {
             <div className={styles.mainChat}>
                 <div className={styles.chatSideBar}>
                     <div className={styles.mentorProfile}>
-                        <img src="/mentorProfileExample.png" />
+                        <img src="/mentorProfileExample.png" alt="멘토 프로필" />
                         <div className={styles.aboutMentor}>
-                            <p className={styles.mentorName}> {mentorName?.[0]?.name} </p>
+                            <p className={styles.mentorName}> {mentorName?.name || '로딩 중...'} </p>
                             <div className={styles.mentorRoleDiv}>
-                                <p className={styles.mentorRole}> {mentor?.[0]?.level} </p>
+                                <p className={styles.mentorRole}> {mentor?.level || '로딩 중...'} </p>
                             </div>
                             <p className={styles.onlineOrNot}> 온라인(임시) </p>
                             <button className={styles.goToChattingRooms} onClick={() => { router.push('/chatroom') }}> 채팅방 화면으로 가기 </button>
                         </div>
                     </div>
                     <div className={styles.memberNumberDiv}>
-                        <p className={styles.memberNumber}> 참여자 {memberNumInfo?.length}명 </p>
+                        <p className={styles.memberNumber}> 참여자 {memberNumInfo?.length || 0}명 </p>
                     </div>
                     <div className={styles.mentorBadgeDiv}>
-                        <p> {mentorName?.[0]?.name} </p>
+                        <p> {mentorName?.name || '로딩 중...'} </p>
                         <div className={styles.mentorBadge}>
                             <div className={styles.mentorBadgeCircle}>
                                 <p className={styles.mentorBadgeCircleP}>멘토</p>
@@ -318,7 +324,7 @@ const Chat = () => {
                     <div className={styles.menteeBadgeDiv}>
                         {memberInfo?.map((member, index) => (
                             <div className={styles.mem} key={index}>
-                                <div key={index} className={styles.memberName}>{memberInfo?.[index]?.nickname}</div>
+                                <div className={styles.memberName}>{member?.nickname}</div>
                                 <div className={styles.mentorBadge}>
                                     <p className={styles.menteeBadgeCircle}> 멘티 </p>
                                 </div>
@@ -329,7 +335,7 @@ const Chat = () => {
                 <div className={styles.mainChatSpace}>
                     <div className={styles.chatRecordsSpace}>
                         <div>
-                            {message.map((message, i) => (
+                            {message.map((msg, i) => (
                                 <div key={i}>
                                     {chatUI(i)}
                                 </div>
@@ -337,7 +343,12 @@ const Chat = () => {
                         </div>
                     </div>
                     <form onSubmit={messageSubmission}>
-                        <input value={input} onChange={(e) => setInput(e.target.value)} className={styles.inputForm} />
+                        <input 
+                            value={input} 
+                            onChange={(e) => setInput(e.target.value)} 
+                            className={styles.inputForm}
+                            placeholder="메시지를 입력하세요..."
+                        />
                         <button type="submit" className={styles.inputSubmitButton}> 전송 </button>
                     </form>
                 </div>

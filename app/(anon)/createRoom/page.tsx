@@ -1,7 +1,7 @@
 "use client"
 
 import styles from '../createRoom/createRoom.module.scss'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import { useRouter } from 'next/navigation'
 
@@ -14,11 +14,32 @@ const CreateRoom = () => {
 
     const router = useRouter()
 
+    const [member, setMember] = useState<any | null>(null)
     const [roomName, setRoomName] = useState<string>('');
     const [roomDescription, setRoomDescription] = useState<string>('');
     const [maxNum, setMaxNum] = useState<number>(0);
     const [agreeTerms, setAgreeTerms] = useState<boolean>(false);
     const [agreeTerms2, setAgreeTerms2] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (typeof window != undefined) {
+            localStorage.setItem('member', JSON.stringify({
+                id: 'f6d4945a-2251-4284-bed5-327f44bc2c7f',
+                name: '승주',
+                email: '승주@gmail.com',
+                password: 'seungjoo',
+                img: '1',
+                nickname: '승쥬'
+            }))
+        }
+
+        if (typeof window != undefined) {
+            const storedMember = localStorage.getItem('member');
+            if (storedMember) {
+                setMember(JSON.parse(storedMember));
+            }
+        }
+    }, [])
 
     const submitted = async () => {
         if (!agreeTerms || !agreeTerms2) {
@@ -31,10 +52,11 @@ const CreateRoom = () => {
         }
     }
 
-    const sendToSupabase = async() => {
-        const {data} = await supabase.from('chat_room').insert([{
+    const sendToSupabase = async () => {
+        const { data } = await supabase.from('chat_room').insert([{
             title: roomName,
             description: roomDescription,
+            created_member_id: member.id,
             max_people: maxNum
         }])
     }
@@ -78,7 +100,7 @@ const CreateRoom = () => {
                 <button className={styles.submitButton}>
                     <p className={styles.submitButtonP} onClick={submitted}> 방 만들기 </p>
                 </button>
-                <button className={styles.submitButton} onClick={()=>router.push('./chatroom')}>
+                <button className={styles.submitButton} onClick={() => router.push('./chatroom')}>
                     <p className={styles.submitButtonP}> 뒤로 가기 </p>
                 </button>
             </div>

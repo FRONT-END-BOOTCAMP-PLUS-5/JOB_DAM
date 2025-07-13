@@ -17,14 +17,19 @@ interface ChatRoom {
     description: string
 }
 
-interface mentorInfo {
-    member_id: string,
-    company: string,
-    level: string
+interface ChatRoomWithMentor {
+    id: number
+    title: string
+    created_member_id: string
+    description: string
+    mentorName: string
+    mentorCompany: string
+    mentorLevel: string
 }
 
-interface mentorName {
-    name: string
+interface mentorInfoI {
+    myMentorTitle: string,
+    myMentorDescription: string
 }
 
 const Chatroom = () => {
@@ -33,10 +38,8 @@ const Chatroom = () => {
 
     const [member, setMember] = useState<any | null>(null)
     const [chatRooms, setChatRooms] = useState<ChatRoom[]>([])
-    const [mentorId, setMentorId] = useState<string[] | null>([])
-    const [mentor, setMentor] = useState<mentorInfo[] | null>(null)
-    const [mentorName, setMentorName] = useState<mentorName[] | null>(null)
-    const [roomSumNum, setRoomSumNum] = useState<number>(0)
+    const [chatRoomsWithMentor, setChatRoomsWithMentor] = useState<ChatRoomWithMentor[]>([])
+    const [myMentorInfo, setMyMentorInfo] = useState<mentorInfoI[]>([])
 
     useEffect(() => {
         if (typeof window != undefined) {
@@ -78,38 +81,57 @@ const Chatroom = () => {
     }, [member])
 
     useEffect(() => {
-        const findChatroomInfo = async () => {
-            const mentorIds = chatRooms.map(room => room.created_member_id)
-            setMentorId(mentorIds || [])
+        const fetchChatRoomsWithMentorInfo = async () => {
+            if (chatRooms.length === 0) return;
+
+            const roomsWithMentorInfo = await Promise.all(
+                chatRooms.map(async (room) => {
+                    const { data: mentorData } = await supabase
+                        .from('mentor_application')
+                        .select('member_id,company,level')
+                        .eq('member_id', room.created_member_id)
+                        .single()
+
+                    const { data: mentorNameData } = await supabase
+                        .from('member')
+                        .select('name')
+                        .eq('id', room.created_member_id)
+                        .single()
+
+                    return {
+                        ...room,
+                        mentorName: mentorNameData?.name || '알 수 없음',
+                        mentorCompany: mentorData?.company || '알 수 없음',
+                        mentorLevel: mentorData?.level || '알 수 없음'
+                    }
+                })
+            )
+
+            setChatRoomsWithMentor(roomsWithMentorInfo)
         }
-        findChatroomInfo()
+
+        fetchChatRoomsWithMentorInfo()
     }, [chatRooms])
 
     useEffect(() => {
-        const findMentorId = async () => {
-            if (!mentorId) {
-                return
-            }
-            const { data: mentorData } = await supabase
-                .from('mentor_application')
-                .select('member_id,company,level')
-                .in('member_id', mentorId)
-            setMentor(mentorData)
+        if (!member) return
+    
+        const fetchMyMentorRooms = async () => {
+            const { data: myRooms } = await supabase
+                .from('chat_room')
+                .select('title, description')
+                .eq('created_member_id', member.id)
+    
+            const formatted = myRooms?.map(room => ({
+                myMentorTitle: room.title,
+                myMentorDescription: room.description
+            })) || []
+    
+            setMyMentorInfo(formatted)
         }
-        const findMentorName = async () => {
-            if (!mentorId) {
-                return
-            }
-            const { data: findMentorName } = await supabase
-                .from('member')
-                .select('name')
-                .in('id', mentorId)
-            setMentorName(findMentorName)
-        }
-        findMentorId()
-        findMentorName()
-    }, [mentorId])
-
+    
+        fetchMyMentorRooms()
+    }, [member])
 
 
     return (
@@ -122,29 +144,43 @@ const Chatroom = () => {
             <div className={styles.recentChatHDiv}>
                 <div className={styles.recentChat}>
                     <h3 className={styles.recentChatH}> 내가 멘티인 채팅방 </h3>
+                    <div className={styles.main}>
+                        <div className={styles.roomDiv}>
+                            {chatRoomsWithMentor.map((room, index) => (
+                                <div key={room.id}>
+                                    <button className={styles.roomButtons} onClick={() => router.push(`/chat?room=${room.title}`)} >
+                                        <div className={styles.mentorInfo2}>
+                                            <h3 className={styles.roomTitle}> {room.mentorName} 멘토님의 {room.title} </h3>
+                                            <h3 className={styles.mentorCompany}> {room.mentorCompany} </h3>
+                                        </div>
+                                        <h4 className={styles.roomDescription}>{room.description}</h4>
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
                 <div className={styles.recentChat}>
                     <h3 className={styles.recentChatH}> 내가 멘토인 채팅방 </h3>
-                </div>
-            </div>
-            <div className={styles.main}>
-                <div className={styles.roomDiv}>
-                    {chatRooms.map((room, index) => (
-                        <div key={room.id}>
-                            <button className={styles.roomButtons} onClick={() => router.push(`/chat?room=${room.title}`)} >
-                                <div className={styles.mentorInfo2}>
-                                    <h3 className={styles.roomTitle}> {mentorName?.[index]?.name} 멘토님의 {room.title} </h3>
-                                    <h3 className={styles.mentorCompany}> {mentor?.[index]?.company} </h3>
+                    <div className={styles.main}>
+                        <div className={styles.roomDiv}>
+                            {myMentorInfo.map((room, index) => (
+                                <div key={room.myMentorTitle}>
+                                    <button className={styles.roomButtons} onClick={() => router.push(`/chat?room=${room.myMentorTitle}`)} >
+                                        <div className={styles.mentorInfo2}>
+                                            <h3 className={styles.roomTitle}> {room.myMentorTitle} </h3>
+                                        </div>
+                                        <h4 className={styles.roomDescription}>{room.myMentorDescription}</h4>
+                                    </button>
                                 </div>
-                                <h4 className={styles.roomDescription}>{chatRooms?.[index]?.description}</h4>
-                            </button>
+                            ))}
                         </div>
-                    ))}
+                    </div>
                 </div>
             </div>
             <div className={styles.bottom}>
                 <div className={styles.bottomBox}>
-                    <h1 className={styles.bottomNum}> {mentorName?.length} </h1>
+                    <h1 className={styles.bottomNum}> {chatRoomsWithMentor.length} </h1>
                     <p> 총 채팅방 </p>
                 </div>
                 <div className={styles.bottomBox}>
