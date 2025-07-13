@@ -38,6 +38,12 @@ export class SbChatRoomRepository implements ChatRoomRepository {
 
     if (error) throw new Error(error.message);
 
-    return data as ChatRoom;
+    return data;
+  }
+
+  async updateChatRoom(chat_room_id: number, progress: number) {
+    const { error } = await this.supabase.from('chat_room').update({ progress: progress }).eq('id', chat_room_id);
+
+    if (error) throw new Error(error.message);
   }
 }

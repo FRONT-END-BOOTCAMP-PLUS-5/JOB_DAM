@@ -1,3 +1,4 @@
+import { UpdateChatRoomRef } from '@/app/types/chatroom/chatroom';
 import { ChatRoom } from '@/app/types/mypage/chat';
 import axios from 'axios';
 
@@ -11,6 +12,16 @@ export const chatService = {
 
     return {
       result: data.chatRoom,
+    };
+  },
+
+  updateChatRoom: async (updateChatRoomRef: UpdateChatRoomRef) => {
+    const { data, error } = await axios.put('/api/chatroom', updateChatRoomRef).catch((error) => error);
+
+    if (error) throw new Error(error.message);
+
+    return {
+      result: data,
     };
   },
 };

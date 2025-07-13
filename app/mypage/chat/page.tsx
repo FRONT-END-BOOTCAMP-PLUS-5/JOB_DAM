@@ -1,6 +1,5 @@
 'use client';
 
-import { TEST_MENTI_ID } from '@/app/constants/test';
 import { chatService } from '@/app/services/mypage/chat';
 import { ChatRoom } from '@/app/types/mypage/chat';
 import { useEffect, useState } from 'react';
@@ -11,6 +10,8 @@ import ReviewModal from './ReviewModal';
 import { reviewService } from '@/app/services/mypage/review';
 import { ChatRoomValue } from '@/app/constants/initialValue';
 
+const TEST_USER_ID = '0bd61fbf-71fd-44e1-a590-1e53af363c3c';
+
 const ChatPage = () => {
   const [chatRoom, setChatRoom] = useState<ChatRoom[]>([]);
   const [reviewOpen, setReviewOpen] = useState(false);
@@ -18,7 +19,7 @@ const ChatPage = () => {
   const [content, setContent] = useState('');
   const [selectChatRoom, setSelectChatRoom] = useState<ChatRoom>(ChatRoomValue);
 
-  const { getChatRoom } = chatService;
+  const { getChatRoom, updateChatRoom } = chatService;
   const { addReview } = reviewService;
 
   const reviewReset = () => {
@@ -47,8 +48,23 @@ const ChatPage = () => {
     if (result) reviewReset();
   };
 
+  const handleUpdateChatRoom = (chatRoomId: number) => {
+    const updateChatRoomRef = {
+      chat_room_id: chatRoomId,
+      progress: 1,
+    };
+
+    updateChatRoom(updateChatRoomRef).then((res) => {
+      if (res) {
+        getChatRoom(TEST_USER_ID).then((gRes) => {
+          setChatRoom(gRes.result);
+        });
+      }
+    });
+  };
+
   useEffect(() => {
-    getChatRoom(TEST_MENTI_ID).then((res) => {
+    getChatRoom(TEST_USER_ID).then((res) => {
       setChatRoom(res.result);
     });
   }, []);
@@ -70,9 +86,17 @@ const ChatPage = () => {
               </p>
               <span className={styles.created_date}>{dayjs(item?.createdAt).format('YYYY.MM.DD')}</span>
             </div>
-            <div className={styles.button_wrap}>
-              <button onClick={() => handleReviewModalShow(true, item?.id)}>리뷰 쓰기</button>
-            </div>
+            {item?.progress === 0 && (
+              <div className={styles.button_wrap}>
+                <button onClick={() => handleUpdateChatRoom(item?.id)}>생성하기</button>
+              </div>
+            )}
+            {item?.progress === 1 && <div>진행중</div>}
+            {item?.progress === 2 && (
+              <div className={styles.button_wrap}>
+                <button onClick={() => handleReviewModalShow(true, item?.id)}>리뷰 쓰기</button>
+              </div>
+            )}
           </li>
         ))}
       </ul>
