@@ -1,8 +1,6 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import { ChatRepository } from '../domain/repositories/ChatRepository';
 
-const CHAT_MEMBER_TABLE_NAME = 'chat_member';
-
 export class SbChatRepository implements ChatRepository {
   private supabase;
 
