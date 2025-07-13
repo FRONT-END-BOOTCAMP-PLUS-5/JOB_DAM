@@ -2,13 +2,14 @@
 
 import { chatService } from '@/app/services/mypage/chat';
 import { ChatRoom } from '@/app/types/mypage/chat';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import styles from './chatPage.module.scss';
 import dayjs from 'dayjs';
 import ReviewModal from './ReviewModal';
 import { reviewService } from '@/app/services/mypage/review';
 import { ChatRoomValue } from '@/app/constants/initialValue';
+import { createClient } from '@/app/utils/supabase/client';
 
 const TEST_USER_ID = '0bd61fbf-71fd-44e1-a590-1e53af363c3c';
 
@@ -18,7 +19,9 @@ const ChatPage = () => {
   const [rating, setRating] = useState<number | null>(0);
   const [content, setContent] = useState('');
   const [selectChatRoom, setSelectChatRoom] = useState<ChatRoom>(ChatRoomValue);
+  const [progress, setProgress] = useState(0);
 
+  const supabase = createClient();
   const { getChatRoom, updateChatRoom } = chatService;
   const { addReview } = reviewService;
 
@@ -62,6 +65,31 @@ const ChatPage = () => {
       }
     });
   };
+
+  const updateChatRoomProgress = useCallback(
+    (progress: number) => {
+      setChatRoom(chatRoom?.map((item) => (item.id === 43 ? { ...item, progress: progress } : item)));
+    },
+    [chatRoom],
+  );
+
+  useEffect(() => {
+    updateChatRoomProgress(progress);
+  }, [progress]);
+
+  useEffect(() => {
+    const channel = supabase.channel('chat_room');
+
+    channel
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'chat_room', filter: `id=in.(${43})` },
+        (payload) => {
+          setProgress(payload.new.progress);
+        },
+      )
+      .subscribe();
+  }, [supabase]);
 
   useEffect(() => {
     getChatRoom(TEST_USER_ID).then((res) => {
