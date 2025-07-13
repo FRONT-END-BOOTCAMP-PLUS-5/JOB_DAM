@@ -14,7 +14,7 @@ body {
     background-color: #A06BF7;
 }
 
-.headerLogo {
+.header_logo {
     font-family: 'SBAggroB';
     color: white;
     font-size: 40px;
@@ -26,18 +26,18 @@ body {
     margin-top: 2%;
 }
 
-.chatroomTitleDiv {
+.chatroom_title_div {
     display: grid;
     margin-left:30%;
     text-align: center;
 }
 
-.chatroomTitle,
-.chatroomMentorTitle {
+.chatroom_title,
+.chatroom_mentor_title {
     color: white;
 }
 
-.joinNumber {
+.join_number {
     border-radius: 5px;
     background-color: rgb(255,255,255,0.5);
     margin-left: auto;
@@ -47,15 +47,15 @@ body {
     margin-right: 2%;
 }
 
-.joinNumberP {
+.join_number_p {
     color: white;
 }
 
-.chatSideBar {
+.chat_side_bar {
     display: grid;
 }
 
-.mainChat {
+.main_chat {
     background-color: white;
     border-radius: 10px;
     margin-top: 30px;
@@ -64,19 +64,19 @@ body {
     display: flex;
 }
 
-.chatSideBar {
+.chat_side_bar {
     border-radius: 10px;
     background-color: #F8FAFC;
     width:25%;
     padding-bottom:23%;
 }
 
-.mainChatSpace {
+.main_chat_space {
     width: 75%;
     height:620px;
 }
 
-.inputForm {
+.input_form {
     width: 85%;
     height: 40px;
     border-radius: 10px;
@@ -85,7 +85,7 @@ body {
     margin-left: 3%;
 }
 
-.inputSubmitButton {
+.input_submit_button {
     width: 8%;
     height: 40px;
     border-radius: 10px;
@@ -93,7 +93,7 @@ body {
     background-color: #d8d6d6
 }
 
-.chatRecordsSpace {
+.chat_records_space {
     height: 530px;
     margin-top: 20px;
     margin-left: 3%;
@@ -112,7 +112,7 @@ body {
     display: flex;
 }
 
-.questionIcon {
+.question_icon {
     background-color: #DBE9FE;
     border-radius: 10px;
     padding-left: 5px;
@@ -121,19 +121,19 @@ body {
     margin-right: 5px;
 }
 
-.mentorProfile {
+.mentor_profile {
     display: flex;
 }
 
-.mentorName {
+.mentor_name {
     font-weight: bold;
 }
 
-.aboutMentor {
+.about_mentor {
     margin-top: 30px;
 }
 
-.memberNumberDiv {
+.member_number_div {
     width: 100%;
     height: 50px;
     background-color: #F1F5F9;
@@ -141,34 +141,34 @@ body {
     align-items: center;
 }
 
-.memberNumber {
+.member_number {
     margin-left: 15px;
     font-weight: bold;
 }
 
-.mentorBadgeDiv {
+.mentor_badge_div {
     display: flex;
     margin-left: 15px;
     margin-top: 10px;
 }
 
-.mentorBadge {
+.mentor_badge {
     margin-left: auto;
     margin-right: 20px;
 }
 
-.mentorBadgeCircle {
+.mentor_badge_circle {
     background-color: #FEF3C7;
     border-radius: 25px;
     padding: 2px 10px 2px 10px;
     border: 1px solid black;
 }
 
-.mentorBadgeCircle {
+.mentor_badge_circle {
     color: #DA790C;
 }
 
-.menteeBadgeCircle {
+.mentee_badge_circle {
     background-color: #F1F5F9;
     border-radius: 25px;
     padding: 2px 10px 2px 10px;
@@ -176,7 +176,7 @@ body {
     margin-top: 15px;
 }
 
-.onlineOrNot {
+.online_or_not {
     color: #54C497;
 }
 
@@ -184,32 +184,32 @@ body {
     display: flex;
 }
 
-.menteeBadgeDiv {
+.mentee_badge_div {
     display: grid;
     margin-left: 15px;
 }
 
-.memberName {
+.member_name {
     display: flex;
     align-items: center;
 }
 
-.usernameForMessage {
+.username_for_message {
     font-weight: bold;
     margin-top: 15px;
 }
 
-.goToChattingRooms {
+.go_to_chatting_rooms {
     border:0.5px solid black;
     padding: 3px 5px 3px 5px;
     margin-top: 5px;
 }
 
-.menteeUp {
+.mentee_up {
     display: flex;
 }
 
-.menteeRole {
+.mentee_role {
     margin-top: 15px;
     margin-left: 10px;
     background-color: #F1F5F9;
@@ -217,7 +217,7 @@ body {
     padding: 0px 5px 0px 5px;
 }
 
-.roleForMentor {
+.role_for_mentor {
     margin-top: 15px;
     margin-left: 10px;
     background-color: #FEF3C7;
