@@ -34,9 +34,9 @@ const CreateRoom = () => {
         }
 
         if (typeof window != undefined) {
-            const storedMember = localStorage.getItem('member');
-            if (storedMember) {
-                setMember(JSON.parse(storedMember));
+            const stored_member = localStorage.getItem('member');
+            if (stored_member) {
+                setMember(JSON.parse(stored_member));
             }
         }
     }, [])
@@ -46,13 +46,13 @@ const CreateRoom = () => {
             alert("필수 사항에 체크해주세요.")
         }
         else {
-            sendToSupabase()
+            send_to_supabase()
             alert('방을 만들었습니다.')
             router.push('./chatroom')
         }
     }
 
-    const sendToSupabase = async () => {
+    const send_to_supabase = async () => {
         const { data } = await supabase.from('chat_room').insert([{
             title: roomName,
             description: roomDescription,
@@ -64,44 +64,44 @@ const CreateRoom = () => {
     return (
         <div className={styles.all}>
             <div className={styles.header}>
-                <p className={styles.headerLogo}> Job담 </p>
+                <p className={styles.header_logo}> Job담 </p>
             </div>
             <div className={styles.main}>
-                <h2 className={styles.createRoomTitle}> 방 만들기 </h2>
-                <p className={styles.createRoomDescription}> 당신의 가치를 공유하세요! </p>
-                <p className={styles.createRoomOption}> 방 이름 </p>
-                <input onChange={(e) => setRoomName(e.target.value)} className={styles.formStyle}></input>
-                <p className={styles.createRoomOption}> 방 설명 </p>
-                <textarea className={styles.createTextarea} rows="4" cols="50" onChange={(e) => setRoomDescription(e.target.value)}></textarea>
-                <div className={styles.maxNumDiv}>
-                    <p className={styles.createRoomOption}> 최대 멘티 수용 인원 </p>
-                    <input type="number" className={styles.smallFormStyle} onChange={(e) => setMaxNum(parseInt(e.target.value))}></input>
+                <h2 className={styles.create_room_title}> 방 만들기 </h2>
+                <p className={styles.create_room_description}> 당신의 가치를 공유하세요! </p>
+                <p className={styles.create_room_option}> 방 이름 </p>
+                <input onChange={(e) => setRoomName(e.target.value)} className={styles.form_style}></input>
+                <p className={styles.create_room_option}> 방 설명 </p>
+                <textarea className={styles.create_textarea} rows="4" cols="50" onChange={(e) => setRoomDescription(e.target.value)}></textarea>
+                <div className={styles.max_num_div}>
+                    <p className={styles.create_room_option}> 최대 멘티 수용 인원 </p>
+                    <input type="number" className={styles.small_form_style} onChange={(e) => setMaxNum(parseInt(e.target.value))}></input>
                 </div>
-                <div className={styles.checkBoxDiv}>
+                <div className={styles.check_box_div}>
                     <input
                         type="checkbox"
-                        className={styles.checkBox}
+                        className={styles.check_box}
                         onChange={(e) => setAgreeTerms(e.target.checked)}
                     />
                     <label> (필수) 서비스 이용약관에 동의합니다 </label>
                 </div>
-                <div className={styles.checkBoxDiv}>
+                <div className={styles.check_box_div}>
                     <input
                         type="checkbox"
-                        className={styles.checkBox}
+                        className={styles.check_box}
                         onChange={(e) => setAgreeTerms2(e.target.checked)}
                     />
                     <label> (필수) 개인정보 처리방침에 동의합니다 </label>
                 </div>
-                <div className={styles.checkBoxDiv}>
+                <div className={styles.check_box_div}>
                     <input type="checkbox" />
                     <label> (선택) 마케팅 정보 수신에 동의합니다 </label>
                 </div>
-                <button className={styles.submitButton}>
-                    <p className={styles.submitButtonP} onClick={submitted}> 방 만들기 </p>
+                <button className={styles.submit_button}>
+                    <p className={styles.submit_button_p} onClick={submitted}> 방 만들기 </p>
                 </button>
-                <button className={styles.submitButton} onClick={() => router.push('./chatroom')}>
-                    <p className={styles.submitButtonP}> 뒤로 가기 </p>
+                <button className={styles.submit_button} onClick={() => router.push('./chatroom')}>
+                    <p className={styles.submit_button_p}> 뒤로 가기 </p>
                 </button>
             </div>
         </div>

@@ -14,7 +14,7 @@ body {
     background-color: #A06BF7;
 }
 
-.headerLogo {
+.header_logo {
     font-family: 'SBAggroB';
     color: white;
     font-size: 40px;
@@ -26,18 +26,18 @@ body {
     margin-top: 2%;
 }
 
-.chatroomTitleDiv {
+.chatroom_title_div {
     display: grid;
     margin-left:30%;
     text-align: center;
 }
 
-.chatroomTitle,
-.chatroomMentorTitle {
+.chatroom_title,
+.chatroom_mentor_title {
     color: white;
 }
 
-.joinNumber {
+.join_number {
     border-radius: 5px;
     background-color: rgb(255,255,255,0.5);
     margin-left: auto;
@@ -48,7 +48,7 @@ body {
 
 }
 
-.joinNumberP {
+.join_number_p {
     color: white;
 }
 
@@ -61,24 +61,24 @@ body {
     padding-bottom: 5%;
 }
 
-.createRoomTitle {
+.create_room_title {
     text-align: center;
     font-weight: bold;
     padding-top: 30px;
 }
 
-.createRoomDescription {
+.create_room_description {
     text-align: center;
     padding-top: 10px;
 }
 
-.checkBoxDiv {
+.check_box_div {
     margin-left: 10%;
     margin-top: 15px;
     font-size: 13px;
 }
 
-.createTextarea {
+.create_textarea {
     resize: none;
     width: 79%;
     margin-left: 10%;
@@ -88,12 +88,12 @@ body {
     border-width: 1;
 }
 
-.createRoomOption {
+.create_room_option {
     padding-left: 10%;
     padding-top: 10px;
 }
 
-.formStyle {
+.form_style {
     margin-left: 10%;
     margin-top: 10px;
     width: 79%;
@@ -103,7 +103,7 @@ body {
     background-color: #FAFAFA;
 }
 
-.submitButton {
+.submit_button {
     width: 78%;
     height: 40px;
     margin-left: 10%;
@@ -113,17 +113,17 @@ body {
     border-width: 0;
 }
 
-.submitButtonP {
+.submit_button_p {
     color: white;
     font-weight: bold;
 }
 
-.maxNumDiv {
+.max_num_div {
     display: flex;
     margin-top: 15px;
 }
 
-.smallFormStyle {
+.small_form_style {
     width: 27%;
     border-radius: 8px;
     border-width: 1;
