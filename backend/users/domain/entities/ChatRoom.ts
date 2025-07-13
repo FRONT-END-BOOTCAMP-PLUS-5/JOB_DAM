@@ -14,5 +14,6 @@ export class ChatRoom {
       name: string;
       email: string;
     },
+    public progress: number,
   ) {}
 }

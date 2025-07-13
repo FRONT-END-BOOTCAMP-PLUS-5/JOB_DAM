@@ -10,6 +10,7 @@ export interface ChatRoom {
     name: string;
     email: string;
   };
+  progress: number;
 }
 
 interface ChatMember {
