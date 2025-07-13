@@ -39,7 +39,7 @@ export default function LoginForm() {
           router.push('/');
         }, 1500);
       }
-    } catch (error) {
+    } catch {
       toast.error('로그인 실패');
     }
   };

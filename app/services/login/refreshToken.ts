@@ -12,3 +12,16 @@ export const RefreshToken = async () => {
     throw error;
   }
 };
+
+export const DeleteRefreshToken = async () => {
+  try {
+    const response = await axios.delete('/api/refresh', {
+      withCredentials: true,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Delete refresh token error:', error);
+    throw error;
+  }
+};

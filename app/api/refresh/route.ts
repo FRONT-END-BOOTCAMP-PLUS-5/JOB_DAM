@@ -28,7 +28,22 @@ export async function POST(request: NextRequest) {
     });
 
     return response;
-  } catch (error) {
-    return NextResponse.json({ message: 'Refresh token is required' }, { status: 400 });
+  } catch {
+    return NextResponse.json({ message: '리프레시 토큰 갱신 실패', status: 400 });
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const refreshToken = request.cookies.get('refresh_token')?.value;
+
+    if (!refreshToken) {
+      const response = NextResponse.json({ message: '리프레시 토큰 삭제 성공', status: 200 });
+      response.cookies.delete('refresh_token');
+
+      return response;
+    }
+  } catch {
+    return NextResponse.json({ message: '리프레시 토큰 삭제 실패', status: 400 });
   }
 }

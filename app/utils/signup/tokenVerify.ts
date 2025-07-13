@@ -10,7 +10,7 @@ export const verifyAccessToken = (token: string): JwtPayload => {
       throw new Error('디코딩 결과가 문자열입니다. 예상과 다릅니다.');
     }
     return decode;
-  } catch (error) {
+  } catch {
     throw new Error('액세스 토큰이 만료되었습니다.');
   }
 };
@@ -25,7 +25,7 @@ export const verifyRefreshToken = (token: string): JwtPayload => {
       throw new Error('디코딩 결과가 문자열입니다. 예상과 다릅니다.');
     }
     return decoded;
-  } catch (error) {
+  } catch {
     throw new Error('리프레시 토큰이 만료되었습니다.');
   }
 };
