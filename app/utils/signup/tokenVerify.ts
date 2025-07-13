@@ -1,9 +1,5 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
-interface Decode {
-  userId: string;
-}
-
 export const verifyAccessToken = (token: string): JwtPayload => {
   const secret = process.env.NEXT_PUBLIC_JWT_ACCESS_SECRET;
   if (!secret) throw new Error('JWT 시크릿 누락');

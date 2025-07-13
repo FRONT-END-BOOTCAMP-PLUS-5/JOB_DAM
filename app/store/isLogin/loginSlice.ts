@@ -21,6 +21,10 @@ export const memberDataSlice = createSlice({
       nickname: '',
       email: '',
       createdAt: '',
+      img: '',
+      grade: 0,
+      point: 0,
+      type: 0,
     },
   },
   reducers: {
