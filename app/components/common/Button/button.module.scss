@@ -81,3 +81,34 @@
   background-image: linear-gradient(90deg, #6876e0 30%, #7354ad 60%);
   color: #fff;
 }
+
+
+.write_non_disabled, .write_disabled{
+  width: 100%;
+  background-color: #ccc;
+  height: 50px;
+  border-radius: 6px;
+  font-size: 19px;
+  margin-bottom: 20px;
+  span{
+    font-weight: bold;
+  }
+}
+
+.write_non_disabled{
+  background-image: linear-gradient(90deg, #6876e0 30%, #7354ad 60%);
+  color: #fff;
+}
+
+
+.choose{
+  max-width: 200px;
+  height: 32px;
+  padding: 5px;
+  border-radius: 5px;
+  background-image: linear-gradient(90deg, #6876e0 30%, #7354ad 60%);
+  > .text {
+    font-weight: bold;
+    color: #fff;
+  }
+}
