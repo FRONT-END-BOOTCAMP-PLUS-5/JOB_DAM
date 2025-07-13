@@ -23,6 +23,7 @@ export class GetChatRoomUseCase {
         chatRoomId: cm.chat_room_id,
       })),
       createMember: cr.member,
+      progress: cr.progress,
     }));
 
     return {
