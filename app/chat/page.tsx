@@ -4,18 +4,18 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import styles from './chat.module.scss';
 import { chatService } from '../services/mypage/chat';
-import { TEST_MENTI_ID } from '../constants/test';
 import { Chat } from '../types/mypage/chat';
 import dayjs from 'dayjs';
 import { TextField } from '@mui/material';
 import { useChatScroll } from '../hooks/useChatScroll';
 import { useRealtimeChat } from '../hooks/useRealTimeChat';
 
-const CHAT_ROOM_ID = 3;
+const CHAT_ROOM_ID = 43;
 
 const ChatPage = () => {
   const [newMessage, setNewMessage] = useState('');
   const [initialMessage, setIntialMessage] = useState<Chat[]>([]);
+  const [userId, setUserId] = useState({ name: '', id: '' });
 
   const { insertChat, getChat } = chatService;
   const { containerRef, scrollToBottom } = useChatScroll();
@@ -24,18 +24,15 @@ const ChatPage = () => {
     sendMessage,
     isConnected,
   } = useRealtimeChat({
-    roomName: 'chat-room-test',
-    username: 'young',
+    roomName: `chat-room-${CHAT_ROOM_ID}`,
+    username: userId?.name,
+    userId: userId?.id,
   });
 
   const allMessages = useMemo(() => {
     const mergedMessages = [...initialMessage, ...realtimeMessages];
 
-    const uniqueMessages = mergedMessages.filter(
-      (message, index, self) => index === self.findIndex((m) => m.id === message.id),
-    );
-
-    const sortedMessages = uniqueMessages.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+    const sortedMessages = mergedMessages.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
 
     return sortedMessages;
   }, [initialMessage, realtimeMessages]);
@@ -47,7 +44,7 @@ const ChatPage = () => {
   const handleSendMessage = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
       const chatRef = {
-        member_id: TEST_MENTI_ID,
+        member_id: userId?.id,
         chat_room_id: CHAT_ROOM_ID,
         content: newMessage,
       };
@@ -63,12 +60,12 @@ const ChatPage = () => {
         }
       });
     },
-    [newMessage, isConnected, sendMessage],
+    [userId?.id, newMessage, isConnected, sendMessage, insertChat],
   );
 
   // 이미 나눴던 채팅 가져오기
   useEffect(() => {
-    getChat(3).then((res) => {
+    getChat(CHAT_ROOM_ID).then((res) => {
       setIntialMessage(res.result);
     });
   }, []);
@@ -76,6 +73,14 @@ const ChatPage = () => {
   useEffect(() => {
     scrollToBottom();
   }, [allMessages, scrollToBottom]);
+
+  useEffect(() => {
+    if (sessionStorage.getItem('mentor')) {
+      setUserId(JSON.parse(sessionStorage.getItem('mentor') ?? ''));
+    } else {
+      setUserId(JSON.parse(sessionStorage.getItem('menti') ?? ''));
+    }
+  }, []);
 
   return (
     <main className={styles.chat_container}>
@@ -87,7 +92,7 @@ const ChatPage = () => {
               <section className={styles.content_top}>
                 <div className={styles.chat_title}>
                   <span className={styles.profile_image}></span>
-                  <span className={styles.chat_name}>장도영</span>
+                  <span className={styles.chat_name}>{item?.memberId === userId?.id ? userId?.name : '익명'}</span>
                   <span className={styles.chat_bedge}>멘토</span>
                 </div>
                 <p className={styles.date}>{dayjs(item?.createdAt).format('HH:mm')}</p>

@@ -24,9 +24,9 @@ export interface ChatRef {
 }
 
 export interface Chat {
-  id: number;
+  id?: number;
   content: string;
-  chatRoomId: number;
+  chatRoomId?: number;
   memberId: string;
   createdAt: string;
   deletedAt?: string;

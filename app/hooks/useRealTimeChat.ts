@@ -2,26 +2,19 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { createClient } from '../utils/supabase/client';
+import { Chat } from '../types/mypage/chat';
 
 interface UseRealtimeChatProps {
   roomName: string;
   username: string;
-}
-
-export interface ChatMessage {
-  id: string;
-  content: string;
-  user: {
-    name: string;
-  };
-  createdAt: string;
+  userId: string;
 }
 
 const EVENT_MESSAGE_TYPE = 'message';
 
-export function useRealtimeChat({ roomName, username }: UseRealtimeChatProps) {
+export function useRealtimeChat({ roomName, username, userId }: UseRealtimeChatProps) {
   const supabase = createClient();
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<Chat[]>([]);
   const [channel, setChannel] = useState<ReturnType<typeof supabase.channel> | null>(null);
   const [isConnected, setIsConnected] = useState(false);
 
@@ -30,7 +23,7 @@ export function useRealtimeChat({ roomName, username }: UseRealtimeChatProps) {
 
     newChannel
       .on('broadcast', { event: EVENT_MESSAGE_TYPE }, (payload) => {
-        setMessages((current) => [...current, payload.payload as ChatMessage]);
+        setMessages((current) => [...current, payload.payload as Chat]);
       })
       .subscribe(async (status) => {
         if (status === 'SUBSCRIBED') {
@@ -49,12 +42,9 @@ export function useRealtimeChat({ roomName, username }: UseRealtimeChatProps) {
     async (content: string) => {
       if (!channel || !isConnected) return;
 
-      const message: ChatMessage = {
-        id: crypto.randomUUID(),
+      const message: Chat = {
+        memberId: userId,
         content,
-        user: {
-          name: username,
-        },
         createdAt: new Date().toISOString(),
       };
 
@@ -67,7 +57,7 @@ export function useRealtimeChat({ roomName, username }: UseRealtimeChatProps) {
         payload: message,
       });
     },
-    [channel, isConnected, username],
+    [channel, isConnected, userId],
   );
 
   return { messages, sendMessage, isConnected };
