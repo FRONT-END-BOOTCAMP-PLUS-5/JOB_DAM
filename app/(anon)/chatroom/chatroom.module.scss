@@ -14,7 +14,7 @@ body {
     background-color: #A06BF7;
 }
 
-.headerLogo {
+.header_logo {
     font-family: 'SBAggroB';
     color: white;
     font-size: 40px;
@@ -26,18 +26,18 @@ body {
     margin-top: 2%;
 }
 
-.chatroomTitleDiv {
+.chatroom_title_div {
     display: grid;
     margin-left: 30%;
     text-align: center;
 }
 
-.chatroomTitle,
-.chatroomMentorTitle {
+.chatroom_title,
+.chatroom_mentor_title {
     color: white;
 }
 
-.joinNumber {
+.join_number {
     border-radius: 5px;
     background-color: rgb(255, 255, 255, 0.5);
     margin-left: auto;
@@ -48,11 +48,11 @@ body {
 
 }
 
-.joinNumberP {
+.join_number_p {
     color: white;
 }
 
-.headerButton1 {
+.header_button1 {
     width: 100px;
     height: 40px;
     border-radius: 10px;
@@ -61,7 +61,7 @@ body {
     margin-right: 20px;
 }
 
-.headerButton2 {
+.header_button2 {
     width: 100px;
     height: 40px;
     border-radius: 10px;
@@ -77,7 +77,7 @@ body {
     width: 100%;
 }
 
-.recentChat {
+.recent_chat {
     margin-top: 15px;
     background-color: #F9FAFB;
     max-height: 487px;
@@ -85,7 +85,7 @@ body {
     width: 50%;
 }
 
-.recentChatH {
+.recent_chat_h {
     font-weight: bold;
     padding-top: 10px;
     padding-bottom: 11px;
@@ -94,7 +94,7 @@ body {
     border:1px solid black;
 }
 
-.recentChatHDiv {
+.recent_chat_h_div {
     display: flex;
 }
 
@@ -107,7 +107,7 @@ body {
     padding-bottom: 30px;
 }
 
-.bottomBox {
+.bottom_box {
     background-color: white;
     width: 42%;
     margin-top: 2%;
@@ -118,14 +118,14 @@ body {
     height: 130px;
 }
 
-.bottomNum {
+.bottom_num {
     font-weight: bold;
     padding-top: 25px;
     color: #8B5CF6;
 }
 
 
-.roomButtons {
+.room_buttons {
     width: 100%;
     height: 91px;
     background-color: white;
@@ -133,16 +133,16 @@ body {
     box-sizing: border-box;
 }
 
-.roomTitle {
+.room_title {
     text-align: left;
 }
 
-.mentorInfo2 {
+.mentor_info2 {
     display:flex;
     margin-left: 4%;
 }
 
-.mentorCompany {
+.mentor_company {
     background-color: #F3EFFE;
     border-radius: 10px;
     margin-left: 5px;
@@ -150,20 +150,20 @@ body {
     color: #9469F7;
 }
 
-.roomDescription {
+.room_description {
     text-align: left;
     color: gray;
     margin-left: 4%;
 }
 
-.roomDiv {
+.room_div {
     width: 100%;
 }
 
-.mainSide {
+.main_side {
     display: flex;
 }
 
-.myMentorRoomDiv {
+.my_mentor_room_div {
     width:49%;
 }
