@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     img: body.img || null,
     type: body.type,
     grade: body.grade,
-    point: body.point,
+    point: body.point || 0,
   };
 
   try {

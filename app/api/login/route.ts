@@ -1,15 +1,10 @@
 import { generateAccessToken, generateRefreshToken } from '@/app/utils/signup/token';
-import { verifyAccessToken, verifyRefreshToken } from '@/app/utils/signup/tokenVerify';
+import { verifyAccessToken } from '@/app/utils/signup/tokenVerify';
 import { createClient } from '@/app/utils/supabase/server';
 import { SbMemberRepository } from '@/backend/members/repositories/SbMemberRepository';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
-  // 로그인 처리
-  // 1. 이메일과 비밀번호를 받아온다.
-  // 2. 이메일과 비밀번호를 확인한다.
-  // 3. 이메일과 비밀번호가 일치하면 로그인 성공 메시지를 반환한다.
-  // 4. 이메일과 비밀번호가 일치하지 않으면 로그인 실패 메시지를 반환한다.
   try {
     const { email, password } = await request.json();
     const supabase = await createClient();
@@ -17,21 +12,21 @@ export async function POST(request: NextRequest) {
     const memberRepository = new SbMemberRepository(supabase);
     const memberData = await memberRepository.findOne(email, password);
 
-    const access_token = generateAccessToken(memberData.id);
-    const refresh_token = generateRefreshToken(memberData.id);
-
     if (!memberData) {
       return NextResponse.json({ message: '아이디 또는 비밀번호가 일치하지 않습니다', status: 401 });
     }
 
-    const response = NextResponse.json({ result: memberData, status: 200 });
+    const access_token = generateAccessToken(memberData.id);
+    const refresh_token = generateRefreshToken(memberData.id);
 
+    const response = NextResponse.json({ user: memberData, status: 200 });
+
+    // 쿠키 설정
+    // 1. 동일 사이트 내에서만 쿠키 전송
+    // 2. 30일 동안 쿠키 유지
+    // 3. 모든 경로에서 쿠키 접근 가능
+    // 4. 쿠키 접근 시 보안 옵션 적용
     response.cookies.set('access_token', access_token, {
-      // 쿠키 설정
-      // 1. 동일 사이트 내에서만 쿠키 전송
-      // 2. 30일 동안 쿠키 유지
-      // 3. 모든 경로에서 쿠키 접근 가능
-      // 4. 쿠키 접근 시 보안 옵션 적용
       sameSite: 'lax',
       maxAge: 60 * 15,
       path: '/',
@@ -39,11 +34,6 @@ export async function POST(request: NextRequest) {
     });
 
     response.cookies.set('refresh_token', refresh_token, {
-      // 쿠키 설정
-      // 1. 동일 사이트 내에서만 쿠키 전송
-      // 2. 30일 동안 쿠키 유지
-      // 3. 모든 경로에서 쿠키 접근 가능
-      // 4. 쿠키 접근 시 보안 옵션 적용
       sameSite: 'lax',
       maxAge: 60 * 60 * 24 * 30,
       path: '/',

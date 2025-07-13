@@ -4,9 +4,10 @@ import styles from './loginForm.module.scss';
 import Input from '@/app/components/common/Input';
 import Link from 'next/link';
 import { toast, ToastContainer } from 'react-toastify';
-import { handleLogin, loginMember } from '@/app/services/login/login';
+import { loginMember } from '@/app/services/login/login';
 import { useDispatch } from 'react-redux';
 import { setLoginState } from '@/app/store/isLogin/loginSlice';
+import { useRouter } from 'next/navigation';
 
 interface FormInput {
   email: string;
@@ -19,18 +20,24 @@ export default function LoginForm() {
     handleSubmit,
     formState: { errors },
   } = useForm<FormInput>();
+  const dispatch = useDispatch();
+  const router = useRouter();
 
   const onSubmit: SubmitHandler<FormInput> = async (data) => {
-    const dispatch = useDispatch();
-
     try {
       const response = await loginMember(data);
+      console.log('response', response);
 
       if (response.data.status === 200) {
-        const userResponse = await handleLogin();
-        if (userResponse.data.status === 200) {
-          dispatch(setLoginState.setLoginMemberData(userResponse.data.result));
-        }
+        // 🔹 POST 응답에서 바로 유저 정보를 Redux에 저장
+        dispatch(setLoginState.setLoginMemberData(response.data.user));
+        toast.success('로그인 성공', {
+          position: 'top-right',
+          autoClose: 1000,
+        });
+        setTimeout(() => {
+          router.push('/');
+        }, 1500);
       }
     } catch (error) {
       toast.error('로그인 실패');
@@ -74,7 +81,7 @@ export default function LoginForm() {
       </div>
       <input type="submit" className={styles.login_button} value="로그인" />
       <span>
-        아직 회원이 아니신가요? <Link href="/signup">회원기입</Link>
+        아직 회원이 아니신가요? <Link href="/signup">회원가입</Link>
       </span>
       <ToastContainer />
     </form>
