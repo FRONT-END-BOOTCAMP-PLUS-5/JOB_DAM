@@ -1,0 +1,154 @@
+body {
+    margin: 0 auto;
+}
+
+.all {
+    background-color: #A06BF7;
+}
+
+.header {
+    display: flex;
+    padding-top: 15px;
+}
+
+.chatroom_title_div {
+    display: grid;
+    margin-left: 30%;
+    text-align: center;
+}
+
+.chatroom_title,
+.chatroom_mentor_title {
+    color: white;
+}
+
+.join_number {
+    border-radius: 5px;
+    background-color: rgb(255, 255, 255, 0.5);
+    margin-left: auto;
+    padding: 4px 20px 4px 20px;
+    display: flex;
+    align-items: center;
+    margin-right: 2%;
+
+}
+
+.join_number_p {
+    color: white;
+}
+
+.header_button1 {
+    width: 100px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: #B070F9;
+    margin-left: 1100px;
+    margin-right: 20px;
+}
+
+.header_button2 {
+    width: 100px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: #B070F9;
+}
+
+.main {
+    background-color: white;
+    padding-bottom: 10%;
+    max-height: 453px;
+    overflow-y: scroll;
+    display: flex;
+    width: 100%;
+}
+
+.recent_chat {
+    margin-top: 15px;
+    background-color: #F9FAFB;
+    max-height: 487px;
+    border: 1px solid black;
+    width: 50%;
+}
+
+.recent_chat_h {
+    font-weight: bold;
+    padding-top: 10px;
+    padding-bottom: 11px;
+    padding-left: 30px;
+    width: 100%;
+    border:1px solid black;
+}
+
+.recent_chat_h_div {
+    display: flex;
+}
+
+.bottom {
+    position:fixed;
+    bottom:0;
+    background-color: #F5F7FF;
+    display: flex;
+    width: 100%;
+    padding-bottom: 30px;
+}
+
+.bottom_box {
+    background-color: white;
+    width: 42%;
+    margin-top: 2%;
+    margin-left: 5.5%;
+    border: 1px solid black;
+    border-radius: 5px;
+    text-align: center;
+    height: 130px;
+}
+
+.bottom_num {
+    font-weight: bold;
+    padding-top: 25px;
+    color: #8B5CF6;
+}
+
+
+.room_buttons {
+    width: 100%;
+    height: 91px;
+    background-color: white;
+    border: 0.5px solid gray;
+    box-sizing: border-box;
+}
+
+.room_title {
+    text-align: left;
+}
+
+.mentor_info2 {
+    display:flex;
+    margin-left: 4%;
+}
+
+.mentor_company {
+    background-color: #F3EFFE;
+    border-radius: 10px;
+    margin-left: 5px;
+    padding: 0px 5px 0px 5px;
+    color: #9469F7;
+}
+
+.room_description {
+    text-align: left;
+    color: gray;
+    margin-left: 4%;
+}
+
+.room_div {
+    width: 100%;
+}
+
+.main_side {
+    display: flex;
+}
+
+.my_mentor_room_div {
+    width:49%;
+}

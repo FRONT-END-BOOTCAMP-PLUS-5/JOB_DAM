@@ -1,0 +1,212 @@
+body {
+    margin: 0 auto;
+}
+
+.all {
+    background-color: #A06BF7;
+}
+
+.header {
+    display: flex;
+    padding-top: 15px;
+}
+
+.chatroom_title_div {
+    display: grid;
+    margin-left:41%;
+    text-align: center;
+}
+
+.chatroom_title,
+.chatroom_mentor_title {
+    color: white;
+}
+
+.join_number {
+    border-radius: 5px;
+    background-color: rgb(255,255,255,0.5);
+    margin-left: auto;
+    padding: 4px 20px 4px 20px;
+    display: flex;
+    align-items: center;
+    margin-right: 2%;
+}
+
+.join_number_p {
+    color: white;
+}
+
+.chat_side_bar {
+    display: grid;
+}
+
+.main_chat {
+    background-color: white;
+    border-radius: 10px;
+    margin-top: 30px;
+    margin-left: 2%;
+    margin-right: 2%;
+    display: flex;
+}
+
+.chat_side_bar {
+    border-radius: 10px;
+    background-color: #F8FAFC;
+    width:25%;
+    padding-bottom:23%;
+}
+
+.main_chat_space {
+    width: 75%;
+    height:620px;
+}
+
+.input_form {
+    width: 85%;
+    height: 40px;
+    border-radius: 10px;
+    background-color: #f0eeee;
+    margin-top: 1.5%;
+    margin-left: 3%;
+}
+
+.input_submit_button {
+    width: 8%;
+    height: 40px;
+    border-radius: 10px;
+    margin-left: 2%;
+    background-color: #d8d6d6
+}
+
+.chat_records_space {
+    height: 530px;
+    margin-top: 20px;
+    margin-left: 3%;
+    margin-right: 2.3%;
+    overflow-y: scroll;
+}
+
+.message {
+    background-color: white;
+    padding: 15px 15px 15px 15px;
+    margin-top:8px;
+    border-radius: 7px;
+    border: 0.3px solid black;
+    display: block;
+    width: max-content;
+    display: flex;
+}
+
+.question_icon {
+    background-color: #DBE9FE;
+    border-radius: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    color: #1D40B0;
+    margin-right: 5px;
+}
+
+.mentor_profile {
+    display: flex;
+}
+
+.mentor_name {
+    font-weight: bold;
+}
+
+.about_mentor {
+    margin-top: 30px;
+}
+
+.member_number_div {
+    width: 100%;
+    height: 50px;
+    background-color: #F1F5F9;
+    display:flex;
+    align-items: center;
+}
+
+.member_number {
+    margin-left: 15px;
+    font-weight: bold;
+}
+
+.mentor_badge_div {
+    display: flex;
+    margin-left: 15px;
+    margin-top: 10px;
+}
+
+.mentor_badge {
+    margin-left: auto;
+    margin-right: 20px;
+}
+
+.mentor_badge_circle {
+    background-color: #FEF3C7;
+    border-radius: 25px;
+    padding: 2px 10px 2px 10px;
+    border: 1px solid black;
+}
+
+.mentor_badge_circle {
+    color: #DA790C;
+}
+
+.mentee_badge_circle {
+    background-color: #F1F5F9;
+    border-radius: 25px;
+    padding: 2px 10px 2px 10px;
+    border: 1px solid black;
+    margin-top: 15px;
+}
+
+.online_or_not {
+    color: #54C497;
+}
+
+.mem {
+    display: flex;
+}
+
+.mentee_badge_div {
+    display: grid;
+    margin-left: 15px;
+}
+
+.member_name {
+    display: flex;
+    align-items: center;
+}
+
+.username_for_message {
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.go_to_chatting_rooms {
+    border:0.5px solid black;
+    padding: 3px 5px 3px 5px;
+    margin-top: 5px;
+}
+
+.mentee_up {
+    display: flex;
+}
+
+.mentee_role {
+    margin-top: 15px;
+    margin-left: 10px;
+    background-color: #F1F5F9;
+    border-radius: 10px;
+    padding: 0px 5px 0px 5px;
+}
+
+.role_for_mentor {
+    margin-top: 15px;
+    margin-left: 10px;
+    background-color: #FEF3C7;
+    border-radius: 10px;
+    padding: 0px 5px 0px 5px;
+    color: #DA790D;
+}
