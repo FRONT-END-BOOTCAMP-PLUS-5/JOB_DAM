@@ -35,7 +35,6 @@ export default function SignupPage() {
   const passwordCheckPattern = passwordValue === passwordCheckValue;
 
   const onSubmit = async (data: sign_up_form_type) => {
-    console.log('data', data);
     // ✅ 위에서 선언한 router 사용
     await validation(data, router);
   };

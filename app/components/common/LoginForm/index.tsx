@@ -26,7 +26,6 @@ export default function LoginForm() {
   const onSubmit: SubmitHandler<FormInput> = async (data) => {
     try {
       const response = await loginMember(data);
-      console.log('response', response);
 
       if (response.data.status === 200) {
         // 🔹 POST 응답에서 바로 유저 정보를 Redux에 저장

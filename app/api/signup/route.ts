@@ -31,17 +31,16 @@ export async function POST(request: NextRequest) {
       if (member) {
         return NextResponse.json({ message: '이미 존재하는 회원입니다.', status: 409 });
       }
-    } catch (error) {
+    } catch {
       // 회원이 없음 = 정상적으로 회원가입 진행
-      console.log('중복 체크 완료 - 새 회원 가입 진행', error);
+      throw new Error('중복 체크 완료 - 새 회원 가입 진행');
     }
 
     // 🔹 중복이 없으므로 회원가입 진행
     const insertedMemberData = await memberRepository.insertMember();
-    console.log('회원가입 성공:', insertedMemberData);
+
     return NextResponse.json({ result: insertedMemberData, status: 200 });
   } catch (err) {
-    console.error('회원가입 에러:', err);
     if (err instanceof Error) {
       return NextResponse.json({ message: err.message, status: 500 });
     }

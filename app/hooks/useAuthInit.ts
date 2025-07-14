@@ -6,6 +6,7 @@ import { setLoginState } from '@/app/store/isLogin/loginSlice';
 import { handleLogin } from '@/app/services/login/login';
 import { useAuth } from './useAuth';
 import { DeleteRefreshToken } from '../services/login/refreshToken';
+import { toast } from 'react-toastify';
 
 export const useAuthInit = () => {
   const dispatch = useDispatch();
@@ -27,7 +28,7 @@ export const useAuthInit = () => {
       } catch {
         // 🔹 토큰이 없거나 만료된 경우 - 아무것도 하지 않음 (로그아웃 상태 유지)
         await DeleteRefreshToken();
-        console.log('토큰 없음 또는 만료됨');
+        toast.error('로그인 정보가 만료되었습니다. 다시 로그인해주세요.');
       }
     };
 

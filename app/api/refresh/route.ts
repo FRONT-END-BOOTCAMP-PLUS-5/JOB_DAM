@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
     }
 
     const decoded = verifyRefreshToken(refreshToken);
-    const userId = decoded.userId;
+    const userId = decoded?.userId;
 
     const newAccessToken = generateAccessToken(userId);
 

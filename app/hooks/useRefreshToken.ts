@@ -5,7 +5,6 @@ export const useRefreshToken = () => {
   useEffect(() => {
     const refreshToken = async () => {
       const response = await RefreshToken();
-      console.log('response', response);
 
       return response.data;
     };
