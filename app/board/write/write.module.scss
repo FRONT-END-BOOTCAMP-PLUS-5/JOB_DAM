@@ -1,0 +1,69 @@
+@use "../../styles/mixin";
+
+.container {
+  @include mixin.flexCenter(row);
+  align-items: flex-start;
+  width: 100%;
+  padding: 0 10px;
+  background-image: linear-gradient(90deg, #6876e0 30%, #7354ad 60%);
+
+  &_content{
+    width: 100%;
+    max-width: 840px;
+    padding: 0 30px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    position: relative;
+  }
+
+  .spinner{
+    top: 50%;
+    left: 47%;
+    position: absolute;
+  }
+
+  .header_box{
+    @include mixin.flexCenter(column);
+    gap: 10px;
+    .header{
+      color: #000;
+      font-weight: bold;
+      font-size: 32px;
+      margin-top: 10px;
+    }
+
+    .sub_header{
+      color: #a1a1a1;
+    }
+    .sub_header:last-child{
+      color: #ccc;
+    }
+
+
+  }
+
+  .essential{
+    color: #ff5252;
+    font-size: 14px;
+  }
+
+  .title_box, .content_box, .drag_drop_image_box{
+    @include mixin.flexCenter(column);
+    align-items: flex-start;
+    margin-top: 30px;
+    gap: 10px;
+    .title, .drag_drop_image_box_title{
+      font-size: 1.3rem;
+      color: #131313;
+    }
+  }
+
+  .drag_drop_image_box{
+    margin-bottom: 50px;
+  }
+
+
+
+}

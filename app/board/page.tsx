@@ -8,8 +8,9 @@ import Skeleton from "../components/common/Skeleton/index"
 import NonData from '@/app/components/common/NonData';
 import Aside from '@/app/components/board/Aside';
 import usePagination from "@/app/hooks/usePagination";
-import {formatTimeAgo} from "@/app/utils/date";
-import { getLastName } from '@/app/utils/name';
+import {formatTimeAgo} from "@/app/utils/board/date";
+import { getLastName } from '@/app/utils/board/name';
+import { useRouter } from 'next/navigation';
 
 /**
  * 작성자: 김동우
@@ -43,6 +44,7 @@ export default function Board(){
     const inputValRef = useRef<string | null>('')
     const textRef = useRef('created_at')
 
+    const router = useRouter()
 
     const {
         currentItems,
@@ -87,6 +89,9 @@ export default function Board(){
     }
 
 
+    const goToWritePage = () => {
+        router.push('/board/write')
+    }
 
 
     const getboardData = async (url: string = `${activeBtn}`, keyword:string =`${textRef['current']}`) => {
@@ -125,7 +130,7 @@ export default function Board(){
                                 <span>
                                     총 <span className={style.search_box_total_question}>{getJson.length}</span>개의 질문
                                 </span>
-                                <Button type={'ask'}  text={'질문하기'} icon={'✏️'}/>
+                                <Button type={'ask'}  text={'질문하기'} icon={'✏️'} onClick={() => {goToWritePage()}}/>
                             </div>
                             <div className={style.search_box_middle}>
                                 <Input typeStyle={'search'}
