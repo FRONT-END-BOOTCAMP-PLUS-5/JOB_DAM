@@ -7,13 +7,28 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json();
+
     const supabase = await createClient();
 
     const memberRepository = new SbMemberRepository(supabase);
+    const validationMember = await memberRepository.findAll();
+
+    // 로그인 버튼 클릭하면 -> 그 때 값을 넘겨 받아 -> 그 값을 벨리데아션
     const memberData = await memberRepository.findOne(email, password);
 
-    if (!memberData) {
-      return NextResponse.json({ message: '아이디 또는 비밀번호가 일치하지 않습니다', status: 401 });
+    const memberEmail = validationMember.find((member) => member.email === email);
+    const memberPassword = validationMember.find((member) => member.password === password);
+
+    if (!memberEmail?.email && !memberPassword) {
+      return NextResponse.json({ message: '회원정보가 없습니다.', status: 401 });
+    }
+
+    if (email !== memberEmail?.email) {
+      return NextResponse.json({ message: '아이디가 일치하지 않습니다.', status: 401 });
+    }
+
+    if (password !== memberPassword?.password) {
+      return NextResponse.json({ message: '비밀번호가 일치하지 않습니다.', status: 401 });
     }
 
     const access_token = generateAccessToken(memberData.id);
@@ -42,13 +57,7 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (error) {
-    if (error instanceof Error && error.message?.includes('이메일이 일치하지 않습니다.')) {
-      return NextResponse.json({ message: '이메일이 일치하지 않습니다', status: 401 });
-    }
-    if (error instanceof Error && error.message?.includes('비밀번호가 일치하지 않습니다.')) {
-      return NextResponse.json({ message: '비밀번호가 일치하지 않습니다', status: 401 });
-    }
-    return NextResponse.json({ message: '로그인에 실패했습니다', status: 500 });
+    throw error;
   }
 }
 

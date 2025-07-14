@@ -2,6 +2,7 @@ import { createClient } from '@/app/utils/supabase/server';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 import { SbMemberRepository } from '../../../backend/members/repositories/SbMemberRepository';
+import { passwordCrypto } from '@/app/utils/signup/passwordCrypto';
 
 export async function POST(request: NextRequest) {
   const body = await request.json(); // 🔹 1. 클라이언트 요청 데이터 추출
@@ -10,7 +11,7 @@ export async function POST(request: NextRequest) {
     nickname: body.nickname,
     name: body.name,
     email: body.email,
-    password: body.password,
+    password: passwordCrypto(body.password),
     img: body.img || null,
     type: body.type,
     grade: body.grade,
