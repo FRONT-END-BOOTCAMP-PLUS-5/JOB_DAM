@@ -23,7 +23,6 @@ export const signUpService = async (member_data: sign_up_form_type) => {
 
       if (imageResult.status === 200 && imageResult.imageUrl) {
         imageUrl = imageResult.imageUrl;
-        console.log('이미지 업로드 성공:', imageUrl);
       } else {
         throw new Error('이미지 업로드 실패');
       }
@@ -38,8 +37,6 @@ export const signUpService = async (member_data: sign_up_form_type) => {
       img: imageUrl, // 실제 스토리지 URL 또는 null
     };
 
-    console.log('회원가입 데이터:', signUpData);
-
     // 회원가입 API 호출
     const signUpResponse = await axios.post('/api/signup', signUpData, {
       headers: {
@@ -49,7 +46,6 @@ export const signUpService = async (member_data: sign_up_form_type) => {
 
     return signUpResponse;
   } catch (error) {
-    console.error('signUpService 에러:', error);
     throw error; // 에러를 상위로 전달
   }
 };

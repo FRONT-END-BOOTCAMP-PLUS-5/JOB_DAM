@@ -23,17 +23,18 @@ export async function POST(request: NextRequest) {
 
     const memberRepository = new SbMemberRepository(supabase, memberData); // 🔹 3. 인프라 계층 생성
 
-    // 🔹 중복 체크를 try-catch로 감싸기
-    try {
-      const member = await new GetOneMemberUseCase(memberRepository).execute(body.email, body.password);
+    // 🔹 이메일 중복 체크 (이메일만으로 체크)
+    const { data: existingMembers, error: checkError } = await supabase
+      .from('member')
+      .select('id')
+      .eq('email', body.email);
 
-      // 회원이 존재하면 중복
-      if (member) {
-        return NextResponse.json({ message: '이미 존재하는 회원입니다.', status: 409 });
-      }
-    } catch {
-      // 회원이 없음 = 정상적으로 회원가입 진행
-      throw new Error('중복 체크 완료 - 새 회원 가입 진행');
+    if (checkError) {
+      return NextResponse.json({ message: checkError.message, status: 500 });
+    }
+
+    if (existingMembers && existingMembers.length > 0) {
+      return NextResponse.json({ message: '이미 존재하는 이메일입니다.', status: 409 });
     }
 
     // 🔹 중복이 없으므로 회원가입 진행
