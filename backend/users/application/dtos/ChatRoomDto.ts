@@ -14,5 +14,6 @@ export class ChatRoomDto {
       email: string;
     },
     public progress: number,
+    public maxPeople: number,
   ) {}
 }

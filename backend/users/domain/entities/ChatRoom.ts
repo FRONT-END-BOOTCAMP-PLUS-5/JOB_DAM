@@ -15,5 +15,6 @@ export class ChatRoom {
       email: string;
     },
     public progress: number,
+    public maxPeople: number,
   ) {}
 }

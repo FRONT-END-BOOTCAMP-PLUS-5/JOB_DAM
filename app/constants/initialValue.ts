@@ -14,4 +14,5 @@ export const ChatRoomValue = {
     email: '',
   },
   progress: 0,
+  maxPeople: 0,
 };

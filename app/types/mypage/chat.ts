@@ -11,6 +11,7 @@ export interface ChatRoom {
     email: string;
   };
   progress: number;
+  maxPeople: number;
 }
 
 interface ChatMember {
