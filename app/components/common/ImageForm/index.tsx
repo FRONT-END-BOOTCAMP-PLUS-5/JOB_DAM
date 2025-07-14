@@ -2,6 +2,8 @@ import Image from 'next/image';
 import React, { useRef, useState } from 'react';
 import styles from './imageForm.module.scss';
 import { UseFormRegister, UseFormSetValue, FieldValues, Path, FieldErrors, PathValue } from 'react-hook-form';
+import userImage from '@/app/public/images/userImage.svg';
+import fileImage from '@/app/public/images/file.svg';
 
 interface ImageFormProps<T extends FieldValues> {
   register?: UseFormRegister<T>;
@@ -52,7 +54,6 @@ export default function ImageForm<T extends FieldValues>({ register, setValue, e
 
     // 파일 읽기 실패 시 실행
     reader.onerror = () => {
-      console.error('파일 읽기 실패');
       alert('파일을 읽는 중 오류가 발생했습니다');
     };
 
@@ -63,15 +64,18 @@ export default function ImageForm<T extends FieldValues>({ register, setValue, e
   return (
     <div className={styles.imageFormContainer}>
       <div className={styles.uploadImageContainer}>
+        <div className={styles.signup_image_container}>
+          <Image
+            src={previewImage || userImage}
+            alt="유저 이미지"
+            width={40}
+            height={40}
+            className={styles.signup_image}
+          />
+        </div>
+
         <Image
-          src={previewImage || '/images/userImage.svg'}
-          alt="유저 이미지"
-          width={40}
-          height={40}
-          className={styles.signup_image}
-        />
-        <Image
-          src={'/images/file.svg'}
+          src={fileImage}
           alt="파일 업로드"
           width={20}
           height={20}
