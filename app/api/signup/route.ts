@@ -2,7 +2,6 @@ import { createClient } from '@/app/utils/supabase/server';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 import { SbMemberRepository } from '../../../backend/members/repositories/SbMemberRepository';
-import { GetOneMemberUseCase } from '../../../backend/signups/application/usecases/GetOneMemberUseCase';
 
 export async function POST(request: NextRequest) {
   const body = await request.json(); // 🔹 1. 클라이언트 요청 데이터 추출
@@ -23,17 +22,11 @@ export async function POST(request: NextRequest) {
 
     const memberRepository = new SbMemberRepository(supabase, memberData); // 🔹 3. 인프라 계층 생성
 
-    // 🔹 중복 체크를 try-catch로 감싸기
-    try {
-      const member = await new GetOneMemberUseCase(memberRepository).execute(body.email, body.password);
+    const member = await memberRepository.findOne(body.email, body.password);
 
-      // 회원이 존재하면 중복
-      if (member) {
-        return NextResponse.json({ message: '이미 존재하는 회원입니다.', status: 409 });
-      }
-    } catch {
-      // 회원이 없음 = 정상적으로 회원가입 진행
-      throw new Error('중복 체크 완료 - 새 회원 가입 진행');
+    // 회원이 존재하면 중복
+    if (member) {
+      return NextResponse.json({ message: '이미 존재하는 회원입니다.', status: 409 });
     }
 
     // 🔹 중복이 없으므로 회원가입 진행
