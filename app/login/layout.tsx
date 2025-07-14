@@ -1,3 +1,5 @@
+'use client';
+
 import styles from './loginPage.module.scss';
 
 function LoginLayout({ children }: { children: React.ReactNode }) {

@@ -5,6 +5,9 @@ import Input from '@/app/components/common/Input';
 import Link from 'next/link';
 import { toast, ToastContainer } from 'react-toastify';
 import { loginMember } from '@/app/services/login/login';
+import { useDispatch } from 'react-redux';
+import { setLoginState } from '@/app/store/isLogin/loginSlice';
+import { useRouter } from 'next/navigation';
 
 interface FormInput {
   email: string;
@@ -17,33 +20,27 @@ export default function LoginForm() {
     handleSubmit,
     formState: { errors },
   } = useForm<FormInput>();
-  const onSubmit: SubmitHandler<FormInput> = (data) => {
-    loginMember(data)
-      .then((res) => {
-        console.log(res);
-        if (res.data.status === 200) {
-          toast.success('로그인 성공!', {
-            position: 'top-left',
-            autoClose: 2000,
-          });
-          console.log('사용자 정보:', res.data.result);
-          // 로그인 성공 후 원하는 페이지로 이동
-          // router.push('/board');
-        } else {
-          toast.error(res.data.message, {
-            position: 'top-left',
-            autoClose: 2000,
-          });
-        }
-      })
-      .catch((error) => {
-        console.error('로그인 오류:', error);
-        if (error.response?.data?.status === 401) {
-          toast.error(error.response.data.message || '이메일 또는 비밀번호가 일치하지 않습니다.');
-        } else {
-          toast.error('로그인 중 오류가 발생했습니다.');
-        }
-      });
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  const onSubmit: SubmitHandler<FormInput> = async (data) => {
+    try {
+      const response = await loginMember(data);
+
+      if (response.data.status === 200) {
+        // 🔹 POST 응답에서 바로 유저 정보를 Redux에 저장
+        dispatch(setLoginState.setLoginMemberData(response.data.user));
+        toast.success('로그인 성공', {
+          position: 'top-right',
+          autoClose: 1000,
+        });
+        setTimeout(() => {
+          router.push('/');
+        }, 1500);
+      }
+    } catch {
+      toast.error('로그인 실패');
+    }
   };
 
   return (
@@ -70,8 +67,8 @@ export default function LoginForm() {
         className={styles.login_form_input}
         containerClassName={styles.login_form_item}
         register={register}
-        pattern={/^(?=.*[!@#$%^&+])[a-zA-Z0-9!@#$%^&+]{8,20}$/}
-        errorMessage="비밀번호는 특수문자 포함해서 8글자이상 20이하로  작성해주세요."
+        pattern={/^(?=.*[!@#$%&*])[a-zA-Z0-9!@#$%&*]{8,15}$/}
+        errorMessage="비밀번호는 특수문자 포함해서 8글자이상 15이하로 작성해주세요."
         errors={errors}
       />
       <div className={styles.login_form_checkbox}>
@@ -83,7 +80,7 @@ export default function LoginForm() {
       </div>
       <input type="submit" className={styles.login_button} value="로그인" />
       <span>
-        아직 회원이 아니신가요? <Link href="/signup">회원기입</Link>
+        아직 회원이 아니신가요? <Link href="/signup">회원가입</Link>
       </span>
       <ToastContainer />
     </form>
