@@ -2,7 +2,6 @@ import { createClient } from '@/app/utils/supabase/server';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 import { SbMemberRepository } from '../../../backend/members/repositories/SbMemberRepository';
-import { GetOneMemberUseCase } from '../../../backend/signups/application/usecases/GetOneMemberUseCase';
 
 export async function POST(request: NextRequest) {
   const body = await request.json(); // 🔹 1. 클라이언트 요청 데이터 추출
