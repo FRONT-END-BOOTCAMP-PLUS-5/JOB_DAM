@@ -39,3 +39,25 @@
     }
   }
 }
+
+.board{
+  border-top: none;
+
+  @include mixin.tablet {
+    min-width: auto;
+  }
+
+  h2 {
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: 16px;
+
+  }
+
+
+  div {
+    font-size: 11px;
+    color: #666;
+
+  }
+}

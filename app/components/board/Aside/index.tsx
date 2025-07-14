@@ -4,6 +4,7 @@ import style from "./aside.module.scss"
 import { getLastName } from '@/app/utils/board/name';
 import Profile from '@/app/components/common/Profile';
 import Skeleton from '@/app/components/common/Skeleton';
+import NonData from "@/app/components/common/NonData";
 /**
  * 작성자: 김동우
  * 작성일: 2025-07-09
@@ -27,6 +28,7 @@ export default function Aside(){
     const res = await fetch('api/member/rank', { next: { revalidate: 3600 } })
     const { result } = await res.json()
     const members = [...result['member']]
+    console.log(members)
     setJson(members)
     setLoading(false)
   }
@@ -38,7 +40,7 @@ export default function Aside(){
   return (
     <>
       <h4 className={style.title}>🏆 이주의 멘토</h4>
-      { loading  && new Array(5).fill(1).map((_, idx) => {
+      { loading  ? new Array(5).fill(1).map((_, idx) => {
         return (
           <Skeleton key={idx}
                     top={true}
@@ -48,10 +50,8 @@ export default function Aside(){
                     containerName={'aside_container'}
                     typeStyle={'aside'}/>
           )
-        })
-      }
-      { !loading && getJson.map((item:JsonType) => {
-          return (
+        }) : getJson.length ? getJson.map((item:JsonType) => {
+        return (
             <div className={style.container} key={item.id}>
               <span>
                 <Profile text={getLastName(item.name as string)}/>
@@ -65,8 +65,8 @@ export default function Aside(){
               </div>
               <span className={style.grade}>{item.grade}P</span>
             </div>
-          )
-        })
+        )
+      })  : <NonData typeStyle={'board'}/>
       }
     </>
   );

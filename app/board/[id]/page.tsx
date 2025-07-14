@@ -37,7 +37,6 @@ export default function Item(){
       const response = await fetch(`/api/question/item?id=${id}`)
       const json = await response.json()
       const item = json['result']['questionItem'][0]
-      console.log(item, "item")
       setItem(item)
       setIsLoading(false)
     }
