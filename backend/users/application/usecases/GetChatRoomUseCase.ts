@@ -10,7 +10,7 @@ export class GetChatRoomUseCase {
   }
 
   async execute(member_id: string): Promise<{ chatRoom: ChatRoomDto[] }> {
-    const chatRoomTable: ChatRoomTable[] = await this.repository.findById(member_id);
+    const chatRoomTable: ChatRoomTable[] = await this.repository.chatRoomFindById(member_id);
 
     const chatRoomDto: ChatRoomDto[] = chatRoomTable.map((cr) => ({
       id: cr.id,
@@ -23,6 +23,7 @@ export class GetChatRoomUseCase {
         chatRoomId: cm.chat_room_id,
       })),
       createMember: cr.member,
+      progress: cr.progress,
     }));
 
     return {
