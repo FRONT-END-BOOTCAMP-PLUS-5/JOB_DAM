@@ -1,6 +1,6 @@
 import { MemberRepository } from '../../domain/repositories/MemberRepository';
-import { MemberTable } from '../../domain/table/MemberTable';
-import { MemberDto } from '../dtos/MemberDto';
+import { MemberMentorRank } from '@/backend/members/domain/entities/MemberMentorRank';
+import { MemberMentorRankDto } from '@/backend/members/application/dtos/MemberMentorRankDto';
 /**
  * 작성자: 김동우
  * 작성일: 2025-07-09
@@ -12,26 +12,20 @@ export class GetMemberListUsecase {
     this.repository = repository;
   }
 
-  async execute(): Promise<{ member: MemberDto[] }> {
-    const members: MemberTable[] = await this.repository.findTopGradeMembers();
+  async execute(): Promise<{ member: MemberMentorRankDto[] }> {
+    const members: MemberMentorRank[] = await this.repository.findTopGradeMembers();
 
-    const memberDtos: MemberDto[] = members.map((item) => ({
+    const memberMentorDtos: MemberMentorRankDto[] = members.map((item) => ({
       id: item['id'],
       name: item['name'],
-      email: item['email'],
-      password: item['password'],
-      createdAt: item['created_at'],
-      updatedAt: item['updated_at'],
-      deletedAt: item['deleted_at'],
       img: item['img'],
       grade: item['grade'],
-      point: item['point'],
-      type: item['type'],
       nickname: item['nickname'],
+      member: item['mentor_application']
     }));
 
     return {
-      member: memberDtos,
+      member: memberMentorDtos,
     };
   }
 }

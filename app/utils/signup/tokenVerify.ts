@@ -9,13 +9,14 @@ export const verifyAccessToken = (token: string): JwtPayload => {
     if (typeof decode === 'string') {
       throw new Error('디코딩 결과가 문자열입니다. 예상과 다릅니다.');
     }
+
     return decode;
   } catch {
     throw new Error('액세스 토큰이 만료되었습니다.');
   }
 };
 
-export const verifyRefreshToken = (token: string): JwtPayload => {
+export const verifyRefreshToken = (token: string): JwtPayload | undefined => {
   const secret = process.env.NEXT_PUBLIC_JWT_REFRESH_SECRET;
   if (!secret) throw new Error('JWT 시크릿 누락');
 

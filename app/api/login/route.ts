@@ -74,10 +74,11 @@ export async function GET(request: NextRequest) {
       status: 200,
     });
   } catch (error) {
-    console.log('error', error);
-    return NextResponse.json({
-      message: '인증 실패',
-      status: 401,
-    });
+    if (error instanceof Error) {
+      return NextResponse.json({
+        message: '인증 실패',
+        status: 401,
+      });
+    }
   }
 }

@@ -1,16 +1,41 @@
 @use "../../../styles/mixin";
 
-.container{
+.container {
   @include mixin.flexCenter(column);
   width: 100%;
-  min-width: 1000px;
-  padding: 0 20px;
-  height: 174px;
-
+  min-width: unset;
+  padding: 20px;
+  height: auto;
   border-top: 1px solid #dddfe2;
+  text-align: center;
 
-  h2{
+  @include mixin.tablet {
+    min-width: 1000px;
+    padding: 0 20px;
+    height: 174px;
+    text-align: left;
+  }
+
+  h2 {
     margin-bottom: 10px;
     font-weight: bold;
+    font-size: 1.5rem;
+
+    @include mixin.tablet {
+      font-size: 2rem;
+    }
+  }
+
+  div {
+    font-size: 1rem;
+    color: #666;
+
+    @include mixin.tablet {
+      font-size: 1.2rem;
+    }
+
+    span {
+      margin-left: 5px;
+    }
   }
 }

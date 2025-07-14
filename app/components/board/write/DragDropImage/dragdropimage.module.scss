@@ -1,0 +1,16 @@
+@use '../../../../styles/mixin';
+
+.container{
+  @include mixin.flexCenter(column);
+  width: 100%;
+  height: 200px;
+  border: 3px dotted #eaecef;
+  border-radius: 8px;
+  color: #ccc;
+  gap: 10px;
+  text-align: center;
+
+  .hidden_input{
+    display: none;
+  }
+}

@@ -8,8 +8,9 @@ import Skeleton from "../components/common/Skeleton/index"
 import NonData from '@/app/components/common/NonData';
 import Aside from '@/app/components/board/Aside';
 import usePagination from "@/app/hooks/usePagination";
-import {formatTimeAgo} from "@/app/utils/date";
-import { getLastName } from '@/app/utils/name';
+import {formatTimeAgo} from "@/app/utils/board/date";
+import { getLastName } from '@/app/utils/board/name';
+import { useRouter } from 'next/navigation';
 
 /**
  * 작성자: 김동우
@@ -43,6 +44,7 @@ export default function Board(){
     const inputValRef = useRef<string | null>('')
     const textRef = useRef('created_at')
 
+    const router = useRouter()
 
     const {
         currentItems,
@@ -87,6 +89,9 @@ export default function Board(){
     }
 
 
+    const goToWritePage = () => {
+        router.push('/board/write')
+    }
 
 
     const getboardData = async (url: string = `${activeBtn}`, keyword:string =`${textRef['current']}`) => {
@@ -125,7 +130,7 @@ export default function Board(){
                                 <span>
                                     총 <span className={style.search_box_total_question}>{getJson.length}</span>개의 질문
                                 </span>
-                                <Button type={'ask'}  text={'질문하기'} icon={'✏️'}/>
+                                <Button type={'ask'}  text={'질문하기'} icon={'✏️'} onClick={() => {goToWritePage()}}/>
                             </div>
                             <div className={style.search_box_middle}>
                                 <Input typeStyle={'search'}
@@ -146,7 +151,7 @@ export default function Board(){
                             </div>
                         </section>
                         <section className={style.question_box}>
-                                {loading  && new Array(5).fill(1).map((_, idx) => {
+                                {loading ? new Array(5).fill(1).map((_, idx) => {
                                     return (
                                       <Skeleton key={idx}
                                                 top={true}
@@ -156,27 +161,27 @@ export default function Board(){
                                                 containerName={'board_container'}
                                                 typeStyle={'board'}/>
                                       )
-                                    })
-                                }
-                                {!loading && currentItems.length ? currentItems.map((item:IProps) => {
-                                    return (
-                                      <div key={item.id} className={style.question}>
-                                        <h3 className={style.question_title}>{item.title}</h3>
-                                        <div className={style.question_sub_box}>
-                                          <span>👍{item.recommend}</span>
-                                          <span>👁️{item.view}<span>조회</span></span>
-                                        </div>
-                                        <p className={style.content}>{item.content}</p>
-                                        <div className={style.question_bottom}>
-                                          <div className={style.profile_box}>
-                                            <Profile text={getLastName(item.member.nickname as string)}/>
-                                            <span className={style.nickname}>{item.member.nickname}</span>
-                                          </div>
-                                          <span className={style.date}>{formatTimeAgo(item.createdAt)}</span>
-                                        </div>
-                                      </div>
-                                    )
-                                }) : <NonData/>}
+                                    }) : currentItems.length ? (
+                                      currentItems.map((item:IProps) => {
+                                          return (
+                                            <div key={item.id} className={style.question}>
+                                                <h3 className={style.question_title}>{item.title}</h3>
+                                                <div className={style.question_sub_box}>
+                                                    <span>👍{item.recommend}</span>
+                                                    <span>👁️{item.view}<span>조회</span></span>
+                                                </div>
+                                                <p className={style.content}>{item.content}</p>
+                                                <div className={style.question_bottom}>
+                                                    <div className={style.profile_box}>
+                                                        <Profile text={getLastName(item.member.nickname as string)}/>
+                                                        <span className={style.nickname}>{item.member.nickname}</span>
+                                                    </div>
+                                                    <span className={style.date}>{formatTimeAgo(item.createdAt)}</span>
+                                                </div>
+                                            </div>
+                                          )
+                                      })
+                                ): <NonData/>}
                         </section>
                         <div className={style.button_container}>
                             {currentItems.length != 0 && <Button text={"<"}
