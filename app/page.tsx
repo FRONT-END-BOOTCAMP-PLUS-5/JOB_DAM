@@ -1,6 +1,12 @@
 'use client';
 
+import { useSelector } from 'react-redux';
+import { RootState } from './store/store';
+
 export default function Home() {
+  const member = useSelector((state: RootState) => state.login.member);
+  console.log('member', member);
+
   const testMentorSet = () => {
     sessionStorage.setItem('mentor', JSON.stringify({ id: '0bd61fbf-71fd-44e1-a590-1e53af363c3c', name: '장도영' }));
   };

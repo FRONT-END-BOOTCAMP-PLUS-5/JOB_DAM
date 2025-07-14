@@ -34,9 +34,7 @@ export default function LoginForm() {
           position: 'top-right',
           autoClose: 1000,
         });
-        setTimeout(() => {
-          router.push('/');
-        }, 1500);
+        router.push('/');
       }
     } catch {
       toast.error('로그인 실패');
@@ -58,6 +56,7 @@ export default function LoginForm() {
         errorMessage="이메일 형식이 올바르지 않습니다."
         errors={errors}
       />
+
       <Input
         label="비밀번호"
         name="password"
@@ -71,9 +70,10 @@ export default function LoginForm() {
         errorMessage="비밀번호는 특수문자 포함해서 8글자이상 15이하로 작성해주세요."
         errors={errors}
       />
+
       <div className={styles.login_form_checkbox}>
         <div className={styles.login_form_checkbox_item}>
-          <input type="checkbox" />
+          <input type="checkbox" className={styles.login_form_checkbox_input} />
           <label>로그인 상태 유지</label>
         </div>
         <Link href="/login/findPassword">비밀번호 찾기</Link>
