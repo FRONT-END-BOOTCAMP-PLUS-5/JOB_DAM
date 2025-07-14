@@ -5,14 +5,9 @@ import { useState, useEffect } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import { useRouter } from 'next/navigation'
 
-interface member_info {
-    id: string,
-    name: string,
-    email: string,
-    password: string,
-    img: string,
-    nickname: string
-}
+import type {
+    member_info
+} from '../types/chatroom/chatroom'
 
 const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -22,7 +17,6 @@ const supabase = createClient(
 const CreateRoom = () => {
 
     const router = useRouter()
-
     const [member, setMember] = useState<member_info | null>(null)
     const [roomName, setRoomName] = useState<string>('');
     const [roomDescription, setRoomDescription] = useState<string>('');

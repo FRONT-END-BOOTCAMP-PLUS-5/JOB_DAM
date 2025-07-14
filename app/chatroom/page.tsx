@@ -2,49 +2,18 @@
 
 import styles from '../chatroom/chatroom.module.scss'
 import { useState, useEffect } from 'react'
-import { createClient } from '@supabase/supabase-js'
 import { useRouter } from 'next/navigation'
 
-const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
-
-interface chat_room {
-    id: number
-    title: string,
-    created_member_id: string,
-    description: string
-}
-
-interface chat_room_with_mentor {
-    id: number
-    title: string
-    created_member_id: string
-    description: string
-    mentor_name: string
-    mentor_company: string
-    mentor_level: string
-}
-
-interface mentor_info_i {
-    my_mentor_title: string,
-    my_mentor_description: string
-}
-
-interface member_info {
-    id: string,
-    name: string,
-    email: string,
-    password: string,
-    img: string,
-    nickname: string
-}
+import type {
+    chat_room,
+    chat_room_with_mentor,
+    mentor_info_i,
+    member_info
+} from '../types/chatroom/chatroom'
 
 const Chatroom = () => {
 
     const router = useRouter()
-
     const [member, setMember] = useState<member_info | null>(null)
     const [chatRooms, setChatRooms] = useState<chat_room[]>([])
     const [chatRoomsWithMentor, setChatRoomsWithMentor] = useState<chat_room_with_mentor[]>([])
@@ -75,15 +44,8 @@ const Chatroom = () => {
             return
         }
         const find_rooms = async () => {
-            const { data: chat_member } = await supabase
-                .from('chat_member')
-                .select('chat_room_id')
-                .eq('member_id', member.id)
-            const room_id = chat_member?.map(m => m.chat_room_id) || []
-            const { data: room_data } = await supabase
-                .from('chat_room')
-                .select('id,title,created_member_id,description')
-                .in('id', room_id)
+            const response = await fetch(`/api/chatroom/roomData?memberId=${member.id}`)
+            const room_data = await response.json()
             setChatRooms(room_data || [])
         }
         find_rooms()
@@ -92,53 +54,21 @@ const Chatroom = () => {
     useEffect(() => {
         const fetch_chat_rooms_with_mentor_info = async () => {
             if (chatRooms.length === 0) return;
-
-            const rooms_with_mentor_info = await Promise.all(
-                chatRooms.map(async (room) => {
-                    const { data: mentor_data } = await supabase
-                        .from('mentor_application')
-                        .select('member_id,company,level')
-                        .eq('member_id', room.created_member_id)
-                        .single()
-
-                    const { data: mentor_name_data } = await supabase
-                        .from('member')
-                        .select('name')
-                        .eq('id', room.created_member_id)
-                        .single()
-
-                    return {
-                        ...room,
-                        mentor_name: mentor_name_data?.name || '알 수 없음',
-                        mentor_company: mentor_data?.company || '알 수 없음',
-                        mentor_level: mentor_data?.level || '알 수 없음'
-                    }
-                })
-            )
-
+            const roomIds = chatRooms.map(room => room.id).join(',')
+            const response = await fetch(`/api/chatroom/mentorInfo?roomIds=${roomIds}`)
+            const rooms_with_mentor_info = await response.json()
             setChatRoomsWithMentor(rooms_with_mentor_info)
         }
-
         fetch_chat_rooms_with_mentor_info()
     }, [chatRooms])
 
     useEffect(() => {
         if (!member) return
-
         const fetch_my_mentor_rooms = async () => {
-            const { data: my_rooms } = await supabase
-                .from('chat_room')
-                .select('title, description')
-                .eq('created_member_id', member.id)
-
-            const formatted = my_rooms?.map(room => ({
-                my_mentor_title: room.title,
-                my_mentor_description: room.description
-            })) || []
-
+            const response = await fetch(`/api/chatroom/mentorRoom?memberId=${member.id}`)
+            const formatted = await response.json()
             setMyMentorInfo(formatted)
         }
-
         fetch_my_mentor_rooms()
     }, [member])
 
