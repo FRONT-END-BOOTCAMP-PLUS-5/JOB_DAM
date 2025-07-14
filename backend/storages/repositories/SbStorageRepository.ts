@@ -1,8 +1,6 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import { StorageRepository } from '../domain/repositories/StorageRepository';
 
-
-
 export class SbStorageRepository implements StorageRepository {
   private supabase: SupabaseClient;
 
@@ -31,30 +29,24 @@ export class SbStorageRepository implements StorageRepository {
     // 공개 URL 생성
     const { data: publicData } = this.supabase.storage.from('user-profile-image').getPublicUrl(data.path);
 
-    console.log('업로드 성공:', {
-      path: data.path,
-      publicUrl: publicData.publicUrl,
-    });
-
     return publicData.publicUrl; // 공개 URL 반환
   }
 
-
-  async writeImageUpload(file: File){
+  async writeImageUpload(file: File) {
     // 위에 있는 타임 스탬프
     const timestamp = Date.now();
     //확장자 가져오기
-    const regex = /\.[a-zA-Z0-9]+$/
+    const regex = /\.[a-zA-Z0-9]+$/;
     //uuid 생성
-    const uuid = crypto.randomUUID()
-    const fileExtension = file.name.match(regex)
+    const uuid = crypto.randomUUID();
+    const fileExtension = file.name.match(regex);
 
-    const fileName = `${timestamp}_${uuid}${fileExtension}`
+    const fileName = `${timestamp}_${uuid}${fileExtension}`;
     const { data, error } = await this.supabase.storage
-      .from("board-upload-image")
-      .upload(fileName, file, { upsert: true })
+      .from('board-upload-image')
+      .upload(fileName, file, { upsert: true });
 
     if (error) throw new Error(error.message);
-    return data
+    return data;
   }
 }

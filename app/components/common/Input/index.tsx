@@ -2,6 +2,8 @@ import { useState } from 'react';
 import styles from './input.module.scss';
 import { Path, UseFormRegister, FieldValues, FieldErrors, RegisterOptions } from 'react-hook-form';
 import Image from 'next/image';
+import showPassword_image from '@/app/public/images/show_password.svg';
+import noShowPassword_image from '@/app/public/images/no_show_image.svg';
 
 interface InputProps<T extends FieldValues> {
   label: string;
@@ -59,8 +61,8 @@ export default function Input<T extends FieldValues>({
             className={styles.toggle_password_button}
           >
             <Image
-              src={showPassword ? '/images/show_password.svg' : '/images/no_show_image.svg'}
-              alt="eye"
+              src={showPassword ? showPassword_image : noShowPassword_image}
+              alt="showTogglePassword"
               width={20}
               height={20}
             />
