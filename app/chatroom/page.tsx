@@ -76,8 +76,7 @@ const Chatroom = () => {
     return (
         <div className={styles.all}>
             <div className={styles.header}>
-                <button className={styles.header_button1} onClick={() => { router.push('/createRoom') }}> + </button>
-                <button className={styles.header_button2}> 마이페이지 </button>
+                <button className={styles.header_button} onClick={() => { router.push('/createRoom') }}> + </button>
             </div>
             <div className={styles.recent_chat_h_div}>
                 <div className={styles.recent_chat}>

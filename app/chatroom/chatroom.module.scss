@@ -37,26 +37,18 @@ body {
     color: white;
 }
 
-.header_button1 {
-    width: 100px;
+.header_button {
+    width: 30px;
     height: 40px;
     border-radius: 10px;
     background-color: #B070F9;
-    margin-left: 1100px;
-    margin-right: 20px;
-}
-
-.header_button2 {
-    width: 100px;
-    height: 40px;
-    border-radius: 10px;
-    background-color: #B070F9;
+    margin-left: 95%;
 }
 
 .main {
     background-color: white;
-    padding-bottom: 10%;
-    max-height: 453px;
+    padding-bottom: 52%;
+    max-height: 473px;
     overflow-y: scroll;
     display: flex;
     width: 100%;
@@ -65,9 +57,12 @@ body {
 .recent_chat {
     margin-top: 15px;
     background-color: #F9FAFB;
-    max-height: 487px;
     border: 1px solid black;
     width: 50%;
+    height: 440px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .recent_chat_h {

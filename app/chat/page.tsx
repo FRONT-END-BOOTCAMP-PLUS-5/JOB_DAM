@@ -218,7 +218,9 @@ const Chat = () => {
             return (
                 <div>
                     <div className={styles.mentee_up}>
-                        <p className={styles.username_for_message}> {mentorName?.name || '멘토'} </p>
+                        <div className={styles.username_with_image}>
+                            <p className={styles.username_for_message}> {mentorName?.name || '멘토'} </p>
+                        </div>
                         <div className={styles.role_for_mentor}>
                             <p> 멘토 </p>
                         </div>
@@ -232,7 +234,9 @@ const Chat = () => {
             return (
                 <div>
                     <div className={styles.mentee_up}>
-                        <p className={styles.username_for_message}> {chatMemberName?.[i] || '멘티'} </p>
+                        <div className={styles.username_with_image}>
+                            <p className={styles.username_for_message}> {chatMemberName?.[i] || '멘티'} </p>
+                        </div>
                         <div className={styles.mentee_role}>
                             <p> 멘티 </p>
                         </div>

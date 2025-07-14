@@ -13,4 +13,5 @@ export async function GET(request: Request) {
         .select('img, nickname')
         .in('id', memberIdArray)
     return Response.json(data || [])
+
 }
