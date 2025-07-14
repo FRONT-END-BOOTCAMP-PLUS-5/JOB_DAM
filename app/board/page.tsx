@@ -108,6 +108,9 @@ export default function Board(){
         setLoading(false)
     }
 
+    const goToItem = (id: number) => {
+        router.push(`/board/${id}`)
+    }
 
     useEffect(() => {
         getboardData()
@@ -164,7 +167,10 @@ export default function Board(){
                                     }) : currentItems.length ? (
                                       currentItems.map((item:IProps) => {
                                           return (
-                                            <div key={item.id} className={style.question}>
+                                            <div key={item.id} className={style.question} onClick={() => {
+                                                const id = item.id
+                                                goToItem(id)
+                                            }}>
                                                 <h3 className={style.question_title}>{item.title}</h3>
                                                 <div className={style.question_sub_box}>
                                                     <span>👍{item.recommend}</span>

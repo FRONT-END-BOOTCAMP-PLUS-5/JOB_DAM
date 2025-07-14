@@ -15,6 +15,9 @@ export class QuestionTable {
             img: string | null,
             nickname: string | null,
         }[],
+        public img1?: string,
+        public img2?: string,
+        public img3?: string,
     ){}
 
 }

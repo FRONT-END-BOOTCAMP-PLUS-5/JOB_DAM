@@ -66,6 +66,7 @@ export class SbQuestionRepository implements QuestionRepository {
     return data.path;
   }
 
+
   async insertQuestion({ title, content, memberId, img }:IProps): Promise<Question> {
     const { data, error } = await this.supabase.from('question').insert({
       title,
@@ -79,5 +80,15 @@ export class SbQuestionRepository implements QuestionRepository {
 
     if (error) throw new Error(error.message);
     return data as Question;
+  }
+
+  async findItem(id: string):Promise<Question[]>{
+    const { data, error } = await this.supabase
+        .from("question")
+        .select('*, member_id(id,name,img,nickname)')
+        .eq('id',`${id}`)
+
+    if (error) throw new Error(error.message);
+    return data as Question[];
   }
 }

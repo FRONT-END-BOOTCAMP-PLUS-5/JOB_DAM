@@ -2,6 +2,7 @@ import { QuestionRepository } from '../../domain/repositories/QuestionRepository
 import { QuestionTable } from '../../domain/table/QuestionTable';
 import { QuestionDto } from '../dtos/QuestionDto';
 import { NextRequest } from 'next/server';
+import {Question} from "@/backend/questions/domain/entities/Question";
 /**
  * 작성자: 김동우
  * 작성일: 2025-07-03
@@ -42,5 +43,26 @@ export class GetQuestionUseCase {
     return {
       question: questionDtos,
     };
+  }
+
+  async getItem(id: string){
+    const questionItem: QuestionTable[] = await this.repository.findItem(id)
+
+    const questionDto =  questionItem.map((item) => ({
+          id: item['id'],
+          title: item['title'],
+          content: item['content'],
+          createdAt: item['created_at'],
+          categoryId: item['category_id'],
+          recommend: item['recommend'],
+          view: item['view'],
+          img1: item['img1'],
+          img2: item['img2'],
+          img3: item['img3'],
+          member: item['member_id'],
+    }))
+    return {
+      questionItem: questionDto
+    }
   }
 }

@@ -38,3 +38,14 @@ export function formatTimeAgo(createdAt: string) {
         return `${years}년 전`;
     }
 }
+
+export function formatDate(createdAt: string){
+    const customDate = new Date(createdAt)
+
+    const year = customDate.getFullYear()
+    const month = customDate.getMonth()+1
+
+    const date = customDate.getDate()
+
+    return `${year}-${month > 9 ?  month : '0'+month }-${date > 9 ?  date : '0'+date }`
+}
