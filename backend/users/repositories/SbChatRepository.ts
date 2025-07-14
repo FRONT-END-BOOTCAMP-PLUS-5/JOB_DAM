@@ -1,14 +1,23 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import { ChatRepository } from '../domain/repositories/ChatRepository';
+import { Chat } from '../domain/entities/Chat';
+
+interface ClientProp {
+  content: string;
+  chat_room_id: number;
+  member_id: string;
+}
 
 export class SbChatRepository implements ChatRepository {
   private supabase;
+  private clientData;
 
-  constructor(supabase: SupabaseClient) {
+  constructor(supabase: SupabaseClient, clientData?: ClientProp) {
     this.supabase = supabase;
+    this.clientData = clientData;
   }
 
-  async findById(member_id: string) {
+  async chatRoomFindById(member_id: string) {
     const { data: chatMembers, error: chatMemberError } = await this.supabase
       .from('chat_member')
       .select('chat_room_id')
@@ -32,5 +41,20 @@ export class SbChatRepository implements ChatRepository {
     if (chatRoomError) throw new Error(chatRoomError.message);
 
     return chatRooms;
+  }
+
+  async insertChat(): Promise<Chat> {
+    const { data: chat, error } = await this.supabase.from('chat').insert(this.clientData).single();
+
+    if (error) throw new Error(error.message);
+    return chat;
+  }
+
+  async chatFindById(chat_room_id: number): Promise<Chat[]> {
+    const { data: chat, error } = await this.supabase.from('chat').select('*').eq('chat_room_id', chat_room_id);
+
+    if (error) throw new Error(error.message);
+
+    return chat;
   }
 }
