@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from "react"
 import style from "./aside.module.scss"
-import { getLastName } from '@/app/utils/name';
+import { getLastName } from '@/app/utils/board/name';
 import Profile from '@/app/components/common/Profile';
 import Skeleton from '@/app/components/common/Skeleton';
 /**

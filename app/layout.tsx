@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import LayoutProvider from './components/common/LayoutProvider';
+import { ReduxProvider } from './components/common/reduxProvider';
 
 export const metadata: Metadata = {
   title: 'JOB DAM',
@@ -23,7 +24,9 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <LayoutProvider>{children}</LayoutProvider>
+        <ReduxProvider>
+          <LayoutProvider>{children}</LayoutProvider>
+        </ReduxProvider>
       </body>
     </html>
   );

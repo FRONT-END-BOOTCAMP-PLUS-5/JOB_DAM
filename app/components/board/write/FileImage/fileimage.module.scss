@@ -1,0 +1,33 @@
+@use "../../../../styles/mixin";
+
+.container{
+  @include mixin.flexCenter(column);
+  gap: 14px;
+  width: 100%;
+  .img_box{
+    @include mixin.flexCenter(column);
+    .img_wrap{
+      position: relative;
+      .img{
+        border-radius: 8px;
+        width: 250px;
+        height: 168px;
+      }
+      .img_delete{
+        position: absolute;
+        right: 5px;
+        top: 5px;
+        cursor: pointer;
+      }
+    }
+
+    @include mixin.tablet {
+      @include mixin.flexCenter(row);
+      gap: 14px;
+    }
+  }
+  @include mixin.tablet {
+    @include mixin.flexCenter(row);
+    justify-content: flex-start;
+  }
+}

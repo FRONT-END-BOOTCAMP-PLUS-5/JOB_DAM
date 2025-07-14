@@ -6,7 +6,14 @@ export const loginMember = async (memberData: { email: string; password: string 
     withCredentials: true,
   });
 
-  console.log(response);
+  return response;
+};
 
+export const handleLogin = async () => {
+  const response = await axios.get('/api/login', {
+    withCredentials: true,
+  });
+
+  console.log('사용자 정보 응답:', response); // 디버깅용
   return response;
 };

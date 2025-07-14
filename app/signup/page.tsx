@@ -21,6 +21,7 @@ export default function SignupPage() {
     control,
     formState: { errors },
   } = useForm<sign_up_form_type>({
+    mode: 'onBlur',
     defaultValues: {
       service_terms: false,
       privacy_terms: false,
@@ -34,7 +35,6 @@ export default function SignupPage() {
   const passwordCheckPattern = passwordValue === passwordCheckValue;
 
   const onSubmit = async (data: sign_up_form_type) => {
-    console.log('data', data);
     // ✅ 위에서 선언한 router 사용
     await validation(data, router);
   };
@@ -82,8 +82,8 @@ export default function SignupPage() {
               className={styles.signup_form_item}
               register={register}
               errors={errors}
-              pattern={/^(?=.*[!@#$%^&+])[a-zA-Z0-9]{8,20}$/}
-              errorMessage="비밀번호는 특수문자 포함 8자 이상 20자 이하이어야 합니다"
+              pattern={/^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/}
+              errorMessage="비밀번호는 영문, 숫자, 특수문자 포함 8자 이상 15자 이하이어야 합니다"
               required
               type="password"
             />
@@ -118,7 +118,7 @@ export default function SignupPage() {
 
           <div className={styles.signup_check_box_container}>
             <input type="checkbox" className={styles.signup_check_box} {...register('marketing_terms')} />
-            <p>(선택) 마케팅 정보 수신에 동의합니다</p>
+            <p className={styles.signup_check_text}>(선택) 마케팅 정보 수신에 동의합니다</p>
           </div>
 
           <Button type="submit" typeStyle="submit" text="회원가입" />

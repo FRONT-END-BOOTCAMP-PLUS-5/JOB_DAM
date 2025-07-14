@@ -67,7 +67,11 @@ export default function Input<T extends FieldValues>({
           </button>
         )}
       </div>
-      {errors?.[name] && <span className={styles.error_message}>{errors[name].message as string}</span>}
+      {errors?.[name] && (
+        <span className={styles.error_message}>
+          {typeof errors[name]?.message === 'string' ? errors[name]?.message : ''}
+        </span>
+      )}
       {name === 'password_check' && passwordCheckPattern === false && !errors?.[name] && (
         <span className={styles.error_message}>{errorMessage}</span>
       )}
