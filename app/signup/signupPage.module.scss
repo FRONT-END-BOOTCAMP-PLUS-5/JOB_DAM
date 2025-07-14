@@ -50,7 +50,6 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 100%;
     gap: 15px;
 
     .signup_form_item {
@@ -68,7 +67,6 @@
     align-items: center;
     gap: 15px;
     padding-top: 10px;
-    border: 1px solid red;
 
     > p {
       font-weight: 600;

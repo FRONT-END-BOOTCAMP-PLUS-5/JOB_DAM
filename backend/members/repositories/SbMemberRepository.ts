@@ -37,7 +37,6 @@ export class SbMemberRepository implements MemberRepository {
 
   async insertMember(): Promise<Member> {
     // 🔹 파라미터 제거, 타입 수정
-
     const { data, error } = await this.supabase.from('member').insert([this.clientData]).select().single();
 
     if (error) {
@@ -63,12 +62,7 @@ export class SbMemberRepository implements MemberRepository {
 
     if (error) throw new Error(error.message);
 
-    // 데이터가 없거나 빈 배열일 때 에러 던지기
-    if (!data || data.length === 0) {
-      throw new Error('이메일 또는 비밀번호가 일치하지 않습니다.');
-    }
-
-    return data[0] as Member;
+    return data[0];
   }
 
   async findById(userId: string): Promise<Member> {

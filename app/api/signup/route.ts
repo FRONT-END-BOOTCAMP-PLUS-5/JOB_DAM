@@ -22,14 +22,24 @@ export async function POST(request: NextRequest) {
 
     const memberRepository = new SbMemberRepository(supabase, memberData); // 🔹 3. 인프라 계층 생성
 
-    const member = await memberRepository.findOne(body.email, body.password);
+    const member = await memberRepository.findAll();
 
-    // 회원이 존재하면 중복
-    if (member) {
-      return NextResponse.json({ message: '이미 존재하는 회원입니다.', status: 409 });
+    const memberEmail = member.find((member) => member.email === body.email);
+    const memberNickname = member.find((member) => member.nickname === body.nickname);
+    const memberName = member.find((member) => member.name === body.name);
+
+    if (memberEmail) {
+      return NextResponse.json({ message: '이미 존재하는 이메일입니다.', status: 409 });
     }
 
-    // 🔹 중복이 없으므로 회원가입 진행
+    if (memberNickname) {
+      return NextResponse.json({ message: '이미 존재하는 닉네임입니다.', status: 409 });
+    }
+
+    if (memberName) {
+      return NextResponse.json({ message: '이미 존재하는 이름입니다.', status: 409 });
+    }
+
     const insertedMemberData = await memberRepository.insertMember();
 
     return NextResponse.json({ result: insertedMemberData, status: 200 });
