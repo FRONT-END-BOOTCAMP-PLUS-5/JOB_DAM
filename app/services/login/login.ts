@@ -14,6 +14,5 @@ export const handleLogin = async () => {
     withCredentials: true,
   });
 
-  console.log('사용자 정보 응답:', response); // 디버깅용
   return response;
 };
