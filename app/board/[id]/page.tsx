@@ -6,6 +6,8 @@ import Aside from "@/app/components/board/Aside";
 import {getLastName} from "@/app/utils/board/name";
 import Profile from "@/app/components/common/Profile";
 import {formatDate} from "@/app/utils/board/date";
+import Input from '@/app/components/board/Input';
+import Button from '@/app/components/common/Button';
 
 interface Item{
   catergoryId: number | null
@@ -79,20 +81,20 @@ export default function Item(){
             <section className={style.container_content_left_bottom}>
               <section className={style.chat_box}>
                 <div className={style.chat}>
-                  <div className={style.chat_box_top}>
+                  <div className={style.other_chat}>
+                    <div>반갑습니다 ㅎㅇ</div>
                   </div>
-                  <div className={style.chat_box_middle}>
-
-                  </div>
-                  <div className={style.chat_box_bottom}>
+                  <div className={style.my_chat}>
+                    <div>안녕하세요</div>
                   </div>
                 </div>
               </section>
-              <section className={style.question_box}>
-
-              </section>
               <div className={style.button_container}>
-
+                <Input typeStyle={'search'}
+                       type={'text'}
+                       placeholder={"채팅내용을 입력하세요"}
+                />
+                <Button type={'send'} text={'🚀 보내기'}/>
               </div>
             </section>
           </section>
