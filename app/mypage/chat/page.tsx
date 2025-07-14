@@ -10,16 +10,20 @@ import ReviewModal from './ReviewModal';
 import { reviewService } from '@/app/services/mypage/review';
 import { ChatRoomValue } from '@/app/constants/initialValue';
 import { createClient } from '@/app/utils/supabase/client';
-
-const TEST_USER_ID = '0bd61fbf-71fd-44e1-a590-1e53af363c3c';
+import { RootState } from '@/app/store/store';
+import { useSelector } from 'react-redux';
+import { Member } from '@/app/store/isLogin/loginSlice';
+import Link from 'next/link';
 
 const ChatPage = () => {
+  const member = useSelector((state: RootState) => state.login.member);
   const [chatRoom, setChatRoom] = useState<ChatRoom[]>([]);
   const [reviewOpen, setReviewOpen] = useState(false);
   const [rating, setRating] = useState<number | null>(0);
   const [content, setContent] = useState('');
   const [selectChatRoom, setSelectChatRoom] = useState<ChatRoom>(ChatRoomValue);
   const [progress, setProgress] = useState(0);
+  const [user, setUser] = useState<Member>(member);
 
   const supabase = createClient();
   const { getChatRoom, updateChatRoom } = chatService;
@@ -59,7 +63,7 @@ const ChatPage = () => {
 
     updateChatRoom(updateChatRoomRef).then((res) => {
       if (res) {
-        getChatRoom(TEST_USER_ID).then((gRes) => {
+        getChatRoom(user.id).then((gRes) => {
           setChatRoom(gRes.result);
         });
       }
@@ -72,6 +76,10 @@ const ChatPage = () => {
     },
     [chatRoom],
   );
+
+  useEffect(() => {
+    setUser(member);
+  }, [member]);
 
   useEffect(() => {
     updateChatRoomProgress(progress);
@@ -92,10 +100,10 @@ const ChatPage = () => {
   }, [supabase]);
 
   useEffect(() => {
-    getChatRoom(TEST_USER_ID).then((res) => {
+    getChatRoom(user.id).then((res) => {
       setChatRoom(res.result);
     });
-  }, []);
+  }, [user]);
 
   return (
     <section>
@@ -119,7 +127,7 @@ const ChatPage = () => {
                 <button onClick={() => handleUpdateChatRoom(item?.id)}>생성하기</button>
               </div>
             )}
-            {item?.progress === 1 && <div>진행중</div>}
+            {item?.progress === 1 && <Link href={`/chat/${item?.id}`}>이동하기</Link>}
             {item?.progress === 2 && (
               <div className={styles.button_wrap}>
                 <button onClick={() => handleReviewModalShow(true, item?.id)}>리뷰 쓰기</button>
