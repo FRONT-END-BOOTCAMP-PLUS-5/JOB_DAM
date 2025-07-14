@@ -6,6 +6,7 @@ interface ClientProp {
   content: string;
   chat_room_id: number;
   member_id: string;
+  type: number;
 }
 
 export class SbChatRepository implements ChatRepository {

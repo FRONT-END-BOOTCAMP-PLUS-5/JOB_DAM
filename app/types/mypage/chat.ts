@@ -22,6 +22,7 @@ export interface ChatRef {
   chat_room_id: number;
   member_id: string;
   content: string;
+  type: number;
 }
 
 export interface Chat {
@@ -32,6 +33,7 @@ export interface Chat {
   createdAt: string;
   deletedAt?: string;
   updatedAt?: string;
+  type: number;
 }
 
 export interface PayloadChat {
