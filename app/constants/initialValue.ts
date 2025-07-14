@@ -13,4 +13,5 @@ export const ChatRoomValue = {
     name: '',
     email: '',
   },
+  progress: 0,
 };

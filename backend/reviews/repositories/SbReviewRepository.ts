@@ -1,7 +1,6 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Review } from '../domain/entities/Review';
 import { ReviewRepository } from '../domain/repositories/ReviewRepository';
-import { TEST_MENTOR_ID } from '@/app/constants/test';
 import { ReviewInfo } from '../domain/entities/ReviewInfo';
 
 interface ClientProp {

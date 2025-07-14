@@ -17,7 +17,7 @@ export class SbMemberRepository implements MemberRepository {
   // 엔티티 타입인자 제네릭 추가, 예시 getEntities<MemberTable>, MemberMentorApplicationJoinTable... 등
   // T는 table,  K는 엔티티
   // board에서도 사용하기 때문에 이와 같이수정함
-  private getEntities<T,K extends T>(member: T): K{
+  private getEntities<T, K extends T>(member: T): K {
     return { ...member } as K;
   }
 
@@ -30,7 +30,9 @@ export class SbMemberRepository implements MemberRepository {
       .limit(5);
 
     if (error) throw new Error(error.message);
-    return data.map((item) => this.getEntities<MemberMentorApplicationJoinTable,MemberMentorRank>(item)) as MemberMentorRank[];
+    return data.map((item) =>
+      this.getEntities<MemberMentorApplicationJoinTable, MemberMentorRank>(item),
+    ) as MemberMentorRank[];
   }
 
   async insertMember(): Promise<Member> {
@@ -84,6 +86,14 @@ export class SbMemberRepository implements MemberRepository {
     if (error || !data) {
       throw new Error('사용자 정보를 찾을 수 없습니다.');
     }
+
+    return data;
+  }
+
+  async findAllMentor(): Promise<Member[]> {
+    const { data, error } = await this.supabase.from('member').select('*').eq('type', 1);
+
+    if (error) throw new Error(error.message);
 
     return data;
   }
