@@ -204,3 +204,22 @@
     border-radius: 4px;
   }
 }
+
+.not_found_data {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  & h3 {
+    margin-bottom: 12px;
+  }
+
+  & h4 {
+    margin-bottom: 8px;
+  }
+
+  & .mentor_move_button {
+    margin-bottom: 30px;
+  }
+}

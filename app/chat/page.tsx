@@ -12,9 +12,9 @@ import { Button, Chip, Switch, TextField } from '@mui/material';
 import { useChatScroll } from '../hooks/useChatScroll';
 import { useRealtimeChat } from '../hooks/useRealTimeChat';
 import ChatEndModal from '../components/chat/ChatEndModal';
-import Link from 'next/link';
+import Image from 'next/image';
+import nonData from '../public/images/not_found_data.png';
 
-const CREATE_MEMBER_ID = '0bd61fbf-71fd-44e1-a590-1e53af363c3c';
 const CHAT_TYPE_TEXT = ['일반', '질문', '답변'];
 
 const ChatPage = () => {
@@ -134,10 +134,13 @@ const ChatPage = () => {
       <section className={styles.content_wrap}>
         <ul className={styles.chat_room_list}>
           {(!chatRoom || chatRoom.length === 0) && (
-            <div>
-              진행중인 채팅이 없어요. <br />
-              멘토에게 채팅 신청을 하고 채팅방을 생성해보세요. <br />
-              <Link href={'/mentor'}>멘토 찾으러가기</Link>
+            <div className={styles.not_found_data}>
+              <Image src={nonData} alt="데이터가 없어요." width={350} height={300} />
+              <h3>진행중인 채팅이 없어요. </h3>
+              <h4>멘토에게 채팅 신청을 하고 채팅방을 생성해보세요. </h4>
+              <Button className={styles.mentor_move_button} variant="contained" href={'/mentor'}>
+                멘토 찾으러가기
+              </Button>
             </div>
           )}
           {chatRoom &&
@@ -164,7 +167,7 @@ const ChatPage = () => {
         </ul>
 
         <section className={styles.chat_section}>
-          {(!selectChatRoom || selectChatRoom?.id === 0) && <div>채팅방을 선택해주세요.</div>}
+          {chatRoom.length > 0 && (!selectChatRoom || selectChatRoom?.id === 0) && <div>채팅방을 선택해주세요.</div>}
           {selectChatRoom && selectChatRoom?.id !== 0 && (
             <>
               <h1 className={styles.section_title}>
@@ -212,7 +215,7 @@ const ChatPage = () => {
                     color={`${chatType !== 0 ? 'primary' : 'default'}`}
                   />
 
-                  {CREATE_MEMBER_ID !== user?.id && (
+                  {selectChatRoom?.createMember?.id !== user?.id && (
                     <Switch
                       aria-label="Switch"
                       value={chatType}
