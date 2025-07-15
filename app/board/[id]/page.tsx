@@ -98,7 +98,7 @@ export default function Item(){
 
 
   const toBottom = () => {
-    commentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' })
+    commentRef.current?.scrollIntoView({ block: 'end', inline: 'nearest' })
   }
 
  useEffect(() => {
@@ -181,7 +181,6 @@ export default function Item(){
                       )
                     })
                   }
-                  <div style={{height: '10px'}}/>
                 </div>
               </section>
               <div className={style.button_container}>
