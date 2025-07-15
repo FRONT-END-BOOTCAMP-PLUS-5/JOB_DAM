@@ -40,6 +40,8 @@
         border-radius: 50%;
         display: inline-block;
         margin-right: 12px;
+        position: relative;
+        overflow: hidden;
       }
 
       & .date_member {
@@ -93,7 +95,7 @@
 .item_container {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
   max-height: 500px;
   overflow-y: scroll;
   min-width: 500px;
@@ -104,6 +106,10 @@
     background: rgba(102, 126, 234, 0.1);
     padding: 16px;
     border-radius: 12px;
+
+    &.my_chat {
+      background: rgba(237, 108, 2, 0.1);
+    }
 
     & .content_top {
       display: flex;
@@ -119,6 +125,8 @@
           height: 24px;
           border-radius: 50%;
           background: burlywood;
+          position: relative;
+          overflow: hidden;
         }
 
         & .chat_name {

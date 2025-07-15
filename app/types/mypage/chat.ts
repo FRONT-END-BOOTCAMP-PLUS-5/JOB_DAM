@@ -23,6 +23,7 @@ export interface ChatMember {
     id: string;
     name: string;
     nickname: string;
+    img?: string;
   };
   chatRoomId: number;
 }
