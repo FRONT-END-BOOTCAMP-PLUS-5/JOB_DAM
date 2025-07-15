@@ -1,6 +1,10 @@
 export class ChatMemberDto {
   constructor(
-    public memberId: string,
-    public chatRoomId: string,
+    public member: {
+      id: string;
+      name: string;
+      nickname: string;
+    },
+    public chatRoomId: number,
   ) {}
 }

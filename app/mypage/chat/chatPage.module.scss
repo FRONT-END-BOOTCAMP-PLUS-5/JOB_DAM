@@ -15,6 +15,8 @@
       @include mixin.flexCenter(row);
       border-radius: 50%;
       margin-right: 16px;
+      position: relative;
+      overflow: hidden;
     }
 
     & .chat_room_info {

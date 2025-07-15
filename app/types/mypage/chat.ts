@@ -6,22 +6,32 @@ export interface ChatRoom {
   title: string;
   chatMember: ChatMember[];
   createMember: {
-    id: number;
+    id: string;
+    img: string;
     name: string;
-    email: string;
+    type: number;
+    grade: number;
+    nickname: string;
   };
   progress: number;
+  maxPeople: number;
+  review?: Review[];
 }
 
-interface ChatMember {
+export interface ChatMember {
+  member: {
+    id: string;
+    name: string;
+    nickname: string;
+  };
   chatRoomId: number;
-  memberId: string;
 }
 
 export interface ChatRef {
   chat_room_id: number;
   member_id: string;
   content: string;
+  type: number;
 }
 
 export interface Chat {
@@ -32,6 +42,7 @@ export interface Chat {
   createdAt: string;
   deletedAt?: string;
   updatedAt?: string;
+  type: number;
 }
 
 export interface PayloadChat {
@@ -42,4 +53,14 @@ export interface PayloadChat {
   id: number;
   member_id: string;
   updated_at?: string;
+}
+
+interface Review {
+  id: number;
+  rating: number;
+  content: string;
+  memberId: string;
+  createdAt: string;
+  deletedAt: string;
+  chatRoomId: number;
 }
