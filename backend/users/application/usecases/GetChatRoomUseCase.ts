@@ -19,12 +19,15 @@ export class GetChatRoomUseCase {
       deletedAt: cr.deleted_at,
       title: cr.title,
       chatMember: cr.chat_member.map((cm) => ({
-        memberId: cm.member_id,
+        member: {
+          name: cm.member.name,
+          nickname: cm.member.nickname,
+        },
         chatRoomId: cm.chat_room_id,
       })),
       createMember: cr.member,
       progress: cr.progress,
-      maxPeople: cr.maxPeople,
+      maxPeople: cr.max_people,
     }));
 
     return {

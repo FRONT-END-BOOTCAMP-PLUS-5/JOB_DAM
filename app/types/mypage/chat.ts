@@ -6,17 +6,22 @@ export interface ChatRoom {
   title: string;
   chatMember: ChatMember[];
   createMember: {
-    id: number;
+    img: string;
     name: string;
-    email: string;
+    type: number;
+    grade: number;
+    nickname: string;
   };
   progress: number;
   maxPeople: number;
 }
 
 interface ChatMember {
+  member: {
+    name: string;
+    nickname: string;
+  };
   chatRoomId: number;
-  memberId: string;
 }
 
 export interface ChatRef {

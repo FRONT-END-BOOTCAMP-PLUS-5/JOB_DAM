@@ -1,6 +1,9 @@
 export class ChatMember {
   constructor(
-    public member_id: string,
-    public chat_room_id: string,
+    public member: {
+      name: string;
+      nickname: string;
+    },
+    public chat_room_id: number,
   ) {}
 }

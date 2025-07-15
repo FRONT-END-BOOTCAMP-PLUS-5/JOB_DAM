@@ -33,8 +33,8 @@ export class SbChatRepository implements ChatRepository {
       .select(
         `
         *,
-        chat_member(*),
-        member!chat_room_created_member_id_fkey(*)
+        chat_member(chat_room_id, member(name,nickname)),
+        member!chat_room_created_member_id_fkey(img,name,type,grade,nickname)
       `,
       )
       .in('id', chatRoomIds);
