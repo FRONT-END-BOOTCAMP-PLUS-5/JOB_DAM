@@ -17,7 +17,7 @@ const StartPage = () => {
     const [mentorNum, setMentorNum] = useState<number>(0)
     const [mentorRoomNum, setMentorRoomNum] = useState<number>(0)
 
-    const find_mem_num = async () => {
+    const findMemNum = async () => {
         const { data: member_num_data } = await supabase
             .from('member')
             .select('id')
@@ -26,9 +26,9 @@ const StartPage = () => {
         }
         setMemberNum(member_num_data.length)
     }
-    find_mem_num()
+    findMemNum()
 
-    const find_question_num = async () => {
+    const findQuestionNum = async () => {
         const { data: question_num_data } = await supabase
             .from('question')
             .select('id')
@@ -37,9 +37,9 @@ const StartPage = () => {
         }
         setQuestionNum(question_num_data.length)
     }
-    find_question_num()
+    findQuestionNum()
 
-    const find_mentor_num = async () => {
+    const findMentorNum = async () => {
         const { data: mentor_num_data } = await supabase
             .from('mentor_application')
             .select('member_id')
@@ -48,9 +48,9 @@ const StartPage = () => {
         }
         setMentorNum(mentor_num_data.length)
     }
-    find_mentor_num()
+    findMentorNum()
 
-    const find_mentor_room_num = async () => {
+    const findMentorRoomNum = async () => {
         const { data: mentor_room_num_data } = await supabase
             .from('chat_room')
             .select('id')
@@ -59,7 +59,7 @@ const StartPage = () => {
         }
         setMentorRoomNum(mentor_room_num_data.length)
     }
-    find_mentor_room_num()
+    findMentorRoomNum()
 
     return (
         <div>
