@@ -20,7 +20,7 @@ const MentorPage = () => {
   const [chatRoomTitle, setChatRoomTitle] = useState('');
   const [chatRoomDescription, setChatRoomDescription] = useState('');
   const [chatRoomMaxPeople, setChatRoomMaxPeople] = useState(1);
-  const [applyCompleteModal, setApplyCompleteModal] = useState(true);
+  const [applyCompleteModal, setApplyCompleteModal] = useState(false);
 
   const { getMentorList } = mentorService();
   const { addChatRoom } = chatroomService;
@@ -78,17 +78,19 @@ const MentorPage = () => {
                 </h2>
                 <h3>포인트: {item?.point}</h3>
               </section>
-              <button
-                className={styles.apply_button}
-                onClick={() => {
-                  {
-                    setModalOpen(true);
-                    setSelectMentorId(item?.id);
-                  }
-                }}
-              >
-                채팅 신청하기
-              </button>
+              {user?.id !== item?.id && user?.type !== 1 && (
+                <button
+                  className={styles.apply_button}
+                  onClick={() => {
+                    {
+                      setModalOpen(true);
+                      setSelectMentorId(item?.id);
+                    }
+                  }}
+                >
+                  채팅 신청하기
+                </button>
+              )}
             </section>
           ))}
       </section>

@@ -123,17 +123,12 @@ const ChatPage = () => {
               </p>
               <span className={styles.created_date}>{dayjs(item?.createdAt).format('YYYY.MM.DD')}</span>
             </div>
-            {item?.progress === 0 && (
+            {item?.progress === 0 && item?.createMember.id === user?.id && (
               <div className={styles.button_wrap}>
                 <button onClick={() => handleUpdateChatRoom(item?.id)}>생성하기</button>
               </div>
             )}
             {item?.progress === 1 && <Link href={`/chat/${item?.id}`}>이동하기</Link>}
-            {item?.progress === 2 && !item?.chatMember?.filter((rv) => rv.member.id === user?.id)[0] && (
-              <div className={styles.button_wrap}>
-                <button onClick={() => handleReviewModalShow(true, item?.id)}>리뷰 쓰기</button>
-              </div>
-            )}
           </li>
         ))}
       </ul>

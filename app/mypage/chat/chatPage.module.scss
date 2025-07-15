@@ -1,10 +1,14 @@
 @use '../../styles/mixin';
 
 .chat_room_ul {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
   & .chat_room {
     border: 1px solid #667eea;
     border-radius: 4px;
-    padding: 12px 24px;
+    padding: 24px 24px;
     display: flex;
     align-items: center;
 
