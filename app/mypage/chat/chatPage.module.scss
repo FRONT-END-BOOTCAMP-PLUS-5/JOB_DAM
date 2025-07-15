@@ -1,5 +1,14 @@
 @use '../../styles/mixin';
 
+.none_chat_section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  justify-content: center;
+  min-height: 350px;
+}
+
 .chat_room_ul {
   display: flex;
   flex-direction: column;
@@ -25,6 +34,9 @@
 
     & .chat_room_info {
       width: calc(100% - 176px);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
 
     & p {
@@ -40,6 +52,9 @@
     & .created_date {
       font-size: 12px;
       color: #666;
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
     & .button_wrap {

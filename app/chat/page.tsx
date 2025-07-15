@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styles from './chat.module.scss';
 import { chatService } from '../services/mypage/chat';
 import { Chat, ChatRoom } from '../types/mypage/chat';
@@ -14,18 +14,21 @@ import { useRealtimeChat } from '../hooks/useRealTimeChat';
 import ChatEndModal from '../components/chat/ChatEndModal';
 import Image from 'next/image';
 import nonData from '../public/images/not_found_data.png';
+import { useSearchParams } from 'next/navigation';
+import { ChatRoomValue } from '../constants/initialValue';
 
 const CHAT_TYPE_TEXT = ['일반', '질문', '답변'];
 
 const ChatPage = () => {
   const member = useSelector((state: RootState) => state.login.member);
+  const param = useSearchParams();
 
   const [user, setUser] = useState<Member>(member);
   const [chatRoom, setChatRoom] = useState<ChatRoom[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [initialMessage, setIntialMessage] = useState<Chat[]>([]);
   const [chatType, setChatType] = useState<0 | 1 | 2>(0);
-  const [chatMembers, setChatMembers] = useState<{ [key: string]: string }>({});
+  const [chatMembers, setChatMembers] = useState<{ [key: string]: { name: string; img?: string } }>({});
   const [selectChatRoom, setSelectChatRoom] = useState<ChatRoom>();
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -58,11 +61,11 @@ const ChatPage = () => {
       if (!isConnected) return;
 
       sendMessage(newMessage);
+      setChatType(0);
 
       insertChat(chatRef).then((res) => {
         if (res) {
           setNewMessage('');
-          setChatType(0);
         }
       });
     },
@@ -82,8 +85,10 @@ const ChatPage = () => {
     };
 
     updateChatRoom(updateChatRoomRef).then((res) => {
-      if (res.result.status === 200) {
+      if (res.status === 200) {
         initChatRoom(user?.id);
+        setSelectChatRoom(ChatRoomValue);
+        setChatMembers({});
       }
     });
 
@@ -94,7 +99,7 @@ const ChatPage = () => {
     setSelectChatRoom(chatRoomData);
 
     chatRoomData?.chatMember.forEach((item) =>
-      setChatMembers((prev) => ({ ...prev, [item.member.id]: item?.member.name })),
+      setChatMembers((prev) => ({ ...prev, [item.member.id]: { name: item?.member.name, img: item?.member?.img } })),
     );
 
     getChat(chatRoomData?.id).then((res) => {
@@ -112,7 +117,18 @@ const ChatPage = () => {
 
   const initChatRoom = (memberId: string) => {
     getChatRoom(memberId).then((res) => {
-      setChatRoom(res.result.filter((item: ChatRoom) => item?.progress === 1));
+      if (res) {
+        // 현재 진행중인 채팅방 filter
+        const progressFilter = res.filter((item) => item?.progress === 1);
+        setChatRoom(progressFilter);
+
+        // param에 id가 있으면 채팅방 셋팅
+        if (progressFilter.length > 0 && param.get('id')) {
+          const paramFilter = progressFilter.filter((v) => v.id === Number(param.get('id')))[0];
+
+          onClickChatRoom(paramFilter);
+        }
+      }
     });
   };
 
@@ -150,7 +166,9 @@ const ChatPage = () => {
               ?.map((item, index) => (
                 <li key={item?.id + index} className={styles.chat_room_item}>
                   <button onClick={() => onClickChatRoom(item)}>
-                    <span className={styles.profile_image} />
+                    <span className={styles.profile_image}>
+                      <Image src={item?.createMember?.img} alt="프로필 이미지" fill />{' '}
+                    </span>
                     <div className={styles.chat_room_title}>
                       <span className={styles.title}>{item?.title}</span>
                       <span className={styles.mentor_name}>{item?.createMember?.name}</span>
@@ -179,32 +197,39 @@ const ChatPage = () => {
                 )}
               </h1>
               <div ref={containerRef} className={styles.item_container}>
-                {allMessages?.map((item, index) => (
-                  <section className={styles.chat_item} key={item?.content + index}>
-                    <section className={styles.content_top}>
-                      <div className={styles.chat_title}>
-                        <span className={styles.profile_image}></span>
-                        <span className={styles.chat_name}>{chatMembers[item?.memberId]}</span>
-                        {selectChatRoom?.createMember?.id === item?.memberId && (
-                          <span className={styles.chat_bedge}>멘토</span>
-                        )}
-                      </div>
-                      <p className={styles.date}>{dayjs(item?.createdAt).format('HH:mm')}</p>
+                {allMessages?.map((item, index) => {
+                  return (
+                    <section
+                      key={item?.content + index}
+                      className={`${styles.chat_item} ${item?.memberId === user?.id && styles.my_chat}`}
+                    >
+                      <section className={styles.content_top}>
+                        <div className={styles.chat_title}>
+                          <span className={styles.profile_image}>
+                            <Image src={chatMembers[item?.memberId]?.img ?? ''} alt="프로필 이미지" fill />
+                          </span>
+                          <span className={styles.chat_name}>{chatMembers[item?.memberId]?.name}</span>
+                          {selectChatRoom?.createMember?.id === item?.memberId && (
+                            <span className={styles.chat_bedge}>멘토</span>
+                          )}
+                        </div>
+                        <p className={styles.date}>{dayjs(item?.createdAt).format('MM.DD / HH:mm')}</p>
+                      </section>
+                      <section className={styles.content_bottom}>
+                        <div className={styles.content_bottom_title}>
+                          {item?.type === 1 && <Chip label="질문" color="primary" variant="filled" />}
+                          {item?.type === 2 && <Chip label="답변" color="primary" variant="filled" />}
+                          {item?.type === 1 && selectChatRoom?.createMember?.id === user?.id && (
+                            <Button color="secondary" onClick={() => setChatType(2)}>
+                              답변하기
+                            </Button>
+                          )}
+                        </div>
+                        <div className={styles.chat_content}>{item?.content}</div>
+                      </section>
                     </section>
-                    <section className={styles.content_bottom}>
-                      <div className={styles.content_bottom_title}>
-                        {item?.type === 1 && <Chip label="질문" color="primary" variant="filled" />}
-                        {item?.type === 2 && <Chip label="답변" color="primary" variant="filled" />}
-                        {item?.type === 1 && selectChatRoom?.createMember?.id === user?.id && (
-                          <Button color="secondary" onClick={() => setChatType(2)}>
-                            답변하기
-                          </Button>
-                        )}
-                      </div>
-                      <div className={styles.chat_content}>{item?.content}</div>
-                    </section>
-                  </section>
-                ))}
+                  );
+                })}
               </div>
 
               <div className={styles.chat_enter}>
@@ -218,7 +243,7 @@ const ChatPage = () => {
                   {selectChatRoom?.createMember?.id !== user?.id && (
                     <Switch
                       aria-label="Switch"
-                      value={chatType}
+                      checked={chatType === 1 ? true : false}
                       onChange={(e) => setChatType(e.target.checked ? 1 : 0)}
                     />
                   )}

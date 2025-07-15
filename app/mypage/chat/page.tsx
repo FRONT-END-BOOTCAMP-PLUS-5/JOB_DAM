@@ -13,8 +13,11 @@ import { createClient } from '@/app/utils/supabase/client';
 import { RootState } from '@/app/store/store';
 import { useSelector } from 'react-redux';
 import { Member } from '@/app/store/isLogin/loginSlice';
-import Link from 'next/link';
 import Image from 'next/image';
+import { Button, Chip } from '@mui/material';
+import Link from 'next/link';
+
+const CHAT_ROOM_PROGRESS = ['대기중', '진행중', '종료'];
 
 const ChatPage = () => {
   const member = useSelector((state: RootState) => state.login.member);
@@ -49,11 +52,16 @@ const ChatPage = () => {
       chat_room_id: chatRoomId,
       content: content,
       rating: rating || 0,
+      member_id: user?.id,
     };
 
-    const result = await addReview(reviewData);
+    await addReview(reviewData).then((res) => {
+      if (res.status === 200) {
+        chatRoomInit(user?.id);
+      }
+    });
 
-    if (result) reviewReset();
+    reviewReset();
   };
 
   const handleUpdateChatRoom = (chatRoomId: number) => {
@@ -64,9 +72,7 @@ const ChatPage = () => {
 
     updateChatRoom(updateChatRoomRef).then((res) => {
       if (res) {
-        getChatRoom(user.id).then((gRes) => {
-          setChatRoom(gRes.result);
-        });
+        chatRoomInit(user?.id);
       }
     });
   };
@@ -78,13 +84,17 @@ const ChatPage = () => {
     [chatRoom],
   );
 
+  const chatRoomInit = (userId: string) => {
+    getChatRoom(userId).then((res) => {
+      setChatRoom(res);
+    });
+  };
+
   useEffect(() => {
     setUser(member);
 
     if (member?.id) {
-      getChatRoom(member?.id).then((res) => {
-        setChatRoom(res.result);
-      });
+      chatRoomInit(member?.id);
     }
   }, [member]);
 
@@ -108,6 +118,22 @@ const ChatPage = () => {
 
   return (
     <section>
+      {chatRoom?.length === 0 && user?.type === 0 && (
+        <section className={styles.none_chat_section}>
+          <p>채팅중인 방이 없습니다. </p>
+          <p>멘토에게 채팅 신청을 해보세요!</p>
+          <Button variant="contained" href={'/mentor'}>
+            채팅하러 가기!
+          </Button>
+        </section>
+      )}
+
+      {chatRoom?.length === 0 && user?.type === 1 && (
+        <section className={styles.none_chat_section}>
+          <p>채팅중인 방이 없습니다.</p>
+          <p>멘티에게 어필할 만한 활동을 해보세요!</p>
+        </section>
+      )}
       <ul className={styles.chat_room_ul}>
         {chatRoom?.map((item, index) => (
           <li className={styles.chat_room} key={item.title + index}>
@@ -116,11 +142,13 @@ const ChatPage = () => {
             </p>
             <div className={styles.chat_room_info}>
               <h2>
-                {item?.title} ({item?.chatMember.length})
+                {item?.title}{' '}
+                <Chip label={CHAT_ROOM_PROGRESS[item?.progress]} color={item?.progress === 1 ? 'primary' : 'default'} />{' '}
+                ({item?.chatMember.length}/{item?.maxPeople})
               </h2>
-              <p>
-                {item?.createMember?.name} <span className={styles.mentor_mark}>멘토</span>
-              </p>
+              <span>
+                <Chip label="멘토" variant="outlined" color="primary" /> {item?.createMember?.name}
+              </span>
               <span className={styles.created_date}>{dayjs(item?.createdAt).format('YYYY.MM.DD')}</span>
             </div>
             {item?.progress === 0 && item?.createMember.id === user?.id && (
@@ -128,7 +156,25 @@ const ChatPage = () => {
                 <button onClick={() => handleUpdateChatRoom(item?.id)}>생성하기</button>
               </div>
             )}
-            {item?.progress === 1 && <Link href={`/chat/${item?.id}`}>이동하기</Link>}
+
+            {item?.progress === 1 && (
+              <Link
+                href={{
+                  pathname: '/chat',
+                  query: {
+                    id: item?.id,
+                  },
+                }}
+              >
+                <Button variant="contained">이동하기</Button>
+              </Link>
+            )}
+
+            {item?.progress === 2 && item?.review?.filter((item) => user?.id === item?.memberId).length === 0 && (
+              <Button variant="contained" onClick={() => handleReviewModalShow(true, item?.id)}>
+                리뷰쓰기
+              </Button>
+            )}
           </li>
         ))}
       </ul>
