@@ -1,3 +1,4 @@
+import { Review } from '@/backend/reviews/domain/entities/Review';
 import { ChatMemberDto } from './ChatMemberDto';
 
 export class ChatRoomDto {
@@ -18,5 +19,6 @@ export class ChatRoomDto {
     },
     public progress: number,
     public maxPeople: number,
+    public review: Review[],
   ) {}
 }

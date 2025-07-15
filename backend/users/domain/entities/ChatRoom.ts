@@ -1,3 +1,4 @@
+import { Review } from '@/backend/reviews/domain/entities/Review';
 import { ChatMember } from './ChatMember';
 
 export class ChatRoom {
@@ -18,5 +19,6 @@ export class ChatRoom {
     },
     public progress: number,
     public max_people: number,
+    public review: Review[],
   ) {}
 }

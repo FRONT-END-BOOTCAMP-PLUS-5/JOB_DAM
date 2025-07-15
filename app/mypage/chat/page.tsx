@@ -14,6 +14,7 @@ import { RootState } from '@/app/store/store';
 import { useSelector } from 'react-redux';
 import { Member } from '@/app/store/isLogin/loginSlice';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const ChatPage = () => {
   const member = useSelector((state: RootState) => state.login.member);
@@ -79,6 +80,12 @@ const ChatPage = () => {
 
   useEffect(() => {
     setUser(member);
+
+    if (member?.id) {
+      getChatRoom(member?.id).then((res) => {
+        setChatRoom(res.result);
+      });
+    }
   }, [member]);
 
   useEffect(() => {
@@ -99,19 +106,13 @@ const ChatPage = () => {
       .subscribe();
   }, [supabase]);
 
-  useEffect(() => {
-    getChatRoom(user.id).then((res) => {
-      setChatRoom(res.result);
-    });
-  }, [user]);
-
   return (
     <section>
       <ul className={styles.chat_room_ul}>
         {chatRoom?.map((item, index) => (
           <li className={styles.chat_room} key={item.title + index}>
             <p className={styles.mentor_image}>
-              <span>프로필</span>
+              <Image src={item?.createMember?.img} alt="프로필 이미지" fill />
             </p>
             <div className={styles.chat_room_info}>
               <h2>
@@ -128,7 +129,7 @@ const ChatPage = () => {
               </div>
             )}
             {item?.progress === 1 && <Link href={`/chat/${item?.id}`}>이동하기</Link>}
-            {item?.progress === 2 && (
+            {item?.progress === 2 && !item?.chatMember?.filter((rv) => rv.member.id === user?.id)[0] && (
               <div className={styles.button_wrap}>
                 <button onClick={() => handleReviewModalShow(true, item?.id)}>리뷰 쓰기</button>
               </div>

@@ -15,6 +15,7 @@ export interface ChatRoom {
   };
   progress: number;
   maxPeople: number;
+  review?: Review[];
 }
 
 export interface ChatMember {
@@ -52,4 +53,14 @@ export interface PayloadChat {
   id: number;
   member_id: string;
   updated_at?: string;
+}
+
+interface Review {
+  id: number;
+  rating: number;
+  content: string;
+  memberId: string;
+  createdAt: string;
+  deletedAt: string;
+  chatRoomId: number;
 }

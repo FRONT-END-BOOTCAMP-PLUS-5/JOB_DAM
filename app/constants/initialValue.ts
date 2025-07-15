@@ -4,14 +4,21 @@ export const ChatRoomValue = {
   title: '',
   chatMember: [
     {
+      member: {
+        id: '',
+        name: '',
+        nickname: '',
+      },
       chatRoomId: 0,
-      memberId: '',
     },
   ],
   createMember: {
-    id: 0,
+    id: '',
     name: '',
-    email: '',
+    img: '',
+    type: 0,
+    grade: 0,
+    nickname: '',
   },
   progress: 0,
   maxPeople: 0,

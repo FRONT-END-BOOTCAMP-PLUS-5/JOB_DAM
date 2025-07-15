@@ -29,6 +29,7 @@ export class GetChatRoomUseCase {
       createMember: cr.member,
       progress: cr.progress,
       maxPeople: cr.max_people,
+      review: cr.review,
     }));
 
     return {
