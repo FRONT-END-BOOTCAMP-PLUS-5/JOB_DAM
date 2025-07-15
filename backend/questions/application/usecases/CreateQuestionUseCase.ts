@@ -1,9 +1,18 @@
 import { QuestionRepository } from '../../domain/repositories/QuestionRepository';
 import { Question } from '../../domain/entities/Question';
+import { AnswerTable } from '@/backend/questions/domain/table/AnswerTable';
+import { QuestionAnswer } from '@/backend/questions/domain/entities/QuestionAnswer';
+import { QuestionAnswerDto } from '@/backend/questions/application/dtos/QuestionAnswerDto';
 /**
  * 작성자: 김동우
  * 작성일: 2025-07-04
  * */
+interface IComment{
+  member_id: string // comment 작성자
+  question_id: number //현재 상세페이지 id
+  title: string
+  content: string
+}
 export class CreateQuestionUseCase {
   private repository: QuestionRepository;
 
@@ -55,4 +64,31 @@ export class CreateQuestionUseCase {
       question,
     };
   }
+
+  async sendMessage(formData: FormData):Promise<QuestionAnswerDto>{
+    const content = formData.get("content")  as string
+    const member_id = formData.get("memberId") as string
+    const question_id= parseInt(formData.get("question_id") as string)
+
+    const commentUser = {
+      content,
+      member_id,
+      question_id
+    }
+
+    const answer:AnswerTable = await this.repository.sendMessage(commentUser)
+
+    const answerDto = {
+      id: answer['id'],
+      memberId: answer['member_id'],
+      questionId: answer['question_id'],
+      content: answer['content'],
+      createdAt: answer['created_at'],
+      deletedAt: answer['deleted_at'],
+      updatedAt: answer['updated_at']
+    }
+
+    return answerDto
+  }
+
 }

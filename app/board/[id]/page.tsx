@@ -1,13 +1,15 @@
 'use client'
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'next/navigation'
 import style from "./boarditem.module.scss";
-import Aside from "@/app/components/board/Aside";
 import {getLastName} from "@/app/utils/board/name";
 import Profile from "@/app/components/common/Profile";
 import {formatDate} from "@/app/utils/board/date";
 import Input from '@/app/components/board/Input';
 import Button from '@/app/components/common/Button';
+import { createClient } from '@/app/utils/supabase/client';
+import AsidePicture from '@/app/components/board/AsidePicture';
+import BoardItemModal from '@/app/components/board/Modal';
 
 interface Item{
   catergoryId: number | null
@@ -24,27 +26,115 @@ interface Item{
 
 }
 
+interface Json{
+  id: number
+  content: string
+  memberId: string
+  questionId: number
+  createdAt: string
+  updatedAt: string | null
+  deletedAt: string | null
+}
 
+const ID = "1a9d99ce-1c9f-4272-b140-c4921ee77794"
 export default function Item(){
+  const supabase = createClient()
   const [getItem, setItem] = useState<Item>()
+  const [getComment, setComment] = useState<Json[]>([])
+  const commentRef = useRef<HTMLLIElement>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [isSendLoading, setSendIsLoading] = useState(false)
+  const [isModal, setIsModal] = useState({
+    open: false,
+    img: ''
+  })
+
   const params = useParams();
   const { id } = params;
 
+  const imgArrRef = useRef<string[] | null>([])
+  const inputRef = useRef<HTMLInputElement>(null)
+  const inputValRef = useRef<string | null>('')
+
+  //내일 로그인한 유저하고 다른유저일때 확인하는거 코드 작성해야함!
+
+  const handleSearch = (evt:React.ChangeEvent<HTMLInputElement>) => {
+    const inputVal = evt['target']['value']
+    inputValRef['current'] = inputVal
+  }
+
+  const handleInput = () => {
+    sendMessage()
+  }
+
+  const handleKeyPress = (evt:React.KeyboardEvent<HTMLInputElement>) => {
+    if(evt.code === 'Enter') handleInput()
+  }
+
+  const getAllMessages = async () => {
+    const response = await fetch(`/api/question/item/chat?item=${id}`, { next: { revalidate: 3600 } })
+    const json = await response.json()
+    const copyJson = [...json['result']['answer']]
+    setComment(copyJson)
+  }
+
+  const sendMessage = async () => {
+    if(!inputValRef['current']) return
+
+    setSendIsLoading(true)
+    const formData = new FormData()
+    formData.append("content", `${inputValRef['current']}`)
+    formData.append("memberId", "1a9d99ce-1c9f-4272-b140-c4921ee77794") //테스트 계정
+    formData.append("question_id",  `${id}`)
+    await fetch(`/api/question/item/chat?item=${id}`, {
+      method: "POST",
+      body: formData,
+    })
+    inputValRef['current'] = ''
+    if(inputRef['current']) inputRef['current'].value = ''
+    setSendIsLoading(false)
+    toBottom()
+  }
 
 
+  const toBottom = () => {
+    commentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' })
+  }
 
-  useEffect(() => {
+ useEffect(() => {
     async function getItem(){
       const response = await fetch(`/api/question/item?id=${id}`)
       const json = await response.json()
       const item = json['result']['questionItem'][0]
+      imgArrRef['current'] = []
+
+      for(let i=0; i<3; i++) imgArrRef['current']?.push(item[`img${i+1}`])
       setItem(item)
       setIsLoading(false)
     }
-
     getItem()
-  },[])
+    getAllMessages()
+
+    const channel = supabase.channel(`board-item-${id}`)
+      .on('postgres_changes',{
+        event: 'INSERT',
+        schema: 'public',
+        table: 'answer'
+      }, payload => {
+        if(payload.eventType === 'INSERT' &&
+          !payload.errors){
+          getAllMessages()
+        }
+      }).subscribe()
+
+    return () => {
+      channel.unsubscribe()
+    }
+  }, [])
+
+  useEffect(() => {
+    toBottom()
+  }, [getComment])
 
   return (
       <main className={style.container}>
@@ -73,7 +163,6 @@ export default function Item(){
                         <p>{getItem?.content}</p>
                       </sub>
                     </div>
-
                   </div>
                 </section>
                 }
@@ -81,27 +170,48 @@ export default function Item(){
             <section className={style.container_content_left_bottom}>
               <section className={style.chat_box}>
                 <div className={style.chat}>
-                  <div className={style.other_chat}>
-                    <div>반갑습니다 ㅎㅇ</div>
-                  </div>
-                  <div className={style.my_chat}>
-                    <div>안녕하세요</div>
-                  </div>
+                  {
+                    getComment.map((item) => {
+                      return (
+                        item.memberId === ID ? <ul key={item.id} className={style.my_chat} >
+                          <li ref={commentRef}>{item.content}</li>
+                        </ul> : <ul key={item.id} className={style.other_chat}>
+                                  <li ref={commentRef} >{item.content}</li>
+                                </ul>
+                      )
+                    })
+                  }
+                  <div style={{height: '10px'}}/>
                 </div>
               </section>
               <div className={style.button_container}>
-                <Input typeStyle={'search'}
+                <Input typeStyle={'send'}
                        type={'text'}
+                       ref={inputRef}
+                       onChange={(evt:React.ChangeEvent<HTMLInputElement>) => {handleSearch(evt)}}
                        placeholder={"채팅내용을 입력하세요"}
+                       onKeyPress={(evt: React.KeyboardEvent<HTMLInputElement>) => {handleKeyPress(evt)}}
                 />
-                <Button type={'send'} text={'🚀 보내기'}/>
+                {
+                  isSendLoading ? <div className={style.loading_btn}>
+                    <span className={style.btn_text_dot1}></span>
+                    <span className={style.btn_text_dot2}></span>
+                    <span className={style.btn_text_dot3}></span>
+                  </div> :
+                    <Button type={'send'}
+                            text={'🚀 보내기'}
+                            onClick={() => {handleInput()}}/>
+                }
               </div>
             </section>
           </section>
           <aside className={style.container_content_right}>
-            <Aside />
+            <AsidePicture img={imgArrRef['current']} setIsModal={setIsModal}/>
           </aside>
         </div>
+        {
+          isModal && <BoardItemModal isModal={isModal} setIsModal={setIsModal}/>
+        }
       </main>
   );
 };

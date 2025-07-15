@@ -17,6 +17,12 @@ interface IProps{
   img: string[];
 }
 
+interface IComment{
+  member_id: string // comment 작성자
+  question_id: number //현재 상세페이지 id
+  content: string
+}
+
 export class SbQuestionRepository implements QuestionRepository {
   private supabase: SupabaseClient;
 
@@ -86,9 +92,34 @@ export class SbQuestionRepository implements QuestionRepository {
     const { data, error } = await this.supabase
         .from("question")
         .select('*, member_id(id,name,img,nickname)')
-        .eq('id',`${id}`)
+        .eq('id',id)
 
     if (error) throw new Error(error.message);
     return data as Question[];
+  }
+
+  async getAllMessages(id: string){
+    const {data, error} = await this.supabase
+      .from("answer")
+      .select("*")
+      .eq('question_id', id)
+
+    if (error) throw new Error(error.message);
+    return data;
+  }
+
+  async sendMessage(commentUser: IComment){
+    const {data, error} = await this.supabase
+      .from("answer")
+      .insert([{
+        member_id: commentUser['member_id'],
+        question_id: commentUser['question_id'],
+        content: commentUser['content']
+      }])
+      .select("*")
+      .single()
+
+    if (error) throw new Error(error.message);
+    return data;
   }
 }

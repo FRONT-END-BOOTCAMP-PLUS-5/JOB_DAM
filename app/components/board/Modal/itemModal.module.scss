@@ -1,0 +1,35 @@
+@use '../../../styles/mixin';
+
+
+.container{
+  outline: none;
+  @include mixin.flexCenter(column);
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width:100%;
+  height: 30%;
+
+  @include mixin.tablet {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    width: 100%;
+    p: 4;
+    gap: 2px;
+
+  }
+
+  .img{
+    max-width: 100%;
+    display: block;
+
+    @include mixin.tablet {
+      max-width: 70%;
+    }
+  }
+}

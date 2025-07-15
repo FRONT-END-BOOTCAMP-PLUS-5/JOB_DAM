@@ -2,7 +2,7 @@ import { QuestionRepository } from '../../domain/repositories/QuestionRepository
 import { QuestionTable } from '../../domain/table/QuestionTable';
 import { QuestionDto } from '../dtos/QuestionDto';
 import { NextRequest } from 'next/server';
-import {Question} from "@/backend/questions/domain/entities/Question";
+import { AnswerTable } from '@/backend/questions/domain/table/AnswerTable';
 /**
  * 작성자: 김동우
  * 작성일: 2025-07-03
@@ -63,6 +63,25 @@ export class GetQuestionUseCase {
     }))
     return {
       questionItem: questionDto
+    }
+  }
+
+  async getAllMessages(id: string){
+    const answers: AnswerTable[]  = await this.repository.getAllMessages(id)
+
+    const answerDto = answers.map((item) => ({
+      id: item['id'],
+      memberId: item['member_id'],
+      questionId: item['question_id'],
+      content: item['content'],
+      createdAt: item['created_at'],
+      deletedAt: item['deleted_at'],
+      updatedAt: item['updated_at']
+    }))
+
+
+    return {
+      answer: answerDto
     }
   }
 }

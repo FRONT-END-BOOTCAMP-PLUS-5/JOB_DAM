@@ -28,7 +28,6 @@ export default function Aside(){
     const res = await fetch('api/member/rank', { next: { revalidate: 3600 } })
     const { result } = await res.json()
     const members = [...result['member']]
-    console.log(members)
     setJson(members)
     setLoading(false)
   }

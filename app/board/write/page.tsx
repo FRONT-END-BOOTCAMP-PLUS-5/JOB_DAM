@@ -26,13 +26,14 @@ export default function BoardWrite(){
 
     formData.append("title", getTitleVal)
     formData.append("content", getContentVal)
-    formData.append("memberId", "0bd61fbf-71fd-44e1-a590-1e53af363c3c") //테스트 계정
+    formData.append("memberId", "b0d096a7-e4ae-42be-9c37-23c5b245a1f9") //테스트 계정
     const result= await fetch('/api/question/write', {
       method: "POST",
       body: formData,
     })
 
     const json = await result.json()
+    console.log(json, "json")
     const id = json.result.question.id
     if(id){
       router.push(`/board/${id}`)

@@ -186,22 +186,34 @@
     overflow: scroll;
   }
 
+  @keyframes slideUp {
+    0% {
+      transform: translateY(50px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(10px);
+      opacity: 1;
+    }
+  }
+
   .other_chat{
     display: flex;
     justify-content: flex-start;
     padding-top: 10px;
+    list-style: none;
 
-    div{
+    li{
       display: flex;
       justify-content: flex-end;
       max-width: 240px;
       padding: 10px;
-      height: 32px;
       background: #e2e2e2;
       border-radius: 8px;
       color: #171717;
       align-items: center;
       margin-left: 20px;
+      animation: slideUp 100ms ease-out forwards;
     }
   }
 
@@ -209,13 +221,14 @@
     display: flex;
     justify-content: flex-end;
     padding-top: 10px;
+    animation: slideUp 100ms ease-out forwards;
+    list-style: none;
 
-    div{
+    li{
       display: flex;
       justify-content: flex-end;
       max-width: 240px;
       padding: 10px;
-      height: 32px;
       background: #343434;
       border-radius: 8px;
       color: #fff;
@@ -391,11 +404,46 @@
       }
     }
 
+
+
     @include mixin.tablet {
       gap: 10px;
     }
   }
 }
+
+.loading_btn{
+  @include mixin.customButton(60px, 30px);
+  @include mixin.flexCenter(row);
+  border: 2px solid #667eea;
+  color: #667eea;
+  padding: 3px 4px;
+
+
+
+  .btn_text_dot1, .btn_text_dot2, .btn_text_dot3{
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    margin-right: 2px;
+    background-color: #667eea;
+    border-radius: 100%;
+    animation: loading 0.4s infinite ease-in-out both;
+  }
+
+  .btn_text_dot2 {
+    animation-delay: 0.1s;
+    background-color: #667eea;
+  }
+
+  .btn_text_dot3 {
+    animation-delay: 0.2s;
+    background-color: #667eea;
+  }
+}
+
+
+
 
 .question:first-child {
   border-top: 1px solid #dddfe2;
