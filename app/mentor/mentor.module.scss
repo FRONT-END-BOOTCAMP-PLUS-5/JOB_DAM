@@ -21,3 +21,30 @@
     margin-top: 16px;
   }
 }
+
+.modal_container {
+  @include mixin.positionCenter(absolute);
+  @include mixin.flexCenter(column);
+  padding: 60px 80px;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+
+  & h1 {
+    margin-bottom: 36px;
+  }
+
+  & .text_field {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  & .button_section {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 20px;
+    margin-top: 36px;
+  }
+}
