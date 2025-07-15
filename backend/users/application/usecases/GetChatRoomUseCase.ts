@@ -20,6 +20,7 @@ export class GetChatRoomUseCase {
       title: cr.title,
       chatMember: cr.chat_member.map((cm) => ({
         member: {
+          id: cm.member.id,
           name: cm.member.name,
           nickname: cm.member.nickname,
         },

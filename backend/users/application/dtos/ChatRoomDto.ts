@@ -9,6 +9,7 @@ export class ChatRoomDto {
     public title: string,
     public chatMember: ChatMemberDto[],
     public createMember: {
+      id: string;
       img: string;
       name: string;
       type: number;

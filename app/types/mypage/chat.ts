@@ -6,6 +6,7 @@ export interface ChatRoom {
   title: string;
   chatMember: ChatMember[];
   createMember: {
+    id: string;
     img: string;
     name: string;
     type: number;
@@ -16,8 +17,9 @@ export interface ChatRoom {
   maxPeople: number;
 }
 
-interface ChatMember {
+export interface ChatMember {
   member: {
+    id: string;
     name: string;
     nickname: string;
   };
