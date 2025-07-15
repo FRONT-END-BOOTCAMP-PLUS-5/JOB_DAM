@@ -8,11 +8,12 @@ interface UseRealtimeChatProps {
   roomName: string;
   username: string;
   userId: string;
+  type: number;
 }
 
 const EVENT_MESSAGE_TYPE = 'message';
 
-export function useRealtimeChat({ roomName, username, userId }: UseRealtimeChatProps) {
+export function useRealtimeChat({ roomName, username, userId, type }: UseRealtimeChatProps) {
   const supabase = createClient();
   const [messages, setMessages] = useState<Chat[]>([]);
   const [channel, setChannel] = useState<ReturnType<typeof supabase.channel> | null>(null);
@@ -46,6 +47,7 @@ export function useRealtimeChat({ roomName, username, userId }: UseRealtimeChatP
         memberId: userId,
         content,
         createdAt: new Date().toISOString(),
+        type: type,
       };
 
       // Update local state immediately for the sender
@@ -57,7 +59,7 @@ export function useRealtimeChat({ roomName, username, userId }: UseRealtimeChatP
         payload: message,
       });
     },
-    [channel, isConnected, userId],
+    [channel, isConnected, type, userId],
   );
 
   return { messages, sendMessage, isConnected };

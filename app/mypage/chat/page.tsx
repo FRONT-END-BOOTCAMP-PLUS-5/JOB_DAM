@@ -10,16 +10,21 @@ import ReviewModal from './ReviewModal';
 import { reviewService } from '@/app/services/mypage/review';
 import { ChatRoomValue } from '@/app/constants/initialValue';
 import { createClient } from '@/app/utils/supabase/client';
-
-const TEST_USER_ID = '0bd61fbf-71fd-44e1-a590-1e53af363c3c';
+import { RootState } from '@/app/store/store';
+import { useSelector } from 'react-redux';
+import { Member } from '@/app/store/isLogin/loginSlice';
+import Link from 'next/link';
+import Image from 'next/image';
 
 const ChatPage = () => {
+  const member = useSelector((state: RootState) => state.login.member);
   const [chatRoom, setChatRoom] = useState<ChatRoom[]>([]);
   const [reviewOpen, setReviewOpen] = useState(false);
   const [rating, setRating] = useState<number | null>(0);
   const [content, setContent] = useState('');
   const [selectChatRoom, setSelectChatRoom] = useState<ChatRoom>(ChatRoomValue);
   const [progress, setProgress] = useState(0);
+  const [user, setUser] = useState<Member>(member);
 
   const supabase = createClient();
   const { getChatRoom, updateChatRoom } = chatService;
@@ -59,7 +64,7 @@ const ChatPage = () => {
 
     updateChatRoom(updateChatRoomRef).then((res) => {
       if (res) {
-        getChatRoom(TEST_USER_ID).then((gRes) => {
+        getChatRoom(user.id).then((gRes) => {
           setChatRoom(gRes.result);
         });
       }
@@ -72,6 +77,16 @@ const ChatPage = () => {
     },
     [chatRoom],
   );
+
+  useEffect(() => {
+    setUser(member);
+
+    if (member?.id) {
+      getChatRoom(member?.id).then((res) => {
+        setChatRoom(res.result);
+      });
+    }
+  }, [member]);
 
   useEffect(() => {
     updateChatRoomProgress(progress);
@@ -91,19 +106,13 @@ const ChatPage = () => {
       .subscribe();
   }, [supabase]);
 
-  useEffect(() => {
-    getChatRoom(TEST_USER_ID).then((res) => {
-      setChatRoom(res.result);
-    });
-  }, []);
-
   return (
     <section>
       <ul className={styles.chat_room_ul}>
         {chatRoom?.map((item, index) => (
           <li className={styles.chat_room} key={item.title + index}>
             <p className={styles.mentor_image}>
-              <span>프로필</span>
+              <Image src={item?.createMember?.img} alt="프로필 이미지" fill />
             </p>
             <div className={styles.chat_room_info}>
               <h2>
@@ -119,8 +128,8 @@ const ChatPage = () => {
                 <button onClick={() => handleUpdateChatRoom(item?.id)}>생성하기</button>
               </div>
             )}
-            {item?.progress === 1 && <div>진행중</div>}
-            {item?.progress === 2 && (
+            {item?.progress === 1 && <Link href={`/chat/${item?.id}`}>이동하기</Link>}
+            {item?.progress === 2 && !item?.chatMember?.filter((rv) => rv.member.id === user?.id)[0] && (
               <div className={styles.button_wrap}>
                 <button onClick={() => handleReviewModalShow(true, item?.id)}>리뷰 쓰기</button>
               </div>

@@ -1,31 +1,54 @@
 'use client';
 
-import { Card, CardContent } from '@mui/material';
+import { Button, Card, CardContent, Modal, TextField } from '@mui/material';
 import styles from './mentor.module.scss';
 import { useEffect, useState } from 'react';
 import { mentorService } from '../services/mypage/mentor';
 import { Mentors } from '../types/mentor/search';
 import { chatroomService } from '../services/chatroom/chatroom';
+import { RootState } from '../store/store';
+import { useSelector } from 'react-redux';
+import { Member } from '../store/isLogin/loginSlice';
 
 const MentorPage = () => {
+  const member = useSelector((state: RootState) => state.login.member);
   const [mentors, setMentors] = useState<Mentors[]>([]);
+  const [user, setUser] = useState<Member>(member);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectMentorId, setSelectMentorId] = useState('');
+  const [chatRoomTitle, setChatRoomTitle] = useState('');
+  const [chatRoomDescription, setChatRoomDescription] = useState('');
+  const [chatRoomMaxPeople, setChatRoomMaxPeople] = useState(1);
 
   const { getMentorList } = mentorService();
   const { addChatRoom } = chatroomService;
 
-  const handleAddChatRoom = (createdId: string) => {
+  const handleAddChatRoom = () => {
     const chatRoomData = {
-      title: '멘티가 신청한 채팅방3463463634',
-      description: '멘티가 신청한 채팅방 내용123123213636436',
-      created_member_id: createdId,
-      max_people: 3,
-      member_id: 'c4b1ac92-d06d-4fa7-b2c1-1738b2b4cab4',
+      title: chatRoomTitle,
+      description: chatRoomDescription,
+      created_member_id: selectMentorId,
+      max_people: chatRoomMaxPeople,
+      member_id: user?.id,
     };
 
     addChatRoom(chatRoomData).then((res) => {
       console.log('res', res);
+      reset();
     });
   };
+
+  const reset = () => {
+    setModalOpen(false);
+    setSelectMentorId('');
+    setChatRoomTitle('');
+    setChatRoomDescription('');
+    setChatRoomMaxPeople(1);
+  };
+
+  useEffect(() => {
+    setUser(member);
+  }, [member]);
 
   useEffect(() => {
     getMentorList().then((res) => {
@@ -50,13 +73,56 @@ const MentorPage = () => {
                   </h2>
                   <h3>포인트: {item?.point}</h3>
                 </section>
-                <button className={styles.apply_button} onClick={() => handleAddChatRoom(item?.id)}>
-                  채팅하기
+                <button
+                  className={styles.apply_button}
+                  onClick={() => {
+                    {
+                      setModalOpen(true);
+                      setSelectMentorId(item?.id);
+                    }
+                  }}
+                >
+                  채팅 신청하기
                 </button>
               </CardContent>
             </Card>
           ))}
       </section>
+
+      <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+        <section className={styles.modal_container}>
+          <h1>채팅방 신청하기</h1>
+          <section className={styles.text_field}>
+            <TextField
+              label="채팅방 이름"
+              variant="outlined"
+              placeholder="채팅방 이름"
+              onChange={(e) => setChatRoomTitle(e.target.value)}
+            />
+            <TextField
+              label="채팅방 설명"
+              variant="outlined"
+              placeholder="채팅방 설명"
+              onChange={(e) => setChatRoomDescription(e.target.value)}
+            />
+            <TextField
+              label="최대 인원수"
+              variant="outlined"
+              placeholder="최대 인원수"
+              type="number"
+              onChange={(e) => setChatRoomMaxPeople(Number(e.target.value))}
+            />
+          </section>
+          <section className={styles.button_section}>
+            <Button fullWidth variant="contained" onClick={() => handleAddChatRoom()}>
+              신청
+            </Button>
+            <Button variant="outlined" onClick={() => setModalOpen(false)}>
+              취소
+            </Button>
+          </section>
+        </section>
+      </Modal>
     </section>
   );
 };

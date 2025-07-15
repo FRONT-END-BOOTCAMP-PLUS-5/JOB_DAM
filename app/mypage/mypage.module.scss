@@ -8,9 +8,11 @@
   & .user_image {
     border: 1px solid #ddd;
     border-radius: 50%;
-    width: 80px;
-    height: 80px;
+    width: 120px;
+    height: 120px;
     @include mixin.flexCenter(row);
+    position: relative;
+    overflow: hidden;
   }
 
   & .user_info {

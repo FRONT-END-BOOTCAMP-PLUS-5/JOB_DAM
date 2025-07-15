@@ -7,5 +7,6 @@ export class Chat {
     public created_at: string,
     public deleted_at: string,
     public updated_at: string,
+    public type: number,
   ) {}
 }
