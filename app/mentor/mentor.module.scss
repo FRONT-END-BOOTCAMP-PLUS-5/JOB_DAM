@@ -8,6 +8,7 @@
   & .content {
     @include mixin.flexCenter(row);
     gap: 24px;
+    height: 500px;
 
     & .profile_image {
       position: relative;

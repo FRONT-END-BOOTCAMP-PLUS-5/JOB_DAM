@@ -10,6 +10,7 @@ import { RootState } from '../store/store';
 import { useSelector } from 'react-redux';
 import { Member } from '../store/isLogin/loginSlice';
 import Image from 'next/image';
+import Spinner from '../components/common/Spinner';
 
 const MentorPage = () => {
   const member = useSelector((state: RootState) => state.login.member);
@@ -21,6 +22,7 @@ const MentorPage = () => {
   const [chatRoomDescription, setChatRoomDescription] = useState('');
   const [chatRoomMaxPeople, setChatRoomMaxPeople] = useState(1);
   const [applyCompleteModal, setApplyCompleteModal] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const { getMentorList } = mentorService();
   const { addChatRoom } = chatroomService;
@@ -58,6 +60,7 @@ const MentorPage = () => {
     getMentorList().then((res) => {
       if (res.data) {
         setMentors(res.data.members);
+        setLoading(false);
       }
     });
   }, []);
@@ -65,7 +68,9 @@ const MentorPage = () => {
   return (
     <section className={styles.container}>
       <section className={styles.content}>
-        {mentors?.length > 0 &&
+        {loading && <Spinner />}
+        {!loading &&
+          mentors?.length > 0 &&
           mentors?.map((item, index) => (
             <section className={styles.mentor_card} key={item?.name + index}>
               <div className={styles.profile_image}>
