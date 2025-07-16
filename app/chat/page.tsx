@@ -18,10 +18,12 @@ import { ChatRoomValue } from '../constants/initialValue';
 import { CHAT_ROOM_PROGRESS, CHAT_TYPE_TEXT } from '../constants/chat';
 import { chatroomService } from '../services/chatroom/chatroom';
 import Spinner from '../components/common/Spinner';
+import { createClient } from '../utils/supabase/client';
 
 const ChatPage = () => {
   const member = useSelector((state: RootState) => state.login.member);
   const param = useSearchParams();
+  const supabase = createClient();
 
   const [user, setUser] = useState<Member>(member);
   const [chatRoom, setChatRoom] = useState<ChatRoom[]>([]);
@@ -29,10 +31,11 @@ const ChatPage = () => {
   const [initialMessage, setIntialMessage] = useState<Chat[]>([]);
   const [chatType, setChatType] = useState<0 | 1 | 2>(0);
   const [chatMembers, setChatMembers] = useState<{ [key: string]: { name: string; img?: string } }>({});
-  const [selectChatRoom, setSelectChatRoom] = useState<ChatRoom>();
+  const [selectChatRoom, setSelectChatRoom] = useState<ChatRoom>(ChatRoomValue);
   const [modalOpen, setModalOpen] = useState(false);
   const [chatRoomLoading, setChatRoomLoading] = useState(true);
   const [chatLoading, setChatLoading] = useState(false);
+  const [chatRoomName, setChatRoomName] = useState('');
 
   const { getChatRoom, insertChat, updateChatRoom, getChat } = chatService;
   const { updatePointMember } = chatroomService;
@@ -43,7 +46,7 @@ const ChatPage = () => {
     sendMessage,
     isConnected,
   } = useRealtimeChat({
-    roomName: `chat-room-${selectChatRoom?.id}`,
+    roomName: chatRoomName,
     username: user?.name,
     userId: user?.id,
     type: chatType,
@@ -63,6 +66,7 @@ const ChatPage = () => {
   const handleSendMessage = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
       if (!selectChatRoom?.id) return;
+      if (selectChatRoom?.progress === 2) return initChatRoom(user?.id);
 
       const chatRef = {
         member_id: user?.id,
@@ -117,6 +121,7 @@ const ChatPage = () => {
   const onClickChatRoom = (chatRoomData: ChatRoom) => {
     setChatLoading(true);
     setSelectChatRoom(chatRoomData);
+    setChatRoomName(`chat-room-${selectChatRoom?.id}`);
 
     chatRoomData?.chatMember.forEach((item) =>
       setChatMembers((prev) => ({ ...prev, [item.member.id]: { name: item?.member.name, img: item?.member?.img } })),
@@ -167,6 +172,26 @@ const ChatPage = () => {
   useEffect(() => {
     scrollToBottom();
   }, [allMessages, scrollToBottom]);
+
+  useEffect(() => {
+    const channel = supabase.channel('end_chat_room' + user?.id);
+
+    channel
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'chat_room',
+          filter: `id=in.(${chatRoom?.map((item) => item.id).join(',')})`,
+        },
+        () => {
+          initChatRoom(user?.id);
+          setSelectChatRoom(ChatRoomValue);
+        },
+      )
+      .subscribe();
+  }, [supabase, chatRoom]);
 
   return (
     <main className={styles.chat_container}>
