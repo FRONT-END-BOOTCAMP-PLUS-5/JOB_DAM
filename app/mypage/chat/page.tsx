@@ -30,7 +30,6 @@ const ChatPage = () => {
   const [selectChatRoom, setSelectChatRoom] = useState<ChatRoom>(ChatRoomValue);
   const [user, setUser] = useState<Member>(member);
   const [loading, setLoading] = useState(true);
-  const [progress, setProgress] = useState(0);
 
   const { getChatRoom, updateChatRoom } = chatService;
   const { addReview } = reviewService;
@@ -83,7 +82,6 @@ const ChatPage = () => {
 
   const chatRoomInit = (userId: string) => {
     getChatRoom(userId).then((res) => {
-      console.log('chatRoomInit', res);
       setChatRoom(res);
       setLoading(false);
     });
@@ -98,10 +96,7 @@ const ChatPage = () => {
   }, [member]);
 
   useEffect(() => {
-    const channel = supabase.channel('chat_room');
-    // ${chatRoom?.map((item) => item.id).join(',')}
-
-    console.log('chatRoom ', chatRoom);
+    const channel = supabase.channel('chat_room' + user?.id);
 
     channel
       .on(
@@ -110,21 +105,14 @@ const ChatPage = () => {
           event: 'UPDATE',
           schema: 'public',
           table: 'chat_room',
-          filter: `id=in.(68,69)`,
+          filter: `id=in.(${chatRoom?.map((item) => item.id).join(',')})`,
         },
-        (payload) => {
-          console.log('payload', payload);
-          setProgress(payload.new.progress);
+        () => {
+          chatRoomInit(user?.id);
         },
       )
       .subscribe();
-  }, [chatRoom, supabase]);
-
-  useEffect(() => {
-    if (user?.id) {
-      chatRoomInit(user?.id);
-    }
-  }, [progress]);
+  }, [supabase, chatRoom]);
 
   return (
     <section>
