@@ -96,7 +96,7 @@ const ChatPage = () => {
   }, [member]);
 
   useEffect(() => {
-    const channel = supabase.channel('chat_room' + user?.id);
+    const channel = supabase.channel('mypage_chat_room' + user?.id);
 
     channel
       .on(
