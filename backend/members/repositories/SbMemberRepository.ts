@@ -82,4 +82,10 @@ export class SbMemberRepository implements MemberRepository {
 
     return data;
   }
+
+  async updatePointMember(member_id: string, point: number) {
+    const { error } = await this.supabase.rpc('add_point', { member_id: member_id, add_value: point });
+
+    if (error) throw new Error(error.message);
+  }
 }

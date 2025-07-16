@@ -22,6 +22,7 @@ interface Member {
 }
 
 export interface ReviewRef {
+  member_id: string;
   content: string;
   rating: number;
 }

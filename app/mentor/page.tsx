@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Card, CardContent, Modal, TextField } from '@mui/material';
+import { Button, Modal, TextField } from '@mui/material';
 import styles from './mentor.module.scss';
 import { useEffect, useState } from 'react';
 import { mentorService } from '../services/mypage/mentor';
@@ -9,6 +9,7 @@ import { chatroomService } from '../services/chatroom/chatroom';
 import { RootState } from '../store/store';
 import { useSelector } from 'react-redux';
 import { Member } from '../store/isLogin/loginSlice';
+import Image from 'next/image';
 
 const MentorPage = () => {
   const member = useSelector((state: RootState) => state.login.member);
@@ -19,6 +20,7 @@ const MentorPage = () => {
   const [chatRoomTitle, setChatRoomTitle] = useState('');
   const [chatRoomDescription, setChatRoomDescription] = useState('');
   const [chatRoomMaxPeople, setChatRoomMaxPeople] = useState(1);
+  const [applyCompleteModal, setApplyCompleteModal] = useState(false);
 
   const { getMentorList } = mentorService();
   const { addChatRoom } = chatroomService;
@@ -33,8 +35,10 @@ const MentorPage = () => {
     };
 
     addChatRoom(chatRoomData).then((res) => {
-      console.log('res', res);
-      reset();
+      if (res.result.status === 200) {
+        setApplyCompleteModal(true);
+        reset();
+      }
     });
   };
 
@@ -60,19 +64,21 @@ const MentorPage = () => {
 
   return (
     <section className={styles.container}>
-      <section className={styles.contnet}>
+      <section className={styles.content}>
         {mentors?.length > 0 &&
           mentors?.map((item, index) => (
-            <Card variant="outlined" sx={{ minWidth: 300 }} key={item?.name + index}>
-              <CardContent>
-                <div>이미지</div>
-                <section>
-                  <h1>회사 / {item?.grade === 0 ? '주니어' : '시니어'}</h1>
-                  <h2>
-                    {item?.nickname} ({item?.name})
-                  </h2>
-                  <h3>포인트: {item?.point}</h3>
-                </section>
+            <section className={styles.mentor_card} key={item?.name + index}>
+              <div className={styles.profile_image}>
+                <Image src={item?.img ?? ''} alt="프로필 이미지" fill />
+              </div>
+              <section>
+                <h1>회사 / {item?.grade === 0 ? '주니어' : '시니어'}</h1>
+                <h2>
+                  {item?.nickname} ({item?.name})
+                </h2>
+                <h3>포인트: {item?.point}</h3>
+              </section>
+              {user?.id !== item?.id && user?.type !== 1 && (
                 <button
                   className={styles.apply_button}
                   onClick={() => {
@@ -84,8 +90,8 @@ const MentorPage = () => {
                 >
                   채팅 신청하기
                 </button>
-              </CardContent>
-            </Card>
+              )}
+            </section>
           ))}
       </section>
 
@@ -121,6 +127,16 @@ const MentorPage = () => {
               취소
             </Button>
           </section>
+        </section>
+      </Modal>
+
+      <Modal open={applyCompleteModal} onClose={() => setApplyCompleteModal(false)}>
+        <section className={`${styles.modal_container} ${styles.complete_modal}`}>
+          <h2>채팅신청이 완료되었어요! </h2>
+          <h3>멘토가 채팅방을 승인하면 채팅할수 있어요.</h3>
+          <Button variant="contained" href="/mypage/chat">
+            채팅방 보러가기
+          </Button>
         </section>
       </Modal>
     </section>

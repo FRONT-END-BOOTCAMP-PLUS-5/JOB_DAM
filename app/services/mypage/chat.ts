@@ -5,16 +5,14 @@ import { Chat } from '@/app/types/mypage/chat';
 import axios from 'axios';
 
 export const chatService = {
-  getChatRoom: async (memberId: string) => {
+  getChatRoom: async (memberId: string): Promise<ChatRoom[]> => {
     const { data, error } = await axios
       .get<{ result: ChatRoom[] }>(`/api/user/room?id=${memberId}`)
       .catch((error) => error);
 
     if (error) throw new Error(error.message);
 
-    return {
-      result: data.chatRoom,
-    };
+    return data.chatRoom;
   },
 
   insertChat: async (chatData: ChatRef) => {
@@ -27,14 +25,14 @@ export const chatService = {
     };
   },
 
-  updateChatRoom: async (updateChatRoomRef: UpdateChatRoomRef) => {
-    const { data, error } = await axios.put('/api/chatroom', updateChatRoomRef).catch((error) => error);
+  updateChatRoom: async (updateChatRoomRef: UpdateChatRoomRef): Promise<{ status: number }> => {
+    const { data, error } = await axios
+      .put<{ status: number }>('/api/chatroom', updateChatRoomRef)
+      .catch((error) => error);
 
     if (error) throw new Error(error.message);
 
-    return {
-      result: data,
-    };
+    return data;
   },
 
   getChat: async (chatRoomId: number) => {
