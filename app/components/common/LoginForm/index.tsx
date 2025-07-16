@@ -19,7 +19,9 @@ export default function LoginForm() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormInput>();
+  } = useForm<FormInput>({
+    mode: 'onBlur',
+  });
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -81,7 +83,7 @@ export default function LoginForm() {
           <input type="checkbox" className={styles.login_form_checkbox_input} />
           <label>로그인 상태 유지</label>
         </div>
-        <Link href="/login/findPassword">비밀번호 찾기</Link>
+        <Link href="/find/password">비밀번호 찾기</Link>
       </div>
       <input type="submit" className={styles.login_button} value="로그인" />
       <span>

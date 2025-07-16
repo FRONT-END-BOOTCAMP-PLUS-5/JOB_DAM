@@ -1,0 +1,88 @@
+.forgot_password_container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+
+  .forgot_password_form_container {
+    width: 60%;
+    height: 50vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .forgot_password_header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+
+    > a {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #6b70d6;
+    }
+    > p {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+  }
+
+  .forgot_password_form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    height: 60%;
+    gap: 40px;
+    position: relative;
+
+    .input_wrapper {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 20px;
+      position: relative;
+
+      > img {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        cursor: pointer;
+      }
+
+      input {
+        width: 100%;
+        height: 5vh;
+        border: 1px solid #6b70d6;
+        border-radius: 10px;
+        padding: 0 10px;
+        font-size: 1rem;
+        font-weight: 600;
+      }
+    }
+
+    > button {
+      width: 100%;
+      height: 4.5vh;
+      background-color: #6b70d6;
+      color: #fff;
+      font-size: 1.2rem;
+      border-radius: 10px;
+    }
+
+    .error_message {
+      position: absolute;
+      top: 100%;
+      left: 1%;
+      margin-top: 6px;
+      color: red;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+  }
+}

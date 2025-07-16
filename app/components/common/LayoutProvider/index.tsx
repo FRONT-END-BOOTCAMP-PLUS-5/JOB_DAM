@@ -10,7 +10,7 @@ import { useRefreshToken } from '@/app/hooks/useRefreshToken';
 export default function LayoutProvider({ children }: { children: React.ReactNode }) {
   const path_name = usePathname();
   const is_auth_page = path_name === '/login' || path_name === '/signup';
-  const is_forgot_password_page = path_name === '/login/forgot-password';
+  const is_forgot_password_page = path_name === '/find/password' || path_name === '/reset/password';
 
   // 🔹 앱 시작 시 토큰 확인하여 유저 정보 복원
   useAuthInit();
