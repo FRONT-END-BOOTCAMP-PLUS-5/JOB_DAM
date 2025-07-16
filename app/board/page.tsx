@@ -26,7 +26,8 @@ export interface IProps {
     deletedAt?: string
     updatedAt?: string
     categoryId: number
-    recommend: number
+    likeNum: number
+    dislikeNum: number
     view: number
     member: {
         id: string
@@ -82,7 +83,7 @@ export default function Board(){
 
     // 최신순,인기순 버튼 누를때 style 하고 api 실행해서 해당 페이지 데이터 보여줌
     const handleChangeActive = (type: string) => {
-        textRef['current'] = type === 'latest' ? 'created_at' : 'recommend'
+        textRef['current'] = type === 'latest' ? 'created_at' : 'like_num'
 
         setActiveBtn(type)
         getboardData(type, textRef['current'])
@@ -100,11 +101,14 @@ export default function Board(){
         const hangle = inputValRef['current']
         const res = await fetch(`/api/question/${url}=${keyword}&search=${hangle}`, { next: { revalidate: 3600 } })
         const { result } = await res.json()
-        const questions = [...result['question']]
-        const lastPg = Math.ceil(questions['length'] / 5)
-        lastPage['current'] = lastPg
+        if(result){
+            const questions = [...result['question']]
+            const lastPg = Math.ceil(questions['length'] / 5)
+            lastPage['current'] = lastPg
+            setJson(questions)
+        }
 
-        setJson(questions)
+
         setLoading(false)
     }
 
@@ -173,7 +177,7 @@ export default function Board(){
                                             }}>
                                                 <h3 className={style.question_title}>{item.title}</h3>
                                                 <div className={style.question_sub_box}>
-                                                    <span>👍{item.recommend}</span>
+                                                    <span>👍{item.likeNum}</span>
                                                     <span>👁️{item.view}<span>조회</span></span>
                                                 </div>
                                                 <p className={style.content}>{item.content}</p>

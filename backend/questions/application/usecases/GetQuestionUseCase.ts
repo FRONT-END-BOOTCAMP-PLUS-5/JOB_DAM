@@ -3,6 +3,7 @@ import { QuestionTable } from '../../domain/table/QuestionTable';
 import { QuestionDto } from '../dtos/QuestionDto';
 import { NextRequest } from 'next/server';
 import { AnswerTable } from '@/backend/questions/domain/table/AnswerTable';
+import {QuestionLikedQuestionJoinTable} from "@/backend/questions/domain/table/QuestionLikedQuestionJoinTable";
 /**
  * 작성자: 김동우
  * 작성일: 2025-07-03
@@ -35,7 +36,8 @@ export class GetQuestionUseCase {
       categoryId: item['category_id'],
       updatedAt: item['updated_at'],
       deletedAt: item['deleted_at'],
-      recommend: item['recommend'],
+      likeNum: item['like_num'],
+      dislikeNum: item['dislike_num'],
       view: item['view'],
       member: item['member_id'],
     }));
@@ -54,7 +56,8 @@ export class GetQuestionUseCase {
           content: item['content'],
           createdAt: item['created_at'],
           categoryId: item['category_id'],
-          recommend: item['recommend'],
+          likeNum: item['like_num'],
+          dislikeNum: item['dislike_num'],
           view: item['view'],
           img1: item['img1'],
           img2: item['img2'],
@@ -82,6 +85,26 @@ export class GetQuestionUseCase {
 
     return {
       answer: answerDto
+    }
+  }
+
+  async getAllLikeDisLike(id: string){
+    const board:QuestionLikedQuestionJoinTable[]  = await this.repository.getLikeDisLike(id)
+    const likeDislikeDto = board.map((item) => ({
+          id: item['id'],
+          title: item['title'],
+          content: item['content'],
+          likeNum: item['like_num'],
+          disLikeNum: item['dislike_num'],
+          likedQuestion: {
+            memberId: item['liked_question'].length ? item['liked_question'][0]['member_id'] : '',
+            questionId: item['liked_question'].length ? item['liked_question'][0]['question_id'] : '',
+            likeType: item['liked_question'].length ? item['liked_question'][0]['like_type'] : ''
+          }
+    }))
+
+    return {
+      ...likeDislikeDto
     }
   }
 }

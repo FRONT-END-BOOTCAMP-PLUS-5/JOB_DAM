@@ -33,7 +33,6 @@ export default function BoardWrite(){
     })
 
     const json = await result.json()
-    console.log(json, "json")
     const id = json.result.question.id
     if(id){
       router.push(`/board/${id}`)

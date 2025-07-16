@@ -2,6 +2,8 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { Question } from '../domain/entities/Question';
 import { QuestionTable } from '../domain/table/QuestionTable';
 import { QuestionRepository } from '../domain/repositories/QuestionRepository';
+import {QuestionLikedQuestion} from "@/backend/questions/domain/entities/QuestionLikedQuestion";
+import {LikedQuestion} from "@/backend/questions/domain/entities/LikedQuestion";
 
 /**
  * 작성자: 김동우
@@ -23,6 +25,19 @@ interface IComment{
   content: string
 }
 
+interface IQuestionLikeDisLike{
+  question_id: number,
+  like_num: number,
+  dislike_num: number,
+  check: boolean
+}
+
+interface ILikedQuestion{
+  member_id: string,
+  question_id: number,
+  like_type: boolean,
+}
+
 export class SbQuestionRepository implements QuestionRepository {
   private supabase: SupabaseClient;
 
@@ -30,10 +45,11 @@ export class SbQuestionRepository implements QuestionRepository {
     this.supabase = supabase;
   }
 
-  // 데이터베이스 데이터를 도메인 엔티티로 변환
-  private getEntities(question: QuestionTable): Question {
-    return { ...question };
+  // 데이터베이스 데이터를 도메인 엔티티로 변환, 두개의 타입인자로 표현
+  private getEntities<T, K extends T>(question: T): K {
+    return { ...question } as K;
   }
+
 
   // 검색기능, 버튼 필터링 생각해서 member 테이블 join
   async findAll(title: string, column: string): Promise<Question[]> {
@@ -47,7 +63,8 @@ export class SbQuestionRepository implements QuestionRepository {
                                                    deleted_at,
                                                    updated_at,
                                                    category_id,
-                                                   recommend,
+                                                   like_num,
+                                                   dislike_num,
                                                    view,
                                                    member_id(
                                                         id,
@@ -122,4 +139,61 @@ export class SbQuestionRepository implements QuestionRepository {
     if (error) throw new Error(error.message);
     return data;
   }
+
+  async getLikeDisLike(id: string):Promise<QuestionLikedQuestion[]>{
+    const {data, error} = await this.supabase
+        .from('question')
+        .select(`id,
+                title,
+                content,
+                like_num,
+                dislike_num,
+                liked_question(member_id, question_id, like_type)`)
+        .eq('id', id)
+
+    if (error) throw new Error(error.message);
+    return data;
+  }
+
+  async insertLikedQuestion({ member_id, question_id, like_type}:ILikedQuestion):Promise<LikedQuestion>{
+    const {data, error} = await this.supabase
+        .from("liked_question")
+        .insert([{
+          member_id,
+          question_id,
+          like_type
+        }])
+        .select(`member_id, question_id, like_type`)
+        .single()
+
+    if (error) throw new Error(error.message);
+    return data;
+  }
+
+  async updateQuestionLikeDisLike({question_id, like_num, dislike_num, check}: IQuestionLikeDisLike){
+    const supabase = this.supabase.from('question')
+
+    const supabase_update = check ? supabase.update({like_num: check ? like_num+1 : like_num}) : supabase.update({dislike_num: check ? dislike_num : dislike_num+1})
+    const {data, error} = await supabase_update
+        .eq('id', question_id)
+        .select(`id, like_num, dislike_num`)
+        .single()
+
+
+    if (error) throw new Error(error.message);
+    return data;
+  }
+
+  async setBoardView(){
+
+  }
+
+
+
+
+
+
+
+
+
 }

@@ -10,6 +10,7 @@ import Button from '@/app/components/common/Button';
 import { createClient } from '@/app/utils/supabase/client';
 import AsidePicture from '@/app/components/board/AsidePicture';
 import BoardItemModal from '@/app/components/board/Modal';
+import LikeDisLike from "@/app/components/board/LikeDisLike";
 
 interface Item{
   catergoryId: number | null
@@ -51,6 +52,7 @@ export default function Item(){
 
   const params = useParams();
   const { id } = params;
+
 
   const imgArrRef = useRef<string[] | null>([])
   const inputRef = useRef<HTMLInputElement>(null)
@@ -101,6 +103,10 @@ export default function Item(){
     commentRef.current?.scrollIntoView({ block: 'end', inline: 'nearest' })
   }
 
+  const setBoardView = (view: number) => {
+    console.log(view,"view")
+  }
+
  useEffect(() => {
     async function getItem(){
       const response = await fetch(`/api/question/item?id=${id}`)
@@ -110,6 +116,7 @@ export default function Item(){
 
       for(let i=0; i<3; i++) imgArrRef['current']?.push(item[`img${i+1}`])
       setItem(item)
+      setBoardView(item['view'])
       setIsLoading(false)
     }
     getItem()
@@ -188,7 +195,7 @@ export default function Item(){
                        type={'text'}
                        ref={inputRef}
                        onChange={(evt:React.ChangeEvent<HTMLInputElement>) => {handleSearch(evt)}}
-                       placeholder={"채팅내용을 입력하세요"}
+                       placeholder={"내용을 입력하세요"}
                        onKeyPress={(evt: React.KeyboardEvent<HTMLInputElement>) => {handleKeyPress(evt)}}
                 />
                 {
@@ -202,6 +209,7 @@ export default function Item(){
                             onClick={() => {handleInput()}}/>
                 }
               </div>
+              <LikeDisLike id={id}/>
             </section>
           </section>
           <aside className={style.container_content_right}>

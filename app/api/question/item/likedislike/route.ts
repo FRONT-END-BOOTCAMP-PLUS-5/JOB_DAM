@@ -8,19 +8,18 @@ import {CreateQuestionUseCase} from "@/backend/questions/application/usecases/Cr
 
 export async function GET(request: NextRequest) {
     try {
-        const {searchParams} = new URL(request.url);
+        const { searchParams } = new URL(request.url);
         const id = searchParams.get('id');
 
         const supabase: SupabaseClient = await createClient();
         const questionRepository = new SbQuestionRepository(supabase);
         const getQuestionUseCase = new GetQuestionUseCase(questionRepository);
-        const questionItem = await getQuestionUseCase.getItem(id || '');
-        return NextResponse.json({result: {...questionItem}, status: 200});
+        const questionItem = await getQuestionUseCase.getAllLikeDisLike(id || '');
+        return NextResponse.json({ result: {...questionItem}, status: 200 });
     } catch (err) {
         if (err instanceof Error) {
-            return NextResponse.json({message: err.message, status: 500});
+            return NextResponse.json({ message: err.message, status: 500 });
         }
-
     }
 }
 
@@ -36,9 +35,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ result: question, status: 200 });
     } catch (err) {
         if (err instanceof Error) {
-            return NextResponse.json({ message: err.message, status: 503 });
+            return NextResponse.json({ result: '이미 누른 회원입니다.',message: err.message, status: 503 });
         }
     }
 }
-
-

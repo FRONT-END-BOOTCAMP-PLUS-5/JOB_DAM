@@ -1,8 +1,9 @@
 import { QuestionRepository } from '../../domain/repositories/QuestionRepository';
-import { Question } from '../../domain/entities/Question';
-import { AnswerTable } from '@/backend/questions/domain/table/AnswerTable';
+import {Question, QuestionLikeDisLike} from '../../domain/entities/Question';
 import { QuestionAnswer } from '@/backend/questions/domain/entities/QuestionAnswer';
 import { QuestionAnswerDto } from '@/backend/questions/application/dtos/QuestionAnswerDto';
+import {LikedQuestionTable} from "@/backend/questions/domain/table/QuestionLikedQuestionJoinTable";
+import {QuestionLikedQuestionJoinDto} from "@/backend/questions/application/dtos/QuestionLikedQuestionJoinDto";
 /**
  * 작성자: 김동우
  * 작성일: 2025-07-04
@@ -76,7 +77,7 @@ export class CreateQuestionUseCase {
       question_id
     }
 
-    const answer:AnswerTable = await this.repository.sendMessage(commentUser)
+    const answer:QuestionAnswer = await this.repository.sendMessage(commentUser)
 
     const answerDto = {
       id: answer['id'],
@@ -89,6 +90,44 @@ export class CreateQuestionUseCase {
     }
 
     return answerDto
+  }
+
+  async upsertLikeDisLike(formData: FormData):Promise<QuestionLikedQuestionJoinDto>{
+    const member_id = formData.get("memberId") as string
+    const question_id = formData.get("questionId") as string
+    const like_type = formData.get("check")?.toString() === 'like' ? true : false
+    const like_num = formData.get("likeNum") as string
+    const dislike_num = formData.get("dislikeNum") as string
+
+    const insertLikedParam = {
+      member_id,
+      question_id: parseInt(question_id),
+      like_type
+    }
+
+    const likedQuestion:LikedQuestionTable = await this.repository.insertLikedQuestion(insertLikedParam)
+
+    // 버튼 누르고 나서 boolean 값
+    const likeType = likedQuestion.like_type ? true : false
+
+    const updateQuestion = {
+      question_id: parseInt(question_id),
+      like_num: parseInt(like_num),
+      dislike_num: parseInt(dislike_num),
+      check: likeType
+    }
+
+    const question:QuestionLikeDisLike = await this.repository.updateQuestionLikeDisLike(updateQuestion)
+
+    const questionDto = {
+      id: question['id'],
+      likeNum: question['like_num'],
+      dislikeNum: question['dislike_num']
+    }
+
+    return {
+      ...questionDto
+    }
   }
 
 }

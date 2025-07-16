@@ -7,7 +7,8 @@ export class QuestionDto {
         public deletedAt: string,
         public updatedAt: string,
         public categoryId: number,
-        public recommend: number,
+        public likeNum: number,
+        public dislikeNum: number,
         public view: number,
         public member: {
             id: string,

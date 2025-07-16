@@ -10,8 +10,6 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('item');
 
-    console.log(id, "get")
-
     const supabase: SupabaseClient = await createClient();
     const questionRepository = new SbQuestionRepository(supabase);
     const getQuestionAnswerUseCase = new GetQuestionUseCase(questionRepository); // 가져온 데이터 가공
