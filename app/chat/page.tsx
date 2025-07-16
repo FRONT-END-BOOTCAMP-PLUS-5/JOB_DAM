@@ -17,6 +17,7 @@ import { useSearchParams } from 'next/navigation';
 import { ChatRoomValue } from '../constants/initialValue';
 import { CHAT_ROOM_PROGRESS, CHAT_TYPE_TEXT } from '../constants/chat';
 import { chatroomService } from '../services/chatroom/chatroom';
+import Spinner from '../components/common/Spinner';
 
 const ChatPage = () => {
   const member = useSelector((state: RootState) => state.login.member);
@@ -30,6 +31,8 @@ const ChatPage = () => {
   const [chatMembers, setChatMembers] = useState<{ [key: string]: { name: string; img?: string } }>({});
   const [selectChatRoom, setSelectChatRoom] = useState<ChatRoom>();
   const [modalOpen, setModalOpen] = useState(false);
+  const [chatRoomLoading, setChatRoomLoading] = useState(true);
+  const [chatLoading, setChatLoading] = useState(false);
 
   const { getChatRoom, insertChat, updateChatRoom, getChat } = chatService;
   const { updatePointMember } = chatroomService;
@@ -112,6 +115,7 @@ const ChatPage = () => {
   };
 
   const onClickChatRoom = (chatRoomData: ChatRoom) => {
+    setChatLoading(true);
     setSelectChatRoom(chatRoomData);
 
     chatRoomData?.chatMember.forEach((item) =>
@@ -120,6 +124,7 @@ const ChatPage = () => {
 
     getChat(chatRoomData?.id).then((res) => {
       setIntialMessage(res.result);
+      setChatLoading(false);
     });
   };
 
@@ -131,8 +136,8 @@ const ChatPage = () => {
     return sortedMessages;
   }, [initialMessage, realtimeMessages]);
 
-  const initChatRoom = (memberId: string) => {
-    getChatRoom(memberId).then((res) => {
+  const initChatRoom = async (memberId: string) => {
+    await getChatRoom(memberId).then((res) => {
       if (res) {
         // 현재 진행중인 채팅방 filter
         const progressFilter = res.filter((item) => item?.progress !== 0);
@@ -146,6 +151,8 @@ const ChatPage = () => {
         }
       }
     });
+
+    setChatRoomLoading(false);
   };
 
   // 유저 정보 셋팅
@@ -165,7 +172,8 @@ const ChatPage = () => {
     <main className={styles.chat_container}>
       <section className={styles.content_wrap}>
         <ul className={styles.chat_room_list}>
-          {(!chatRoom || chatRoom.length === 0) && (
+          {chatRoomLoading && <Spinner />}
+          {!chatRoomLoading && (!chatRoom || chatRoom.length === 0) && (
             <div className={styles.not_found_data}>
               <h3>진행중인 채팅이 없어요. </h3>
               <h4>멘토에게 채팅 신청을 하고 채팅방을 생성해보세요. </h4>
@@ -174,7 +182,7 @@ const ChatPage = () => {
               </Button>
             </div>
           )}
-          {chatRoom &&
+          {!chatRoomLoading &&
             chatRoom.length > 0 &&
             chatRoom?.map((item, index) => (
               <li key={item?.title + item?.id + index} className={styles.chat_room_item}>
@@ -208,12 +216,13 @@ const ChatPage = () => {
         </ul>
 
         <section className={styles.chat_section}>
-          {chatRoom.length > 0 && (!selectChatRoom || selectChatRoom?.id === 0) && (
+          {chatLoading && <Spinner />}
+          {!chatLoading && chatRoom.length > 0 && (!selectChatRoom || selectChatRoom?.id === 0) && (
             <div className={styles.not_select_chatRoom}>
               <p>왼쪽에서 원하는 채팅방을 선택해주세요.</p>
             </div>
           )}
-          {selectChatRoom && selectChatRoom?.id !== 0 && (
+          {!chatLoading && selectChatRoom && selectChatRoom?.id !== 0 && (
             <>
               <hgroup className={styles.section_title}>
                 <Chip className={styles.right_chat_room_title} variant="filled" label={selectChatRoom?.title} />
