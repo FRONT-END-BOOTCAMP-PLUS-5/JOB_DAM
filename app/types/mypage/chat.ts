@@ -65,3 +65,8 @@ interface Review {
   deletedAt: string;
   chatRoomId: number;
 }
+
+export interface UpdateChatPointRef {
+  member_id: string;
+  point: number;
+}

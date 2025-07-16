@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styles from './chat.module.scss';
 import { chatService } from '../services/mypage/chat';
-import { Chat, ChatRoom } from '../types/mypage/chat';
+import { Chat, ChatRoom, UpdateChatPointRef } from '../types/mypage/chat';
 import dayjs from 'dayjs';
 import { RootState } from '../store/store';
 import { useSelector } from 'react-redux';
@@ -13,11 +13,10 @@ import { useChatScroll } from '../hooks/useChatScroll';
 import { useRealtimeChat } from '../hooks/useRealTimeChat';
 import ChatEndModal from '../components/chat/ChatEndModal';
 import Image from 'next/image';
-import nonData from '../public/images/not_found_data.png';
 import { useSearchParams } from 'next/navigation';
 import { ChatRoomValue } from '../constants/initialValue';
-
-const CHAT_TYPE_TEXT = ['일반', '질문', '답변'];
+import { CHAT_ROOM_PROGRESS, CHAT_TYPE_TEXT } from '../constants/chat';
+import { chatroomService } from '../services/chatroom/chatroom';
 
 const ChatPage = () => {
   const member = useSelector((state: RootState) => state.login.member);
@@ -33,6 +32,7 @@ const ChatPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
 
   const { getChatRoom, insertChat, updateChatRoom, getChat } = chatService;
+  const { updatePointMember } = chatroomService;
   const { containerRef, scrollToBottom } = useChatScroll();
 
   const {
@@ -45,6 +45,17 @@ const ChatPage = () => {
     userId: user?.id,
     type: chatType,
   });
+
+  const handleUpdatePoint = async () => {
+    if (!selectChatRoom) return;
+
+    const updateRef: UpdateChatPointRef = {
+      member_id: selectChatRoom?.createMember?.id,
+      point: 100,
+    };
+
+    await updatePointMember(updateRef);
+  };
 
   const handleSendMessage = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -61,6 +72,11 @@ const ChatPage = () => {
       if (!isConnected) return;
 
       sendMessage(newMessage);
+
+      if (chatType === 2) {
+        handleUpdatePoint();
+      }
+
       setChatType(0);
 
       insertChat(chatRef).then((res) => {
@@ -69,7 +85,7 @@ const ChatPage = () => {
         }
       });
     },
-    [chatType, insertChat, isConnected, newMessage, selectChatRoom, sendMessage, user?.id],
+    [chatType, insertChat, isConnected, newMessage, selectChatRoom?.id, sendMessage, updatePointMember, user?.id],
   );
 
   const onChangeMessage = (value: string) => {
@@ -119,7 +135,7 @@ const ChatPage = () => {
     getChatRoom(memberId).then((res) => {
       if (res) {
         // 현재 진행중인 채팅방 filter
-        const progressFilter = res.filter((item) => item?.progress === 1);
+        const progressFilter = res.filter((item) => item?.progress !== 0);
         setChatRoom(progressFilter);
 
         // param에 id가 있으면 채팅방 셋팅
@@ -151,7 +167,6 @@ const ChatPage = () => {
         <ul className={styles.chat_room_list}>
           {(!chatRoom || chatRoom.length === 0) && (
             <div className={styles.not_found_data}>
-              <Image src={nonData} alt="데이터가 없어요." width={350} height={300} />
               <h3>진행중인 채팅이 없어요. </h3>
               <h4>멘토에게 채팅 신청을 하고 채팅방을 생성해보세요. </h4>
               <Button className={styles.mentor_move_button} variant="contained" href={'/mentor'}>
@@ -161,41 +176,53 @@ const ChatPage = () => {
           )}
           {chatRoom &&
             chatRoom.length > 0 &&
-            chatRoom
-              .filter((cr) => cr.progress !== 2)
-              ?.map((item, index) => (
-                <li key={item?.id + index} className={styles.chat_room_item}>
-                  <button onClick={() => onClickChatRoom(item)}>
-                    <span className={styles.profile_image}>
-                      <Image src={item?.createMember?.img} alt="프로필 이미지" fill />{' '}
+            chatRoom?.map((item, index) => (
+              <li key={item?.title + item?.id + index} className={styles.chat_room_item}>
+                <button onClick={() => onClickChatRoom(item)}>
+                  <span className={styles.profile_image}>
+                    <Image src={item?.createMember?.img} alt="프로필 이미지" fill />
+                  </span>
+                  <div className={styles.chat_room_title}>
+                    <span className={styles.title}>
+                      <Chip
+                        variant="filled"
+                        label={CHAT_ROOM_PROGRESS[item?.progress]}
+                        color={item?.progress === 1 ? 'primary' : 'default'}
+                      />
+                      {item?.title}
                     </span>
-                    <div className={styles.chat_room_title}>
-                      <span className={styles.title}>{item?.title}</span>
-                      <span className={styles.mentor_name}>{item?.createMember?.name}</span>
-                    </div>
-                    <div className={styles.date_member}>
-                      <span className={styles.date}>{dayjs(item?.createdAt).format('YY. MM. DD')}</span>
-                      <span className={styles.chat_room_member}>
-                        {item?.chatMember.length} / {item?.maxPeople}
-                      </span>
-                    </div>
-                  </button>
-                </li>
-              ))}
+                    <span className={styles.mentor_name}>
+                      <Chip variant="filled" label="멘토" color="secondary" />
+                      {item?.createMember?.name}
+                    </span>
+                  </div>
+                  <div className={styles.date_member}>
+                    <span className={styles.date}>{dayjs(item?.createdAt).format('YY. MM. DD')}</span>
+                    <span className={styles.chat_room_member}>
+                      {item?.chatMember.length} / {item?.maxPeople}
+                    </span>
+                  </div>
+                </button>
+              </li>
+            ))}
         </ul>
 
         <section className={styles.chat_section}>
-          {chatRoom.length > 0 && (!selectChatRoom || selectChatRoom?.id === 0) && <div>채팅방을 선택해주세요.</div>}
+          {chatRoom.length > 0 && (!selectChatRoom || selectChatRoom?.id === 0) && (
+            <div className={styles.not_select_chatRoom}>
+              <p>왼쪽에서 원하는 채팅방을 선택해주세요.</p>
+            </div>
+          )}
           {selectChatRoom && selectChatRoom?.id !== 0 && (
             <>
-              <h1 className={styles.section_title}>
-                채팅하기
-                {selectChatRoom?.createMember?.id !== user?.id && (
+              <hgroup className={styles.section_title}>
+                <Chip className={styles.right_chat_room_title} variant="filled" label={selectChatRoom?.title} />
+                {selectChatRoom?.createMember?.id !== user?.id && selectChatRoom?.progress !== 2 && (
                   <Button variant="contained" color="warning" onClick={() => setModalOpen(true)}>
                     종료하기
                   </Button>
                 )}
-              </h1>
+              </hgroup>
               <div ref={containerRef} className={styles.item_container}>
                 {allMessages?.map((item, index) => {
                   return (
@@ -232,36 +259,38 @@ const ChatPage = () => {
                 })}
               </div>
 
-              <div className={styles.chat_enter}>
-                <section>
-                  <Chip
-                    label={CHAT_TYPE_TEXT[chatType]}
-                    variant="outlined"
-                    color={`${chatType !== 0 ? 'primary' : 'default'}`}
-                  />
-
-                  {selectChatRoom?.createMember?.id !== user?.id && (
-                    <Switch
-                      aria-label="Switch"
-                      checked={chatType === 1 ? true : false}
-                      onChange={(e) => setChatType(e.target.checked ? 1 : 0)}
+              {selectChatRoom?.progress !== 2 && (
+                <div className={styles.chat_enter}>
+                  <section>
+                    <Chip
+                      label={CHAT_TYPE_TEXT[chatType]}
+                      variant="outlined"
+                      color={`${chatType !== 0 ? 'primary' : 'default'}`}
                     />
-                  )}
-                </section>
 
-                <TextField
-                  id="outlined-basic"
-                  className={styles.text_field}
-                  style={{ border: `1px solid ${chatType === 0 ? '#ddd' : '#667eea'}` }}
-                  label=""
-                  variant="outlined"
-                  placeholder="메시지 입력"
-                  fullWidth
-                  value={newMessage}
-                  onChange={(e) => onChangeMessage(e.target.value)}
-                  onKeyDown={(e) => handleSendMessage(e)}
-                />
-              </div>
+                    {selectChatRoom?.createMember?.id !== user?.id && (
+                      <Switch
+                        aria-label="Switch"
+                        checked={chatType === 1 ? true : false}
+                        onChange={(e) => setChatType(e.target.checked ? 1 : 0)}
+                      />
+                    )}
+                  </section>
+
+                  <TextField
+                    id="outlined-basic"
+                    className={styles.text_field}
+                    style={{ border: `1px solid ${chatType === 0 ? '#ddd' : '#667eea'}` }}
+                    label=""
+                    variant="outlined"
+                    placeholder="메시지 입력"
+                    fullWidth
+                    value={newMessage}
+                    onChange={(e) => onChangeMessage(e.target.value)}
+                    onKeyDown={(e) => handleSendMessage(e)}
+                  />
+                </div>
+              )}
             </>
           )}
         </section>

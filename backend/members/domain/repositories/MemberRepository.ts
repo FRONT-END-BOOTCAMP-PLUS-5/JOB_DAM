@@ -8,4 +8,5 @@ export interface MemberRepository {
   findTopGradeMembers(): Promise<MemberMentorRank[]>;
   findById(userId: string): Promise<Member>;
   findAllMentor(): Promise<Member[]>;
+  updatePointMember(member_id: string, point: number): void;
 }
