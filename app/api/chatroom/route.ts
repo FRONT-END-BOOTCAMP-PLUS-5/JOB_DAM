@@ -22,11 +22,17 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
-  const body = await request.json();
+  try {
+    const body = await request.json();
 
-  const supabase: SupabaseClient = await createClient();
-  const chatroomRepository = new SbChatRoomRepository(supabase, body);
-  const chatroom = new UpdateChatRoomUseCase(chatroomRepository).update(body.chat_room_id, body.progress);
+    const supabase: SupabaseClient = await createClient();
+    const chatroomRepository = new SbChatRoomRepository(supabase, body);
+    const chatroom = new UpdateChatRoomUseCase(chatroomRepository).update(body.chat_room_id, body.progress);
 
-  return NextResponse.json({ result: chatroom, status: 200 });
+    return NextResponse.json({ result: chatroom, status: 200 });
+  } catch (error) {
+    if (error instanceof Error) {
+      return NextResponse.json({ message: error.message, status: 503 });
+    }
+  }
 }

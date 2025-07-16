@@ -10,16 +10,23 @@ import ReviewModal from './ReviewModal';
 import { reviewService } from '@/app/services/mypage/review';
 import { ChatRoomValue } from '@/app/constants/initialValue';
 import { createClient } from '@/app/utils/supabase/client';
-
-const TEST_USER_ID = '0bd61fbf-71fd-44e1-a590-1e53af363c3c';
+import { RootState } from '@/app/store/store';
+import { useSelector } from 'react-redux';
+import { Member } from '@/app/store/isLogin/loginSlice';
+import Image from 'next/image';
+import { Button, Chip } from '@mui/material';
+import Link from 'next/link';
+import { CHAT_ROOM_PROGRESS } from '@/app/constants/chat';
 
 const ChatPage = () => {
+  const member = useSelector((state: RootState) => state.login.member);
   const [chatRoom, setChatRoom] = useState<ChatRoom[]>([]);
   const [reviewOpen, setReviewOpen] = useState(false);
   const [rating, setRating] = useState<number | null>(0);
   const [content, setContent] = useState('');
   const [selectChatRoom, setSelectChatRoom] = useState<ChatRoom>(ChatRoomValue);
   const [progress, setProgress] = useState(0);
+  const [user, setUser] = useState<Member>(member);
 
   const supabase = createClient();
   const { getChatRoom, updateChatRoom } = chatService;
@@ -44,11 +51,16 @@ const ChatPage = () => {
       chat_room_id: chatRoomId,
       content: content,
       rating: rating || 0,
+      member_id: user?.id,
     };
 
-    const result = await addReview(reviewData);
+    await addReview(reviewData).then((res) => {
+      if (res.status === 200) {
+        chatRoomInit(user?.id);
+      }
+    });
 
-    if (result) reviewReset();
+    reviewReset();
   };
 
   const handleUpdateChatRoom = (chatRoomId: number) => {
@@ -59,9 +71,7 @@ const ChatPage = () => {
 
     updateChatRoom(updateChatRoomRef).then((res) => {
       if (res) {
-        getChatRoom(TEST_USER_ID).then((gRes) => {
-          setChatRoom(gRes.result);
-        });
+        chatRoomInit(user?.id);
       }
     });
   };
@@ -72,6 +82,20 @@ const ChatPage = () => {
     },
     [chatRoom],
   );
+
+  const chatRoomInit = (userId: string) => {
+    getChatRoom(userId).then((res) => {
+      setChatRoom(res);
+    });
+  };
+
+  useEffect(() => {
+    setUser(member);
+
+    if (member?.id) {
+      chatRoomInit(member?.id);
+    }
+  }, [member]);
 
   useEffect(() => {
     updateChatRoomProgress(progress);
@@ -91,40 +115,69 @@ const ChatPage = () => {
       .subscribe();
   }, [supabase]);
 
-  useEffect(() => {
-    getChatRoom(TEST_USER_ID).then((res) => {
-      setChatRoom(res.result);
-    });
-  }, []);
-
   return (
     <section>
+      {chatRoom?.length === 0 && user?.type === 0 && (
+        <section className={styles.none_chat_section}>
+          <p>채팅중인 방이 없습니다. </p>
+          <p>멘토에게 채팅 신청을 해보세요!</p>
+          <Button variant="contained" href={'/mentor'}>
+            채팅하러 가기!
+          </Button>
+        </section>
+      )}
+
+      {chatRoom?.length === 0 && user?.type === 1 && (
+        <section className={styles.none_chat_section}>
+          <p>채팅중인 방이 없습니다.</p>
+          <p>멘티에게 어필할 만한 활동을 해보세요!</p>
+        </section>
+      )}
       <ul className={styles.chat_room_ul}>
         {chatRoom?.map((item, index) => (
           <li className={styles.chat_room} key={item.title + index}>
             <p className={styles.mentor_image}>
-              <span>프로필</span>
+              <Image src={item?.createMember?.img} alt="프로필 이미지" fill />
             </p>
             <div className={styles.chat_room_info}>
-              <h2>
-                {item?.title} ({item?.chatMember.length})
-              </h2>
-              <p>
-                {item?.createMember?.name} <span className={styles.mentor_mark}>멘토</span>
-              </p>
+              <hgroup>
+                <Chip label={CHAT_ROOM_PROGRESS[item?.progress]} color={item?.progress === 1 ? 'primary' : 'default'} />
+                <span className={styles.title}>{item?.title}</span>
+                <span className={styles.member_num}>
+                  ({item?.chatMember.length}/{item?.maxPeople})
+                </span>
+              </hgroup>
+              <span className={styles.mentor_name}>
+                <Chip label="멘토" variant="filled" color="secondary" /> {item?.createMember?.name}
+              </span>
               <span className={styles.created_date}>{dayjs(item?.createdAt).format('YYYY.MM.DD')}</span>
             </div>
-            {item?.progress === 0 && (
+            {item?.progress === 0 && item?.createMember.id === user?.id && (
               <div className={styles.button_wrap}>
                 <button onClick={() => handleUpdateChatRoom(item?.id)}>생성하기</button>
               </div>
             )}
-            {item?.progress === 1 && <div>진행중</div>}
-            {item?.progress === 2 && (
-              <div className={styles.button_wrap}>
-                <button onClick={() => handleReviewModalShow(true, item?.id)}>리뷰 쓰기</button>
-              </div>
+
+            {item?.progress === 1 && (
+              <Link
+                href={{
+                  pathname: '/chat',
+                  query: {
+                    id: item?.id,
+                  },
+                }}
+              >
+                <Button variant="contained">이동하기</Button>
+              </Link>
             )}
+
+            {item?.progress === 2 &&
+              item?.createMember.id !== user?.id &&
+              item?.review?.filter((item) => user?.id === item?.memberId).length === 0 && (
+                <Button variant="contained" onClick={() => handleReviewModalShow(true, item?.id)}>
+                  리뷰쓰기
+                </Button>
+              )}
           </li>
         ))}
       </ul>

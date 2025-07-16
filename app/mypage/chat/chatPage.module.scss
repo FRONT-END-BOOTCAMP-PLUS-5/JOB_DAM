@@ -1,10 +1,23 @@
 @use '../../styles/mixin';
 
+.none_chat_section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  justify-content: center;
+  min-height: 350px;
+}
+
 .chat_room_ul {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
   & .chat_room {
-    border: 1px solid #667eea;
+    background: rgba(102, 126, 234, 0.1);
     border-radius: 4px;
-    padding: 12px 24px;
+    padding: 24px 24px;
     display: flex;
     align-items: center;
 
@@ -15,10 +28,36 @@
       @include mixin.flexCenter(row);
       border-radius: 50%;
       margin-right: 16px;
+      position: relative;
+      overflow: hidden;
     }
 
     & .chat_room_info {
       width: calc(100% - 176px);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      & hgroup {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+
+        & .title {
+          font-size: 16px;
+          font-weight: 600;
+        }
+
+        & .member_num {
+          font-size: 16px;
+        }
+      }
+
+      & .mentor_name {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
     }
 
     & p {
@@ -32,8 +71,11 @@
     }
 
     & .created_date {
-      font-size: 12px;
+      font-size: 14px;
       color: #666;
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
     & .button_wrap {

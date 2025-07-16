@@ -1,3 +1,4 @@
+import { Review } from '@/backend/reviews/domain/entities/Review';
 import { ChatMember } from './ChatMember';
 
 export class ChatRoom {
@@ -7,13 +8,17 @@ export class ChatRoom {
     public updated_at: string,
     public deleted_at: string | null,
     public title: string,
-    public created_member_id: string,
     public chat_member: ChatMember[],
     public member: {
       id: string;
+      img: string;
       name: string;
-      email: string;
+      type: number;
+      grade: number;
+      nickname: string;
     },
     public progress: number,
+    public max_people: number,
+    public review: Review[],
   ) {}
 }

@@ -6,6 +6,7 @@ interface ClientProp {
   content: string;
   chat_room_id: number;
   member_id: string;
+  type: number;
 }
 
 export class SbChatRepository implements ChatRepository {
@@ -32,8 +33,9 @@ export class SbChatRepository implements ChatRepository {
       .select(
         `
         *,
-        chat_member(*),
-        member!chat_room_created_member_id_fkey(*)
+        chat_member(chat_room_id, member(id,img,name,nickname)),
+        member!chat_room_created_member_id_fkey(id,img,name,type,grade,nickname),
+        review:review_chat_room_id_fkey(*)
       `,
       )
       .in('id', chatRoomIds);

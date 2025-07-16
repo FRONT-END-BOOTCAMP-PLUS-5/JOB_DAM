@@ -6,5 +6,6 @@ export class Review {
     public content: string,
     public rating: number,
     public chat_room_id: number,
+    public member_id: string,
   ) {}
 }
