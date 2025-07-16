@@ -4,6 +4,7 @@ export class ChatMemberDto {
       id: string;
       name: string;
       nickname: string;
+      img: string;
     },
     public chatRoomId: number,
   ) {}

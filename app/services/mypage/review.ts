@@ -14,13 +14,13 @@ export const reviewService = {
     };
   },
 
-  addReview: async (reviewData: ReviewRef) => {
-    const { data, error } = await axios.post(`/api/user/review`, reviewData).catch((error) => error);
+  addReview: async (reviewData: ReviewRef): Promise<{ status: number }> => {
+    const { data, error } = await axios
+      .post<{ status: number }>(`/api/user/review`, reviewData)
+      .catch((error) => error);
 
     if (error) throw new Error(error.message);
 
-    return {
-      result: data.review,
-    };
+    return data;
   },
 };

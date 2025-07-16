@@ -4,6 +4,7 @@ export class ChatMember {
       id: string;
       name: string;
       nickname: string;
+      img: string;
     },
     public chat_room_id: number,
   ) {}

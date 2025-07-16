@@ -23,6 +23,7 @@ export interface ChatMember {
     id: string;
     name: string;
     nickname: string;
+    img?: string;
   };
   chatRoomId: number;
 }
@@ -63,4 +64,9 @@ interface Review {
   createdAt: string;
   deletedAt: string;
   chatRoomId: number;
+}
+
+export interface UpdateChatPointRef {
+  member_id: string;
+  point: number;
 }
