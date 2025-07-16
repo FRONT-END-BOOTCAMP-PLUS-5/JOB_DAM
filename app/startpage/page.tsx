@@ -1,14 +1,8 @@
 "use client"
 
 import styles from './startpage.module.scss'
-import { createClient } from '@supabase/supabase-js'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-
-const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
 
 const StartPage = () => {
     const router = useRouter()
@@ -18,46 +12,42 @@ const StartPage = () => {
     const [mentorRoomNum, setMentorRoomNum] = useState<number>(0)
 
     const findMemNum = async () => {
-        const { data: member_num_data } = await supabase
-            .from('member')
-            .select('id')
-        if (!member_num_data) {
+        const response = await fetch(`/api/member/count`)
+        if (!response) {
             return
         }
-        setMemberNum(member_num_data.length)
+        const data = await response.json();
+        setMemberNum(data.result.length)
     }
     findMemNum()
 
     const findQuestionNum = async () => {
-        const { data: question_num_data } = await supabase
-            .from('question')
-            .select('id')
-        if (!question_num_data) {
+        const response = await fetch(`/api/question/count`)
+        if (!response) {
             return
         }
-        setQuestionNum(question_num_data.length)
+        const data = await response.json();
+        setQuestionNum(data.result.length)
     }
     findQuestionNum()
 
     const findMentorNum = async () => {
-        const { data: mentor_num_data } = await supabase
-            .from('mentor_application')
-            .select('member_id')
-        if (!mentor_num_data) {
+        const response = await fetch(`/api/mentor/count`)
+        if (!response) {
             return
         }
-        setMentorNum(mentor_num_data.length)
+        const data = await response.json();
+        setMentorNum(data.result.length)
     }
     findMentorNum()
 
     const findMentorRoomNum = async () => {
-        const { data: mentor_room_num_data } = await supabase
-            .from('chat_room')
-            .select('id')
-        if (!mentor_room_num_data) {
+        const response = await fetch(`/api/chatroom/count`)
+        if (!response) {
             return
         }
-        setMentorRoomNum(mentor_room_num_data.length)
+        const data = await response.json();
+        setMentorRoomNum(data.result.length)
     }
     findMentorRoomNum()
 

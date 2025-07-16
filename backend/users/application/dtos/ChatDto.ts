@@ -3,5 +3,6 @@ export class ChatDto {
     public memberId: string,
     public chatRoomId: number,
     public content: string,
+    public type: number,
   ) {}
 }

@@ -1,6 +1,6 @@
 import { ChatRepository } from '@/backend/users/domain/repositories/ChatRepository';
 import { ChatRoomDto } from '../dtos/ChatRoomDto';
-import { ChatRoomTable } from '@/backend/users/domain/table/ChatRoomTable';
+import { ChatRoom } from '../../domain/entities/ChatRoom';
 
 export class GetChatRoomUseCase {
   private repository: ChatRepository;
@@ -10,7 +10,7 @@ export class GetChatRoomUseCase {
   }
 
   async execute(member_id: string): Promise<{ chatRoom: ChatRoomDto[] }> {
-    const chatRoomTable: ChatRoomTable[] = await this.repository.chatRoomFindById(member_id);
+    const chatRoomTable: ChatRoom[] = await this.repository.chatRoomFindById(member_id);
 
     const chatRoomDto: ChatRoomDto[] = chatRoomTable.map((cr) => ({
       id: cr.id,
@@ -19,11 +19,17 @@ export class GetChatRoomUseCase {
       deletedAt: cr.deleted_at,
       title: cr.title,
       chatMember: cr.chat_member.map((cm) => ({
-        memberId: cm.member_id,
+        member: {
+          id: cm.member.id,
+          name: cm.member.name,
+          nickname: cm.member.nickname,
+        },
         chatRoomId: cm.chat_room_id,
       })),
       createMember: cr.member,
       progress: cr.progress,
+      maxPeople: cr.max_people,
+      review: cr.review,
     }));
 
     return {

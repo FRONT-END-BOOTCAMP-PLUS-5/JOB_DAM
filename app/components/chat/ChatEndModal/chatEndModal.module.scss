@@ -1,0 +1,18 @@
+@use '../../../styles/mixin';
+
+.content_container {
+  @include mixin.positionCenter(absolute);
+  @include mixin.flexCenter(column);
+  padding: 60px 80px;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+
+  & .button_section {
+    margin-top: 60px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 20px;
+  }
+}

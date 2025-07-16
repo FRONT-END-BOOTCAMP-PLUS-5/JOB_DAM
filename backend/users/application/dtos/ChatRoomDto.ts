@@ -1,3 +1,4 @@
+import { Review } from '@/backend/reviews/domain/entities/Review';
 import { ChatMemberDto } from './ChatMemberDto';
 
 export class ChatRoomDto {
@@ -10,9 +11,14 @@ export class ChatRoomDto {
     public chatMember: ChatMemberDto[],
     public createMember: {
       id: string;
+      img: string;
       name: string;
-      email: string;
+      type: number;
+      grade: number;
+      nickname: string;
     },
     public progress: number,
+    public maxPeople: number,
+    public review: Review[],
   ) {}
 }
