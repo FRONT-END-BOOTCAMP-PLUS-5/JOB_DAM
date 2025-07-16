@@ -1,10 +1,10 @@
-import { passwordCrypto, passwordDecrypto } from '@/app/utils/signup/passwordCrypto';
+import { passwordDecrypto } from '@/app/utils/signup/passwordCrypto';
 import { generateAccessToken, generateRefreshToken } from '@/app/utils/signup/token';
 import { verifyAccessToken } from '@/app/utils/signup/tokenVerify';
 import { createClient } from '@/app/utils/supabase/server';
+import { GetLoginUserIdUseCase } from '@/backend/login/application/usecases/GetLoginUserIdUseCase';
 import { GetLoginUserUseCase } from '@/backend/login/application/usecases/GetLoginUserUseCase';
 import { SbLoginRepository } from '@/backend/login/repository/SbLoginRepository';
-import { SbMemberRepository } from '@/backend/members/repositories/SbMemberRepository';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
@@ -16,12 +16,12 @@ export async function POST(request: NextRequest) {
     const loginRepository = new SbLoginRepository(supabase);
 
     const memberEmail = await new GetLoginUserUseCase(loginRepository).execute(email);
-    console.log(memberEmail);
+    const decryptoPassword = passwordDecrypto(memberEmail.password);
 
     if (!memberEmail) {
       return NextResponse.json({ status: 409, message: '일치하는 이메일이 없습니다.' });
     } else {
-      if (memberEmail.password !== password) {
+      if (decryptoPassword !== password) {
         return NextResponse.json({ status: 409, message: '비밀번호가 일치하지 않습니다.' });
       }
     }
@@ -29,7 +29,10 @@ export async function POST(request: NextRequest) {
     const access_token = generateAccessToken(memberEmail.id.toString());
     const refresh_token = generateRefreshToken(memberEmail.id.toString());
 
-    const response = NextResponse.json({ user: memberEmail, status: 200 });
+    const response = NextResponse.json({
+      user: { ...memberEmail, access_token, refresh_token },
+      status: 200,
+    });
 
     response.cookies.set('access_token', access_token, {
       sameSite: 'lax',
@@ -64,8 +67,8 @@ export async function GET(request: NextRequest) {
 
     // 2️⃣ DB에서 사용자 정보 조회
     const supabase = await createClient();
-    const memberRepository = new SbMemberRepository(supabase);
-    const memberData = await memberRepository.findById(userId);
+    const loginRepository = new SbLoginRepository(supabase);
+    const memberData = await new GetLoginUserIdUseCase(loginRepository).execute(userId);
 
     // 3️⃣ 사용자 정보만 반환 (토큰 갱신 X)
     return NextResponse.json({

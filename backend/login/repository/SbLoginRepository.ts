@@ -15,4 +15,11 @@ export class SbLoginRepository implements LoginRepository {
     if (error) throw new Error(error.message);
     return data;
   }
+
+  async findById(userId: string): Promise<Member> {
+    const { data, error } = await this.supabase.from('member').select('*').eq('id', userId).single();
+
+    if (error) throw new Error(error.message);
+    return data;
+  }
 }
