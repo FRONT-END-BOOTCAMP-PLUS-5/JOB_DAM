@@ -2,6 +2,7 @@ import { createClient } from '@/app/utils/supabase/server';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 import { SbMemberRepository } from '../../../backend/members/repositories/SbMemberRepository';
+import { UpdateMemberPasswordUseCase } from '@/backend/members/application/usecases/UpdateMemberPasswordUseCase';
 
 export async function GET(request: NextRequest) {
   try {
@@ -51,7 +52,7 @@ export async function PATCH(request: NextRequest) {
 
   const supabase: SupabaseClient = await createClient();
   const memberRepository = new SbMemberRepository(supabase);
-  const updateMemberPassword = await memberRepository.updatePassword(body.email, body.password);
+  const updateMemberPassword = new UpdateMemberPasswordUseCase(memberRepository).execute(body.email, body.password);
 
   return NextResponse.json({ result: updateMemberPassword, status: 200, message: '비밀번호 변경을 완료했습니다.' });
 }

@@ -10,6 +10,8 @@ import eyeIcon from '@/app/public/images/show_password.svg';
 import hidePasswordIcon from '@/app/public/images/no_show_image.svg';
 import { resetPassword } from '@/app/services/reset/resetPassword';
 import { useSearchParams } from 'next/navigation';
+import { passwordCrypto } from '@/app/utils/signup/passwordCrypto';
+import { useRouter } from 'next/navigation';
 
 interface ResetPasswordForm {
   password: string;
@@ -18,6 +20,7 @@ interface ResetPasswordForm {
 
 export default function ResetPasswordPage() {
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   const {
     register,
@@ -36,9 +39,11 @@ export default function ResetPasswordPage() {
 
   const onSubmit = async (data: ResetPasswordForm) => {
     const email = searchParams.get('email');
+    const userPassword = passwordCrypto(data.password);
 
     if (email) {
-      await resetPassword(email, data.password);
+      await resetPassword(email, userPassword);
+      router.push('/login');
     }
   };
 
