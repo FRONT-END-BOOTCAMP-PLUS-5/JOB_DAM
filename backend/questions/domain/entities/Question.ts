@@ -26,3 +26,9 @@ export class QuestionLikeDisLike{
         public dislike_num: number
     ){}
 }
+
+export class QuestionView{
+  constructor(
+    public view :number
+  ) {}
+}

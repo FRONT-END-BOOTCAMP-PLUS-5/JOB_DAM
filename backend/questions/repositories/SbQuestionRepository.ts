@@ -13,10 +13,10 @@ import {LikedQuestion} from "@/backend/questions/domain/entities/LikedQuestion";
 
 
 interface IProps{
-  title: FormDataEntryValue | null;
-  content: FormDataEntryValue | null;
-  memberId: FormDataEntryValue | null;
-  img: string[];
+  title: FormDataEntryValue | null
+  content: FormDataEntryValue | null
+  memberId: FormDataEntryValue | null
+  img: string[]
 }
 
 interface IComment{
@@ -26,16 +26,21 @@ interface IComment{
 }
 
 interface IQuestionLikeDisLike{
-  question_id: number,
-  like_num: number,
-  dislike_num: number,
+  question_id: number
+  like_num: number
+  dislike_num: number
   check: boolean
 }
 
 interface ILikedQuestion{
-  member_id: string,
-  question_id: number,
-  like_type: boolean,
+  member_id: string
+  question_id: number
+  like_type: boolean
+}
+
+interface IQuestionView{
+  id: number
+  view: number
 }
 
 export class SbQuestionRepository implements QuestionRepository {
@@ -53,29 +58,34 @@ export class SbQuestionRepository implements QuestionRepository {
 
   // 검색기능, 버튼 필터링 생각해서 member 테이블 join
   async findAll(title: string, column: string): Promise<Question[]> {
-    const { data, error } = await this.supabase
+    const supabase = this.supabase
       .from('question')
       .select(
         `id,
-                                                   title,
-                                                   content,
-                                                   created_at,
-                                                   deleted_at,
-                                                   updated_at,
-                                                   category_id,
-                                                   like_num,
-                                                   dislike_num,
-                                                   view,
-                                                   member_id(
-                                                        id,
-                                                        name,
-                                                        img,
-                                                        nickname
-                                                     )
-                                                   `,
-      )
+                 title,
+                 content,
+                 created_at,
+                 deleted_at,
+                 updated_at,
+                 category_id,
+                 like_num,
+                 dislike_num,
+                 view,
+                 member_id(
+                  id,
+                  name,
+                  img,
+                  nickname
+                 )
+                 `)
       .like('title', `%${title}%`)
-      .order(`${column}`, { ascending: false });
+    const orderSupabase = column === 'created_at' ?
+      supabase.order(`${column}`, { ascending: false }) :
+      supabase.order(`${column}`, { ascending: false }).order(`view`, { ascending: false })
+
+    const { data, error } = await orderSupabase
+
+
 
     if (error) throw new Error(error.message);
     return data.map((item) => this.getEntities(item)) as Question[];
@@ -184,8 +194,14 @@ export class SbQuestionRepository implements QuestionRepository {
     return data;
   }
 
-  async setBoardView(){
+  async setBoardView({id, view}: IQuestionView){
+    const {data, error} = await this.supabase
+      .from('question')
+      .update({view})
+      .eq('id',id)
 
+    if (error) throw new Error(error.message);
+    return data;
   }
 
 

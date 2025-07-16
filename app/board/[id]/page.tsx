@@ -103,8 +103,17 @@ export default function Item(){
     commentRef.current?.scrollIntoView({ block: 'end', inline: 'nearest' })
   }
 
+
   const setBoardView = (view: number) => {
-    console.log(view,"view")
+    const formData = new FormData()
+
+
+    formData.append('view', view.toString())
+    formData.append('question_id',`${id}`)
+    fetch(`/api/question/item/view?item=${id}`, {
+      method: "POST",
+      body: formData,
+    })
   }
 
  useEffect(() => {
@@ -112,11 +121,12 @@ export default function Item(){
       const response = await fetch(`/api/question/item?id=${id}`)
       const json = await response.json()
       const item = json['result']['questionItem'][0]
+      const view = item['view']
       imgArrRef['current'] = []
 
       for(let i=0; i<3; i++) imgArrRef['current']?.push(item[`img${i+1}`])
       setItem(item)
-      setBoardView(item['view'])
+      setBoardView(view)
       setIsLoading(false)
     }
     getItem()

@@ -96,7 +96,7 @@ export default function Board(){
 
 
     const getboardData = async (url: string = `${activeBtn}`, keyword:string =`${textRef['current']}`) => {
-        if(keyword === "recommend") url = "popular"
+        if(keyword === "like_num") url = "popular"
 
         const hangle = inputValRef['current']
         const res = await fetch(`/api/question/${url}=${keyword}&search=${hangle}`, { next: { revalidate: 3600 } })

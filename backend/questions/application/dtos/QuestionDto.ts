@@ -22,3 +22,9 @@ export class QuestionDto {
     ) {}
 
 }
+
+export class QuestionViewDto{
+  constructor(
+    public view: number
+  ) {}
+}

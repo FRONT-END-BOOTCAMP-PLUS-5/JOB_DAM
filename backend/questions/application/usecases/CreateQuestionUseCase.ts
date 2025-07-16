@@ -130,4 +130,18 @@ export class CreateQuestionUseCase {
     }
   }
 
+  async updateViewNum(formData: FormData){
+    const view = formData.get('view') as string
+    const id = formData.get('question_id') as string
+
+    const param = {
+      id: parseInt(id),
+      view: parseInt(view)+1
+    }
+
+    const QuestionView = await this.repository.setBoardView(param)
+
+    if(QuestionView === null) return 'success'
+  }
+
 }

@@ -29,6 +29,11 @@ interface ILikedQuestion{
   like_type: boolean,
 }
 
+interface IQuestionView{
+  id: number
+  view: number
+}
+
 export interface QuestionRepository {
   findAll(title: string, column: string): Promise<Question[]>;
   insertQuestion({ title, content, memberId, img }:IProps): Promise<Question>;
@@ -39,4 +44,5 @@ export interface QuestionRepository {
   getLikeDisLike(id: string): Promise<QuestionLikedQuestion[]>
   insertLikedQuestion({ member_id, question_id, like_type}:ILikedQuestion): Promise<LikedQuestion>
   updateQuestionLikeDisLike({question_id, like_num, dislike_num, check}: IQuestionLikeDisLike):Promise<QuestionLikeDisLike>
+  setBoardView({id, view}: IQuestionView):Promise<null>
 }
