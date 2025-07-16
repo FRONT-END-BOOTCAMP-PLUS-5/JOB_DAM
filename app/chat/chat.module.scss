@@ -20,17 +20,23 @@
     width: 35%;
     display: flex;
     flex-direction: column;
-    border: 1px solid #ddd;
+    background: rgba(102, 126, 234, 0.1);
     border-radius: 4px;
+    overflow: hidden;
 
     & .chat_room_item {
+      transition: 0.3s;
+
+      &:hover {
+        background: rgba(102, 126, 234, 0.3);
+      }
+
       & button {
         width: 100%;
-        border-bottom: 1px solid #ddd;
         display: flex;
-        padding: 24px 16px;
+        padding: 32px;
         align-items: center;
-        background: #fff;
+        background: none;
       }
 
       & .profile_image {
@@ -39,7 +45,7 @@
         background: #667eea;
         border-radius: 50%;
         display: inline-block;
-        margin-right: 12px;
+        margin-right: 20px;
         position: relative;
         overflow: hidden;
       }
@@ -55,18 +61,24 @@
         display: flex;
         flex-direction: column;
         margin-right: 16px;
-        gap: 6px;
+        gap: 12px;
         flex: 1;
         align-items: start;
 
         & .title {
           font-size: 16px;
           font-weight: 600;
+          display: flex;
+          gap: 12px;
+          align-items: center;
         }
 
         & .mentor_name {
-          font-size: 14px;
+          font-size: 16px;
           font-weight: 400;
+          display: flex;
+          align-items: center;
+          gap: 12px;
         }
       }
     }
@@ -83,12 +95,30 @@
 .chat_section {
   @include mixin.flexCenter(column);
   gap: 40px;
+  width: 100%;
   max-width: 500px;
+
+  & .not_select_chatRoom {
+    background: rgba(102, 126, 234, 0.1);
+    @include mixin.flexCenter(column);
+    width: 100%;
+    height: 100%;
+  }
 
   & .section_title {
     display: flex;
     align-items: center;
     gap: 24px;
+
+    & .right_chat_room_title {
+      font-size: 16px;
+      font-weight: 600;
+      padding: 12px;
+      height: auto;
+      & span {
+        font-weight: 600;
+      }
+    }
   }
 }
 
@@ -104,7 +134,7 @@
     display: flex;
     flex-direction: column;
     background: rgba(102, 126, 234, 0.1);
-    padding: 16px;
+    padding: 20px;
     border-radius: 12px;
 
     &.my_chat {
@@ -155,7 +185,6 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
-      border: 1px solid #ddd;
       padding: 8px;
       border-radius: 8px;
       align-items: start;
@@ -218,6 +247,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 60px 0;
 
   & h3 {
     margin-bottom: 12px;

@@ -16,8 +16,7 @@ import { Member } from '@/app/store/isLogin/loginSlice';
 import Image from 'next/image';
 import { Button, Chip } from '@mui/material';
 import Link from 'next/link';
-
-const CHAT_ROOM_PROGRESS = ['대기중', '진행중', '종료'];
+import { CHAT_ROOM_PROGRESS } from '@/app/constants/chat';
 
 const ChatPage = () => {
   const member = useSelector((state: RootState) => state.login.member);
@@ -141,13 +140,15 @@ const ChatPage = () => {
               <Image src={item?.createMember?.img} alt="프로필 이미지" fill />
             </p>
             <div className={styles.chat_room_info}>
-              <h2>
-                {item?.title}{' '}
-                <Chip label={CHAT_ROOM_PROGRESS[item?.progress]} color={item?.progress === 1 ? 'primary' : 'default'} />{' '}
-                ({item?.chatMember.length}/{item?.maxPeople})
-              </h2>
-              <span>
-                <Chip label="멘토" variant="outlined" color="primary" /> {item?.createMember?.name}
+              <hgroup>
+                <Chip label={CHAT_ROOM_PROGRESS[item?.progress]} color={item?.progress === 1 ? 'primary' : 'default'} />
+                <span className={styles.title}>{item?.title}</span>
+                <span className={styles.member_num}>
+                  ({item?.chatMember.length}/{item?.maxPeople})
+                </span>
+              </hgroup>
+              <span className={styles.mentor_name}>
+                <Chip label="멘토" variant="filled" color="secondary" /> {item?.createMember?.name}
               </span>
               <span className={styles.created_date}>{dayjs(item?.createdAt).format('YYYY.MM.DD')}</span>
             </div>
@@ -170,11 +171,13 @@ const ChatPage = () => {
               </Link>
             )}
 
-            {item?.progress === 2 && item?.review?.filter((item) => user?.id === item?.memberId).length === 0 && (
-              <Button variant="contained" onClick={() => handleReviewModalShow(true, item?.id)}>
-                리뷰쓰기
-              </Button>
-            )}
+            {item?.progress === 2 &&
+              item?.createMember.id !== user?.id &&
+              item?.review?.filter((item) => user?.id === item?.memberId).length === 0 && (
+                <Button variant="contained" onClick={() => handleReviewModalShow(true, item?.id)}>
+                  리뷰쓰기
+                </Button>
+              )}
           </li>
         ))}
       </ul>
