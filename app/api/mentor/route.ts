@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
 
     const supabase: SupabaseClient = await createClient();
     const mentorRepository = new SbMentorRepository(supabase, body);
-    const mentor = new CreateMentorUseCase(mentorRepository).create();
+    const mentor = new CreateMentorUseCase(mentorRepository).create(body.member_id);
 
     return NextResponse.json({ result: mentor, status: 200 });
   } catch (err) {
@@ -39,5 +39,5 @@ export async function GET(request: NextRequest) {
     mentor = await getMentorUseCase.execute();
   }
 
-  return NextResponse.json(mentor);
+  return NextResponse.json({ result: mentor });
 }

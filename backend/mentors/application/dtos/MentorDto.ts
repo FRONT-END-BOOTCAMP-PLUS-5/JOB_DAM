@@ -5,7 +5,5 @@ export class MentorDto {
     public level: string,
     public workPeriod: string,
     public createdAt: string,
-    public deletedAt: string,
-    public updatedAt: string,
   ) {}
 }

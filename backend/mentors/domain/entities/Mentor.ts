@@ -5,7 +5,5 @@ export class Mentor {
     public level: string,
     public work_period: string,
     public created_at: string,
-    public deleted_at: string,
-    public updated_at: string,
   ) {}
 }

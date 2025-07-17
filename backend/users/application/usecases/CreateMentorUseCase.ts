@@ -8,8 +8,8 @@ export class CreateMentorUseCase {
     this.repository = repository;
   }
 
-  async create(): Promise<{ mentor: string }> {
-    const mentor: Mentor = await this.repository.insertMentor();
+  async create(member_id: string): Promise<{ mentor: string }> {
+    const mentor: Mentor = await this.repository.insertMentor(member_id);
 
     const success = mentor ? 'success' : 'fail';
 
