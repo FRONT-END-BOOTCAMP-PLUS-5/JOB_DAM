@@ -2,12 +2,15 @@
 import style from "./likeDisLike.module.scss"
 import { useState, useEffect } from "react";
 import {ParamValue} from "next/dist/server/request/params";
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/store/store';
+
 
 interface IProps{
     id:  ParamValue
+    handleCloseToast: (text: string) => void
 }
-const memberId = '0a03069e-20a9-4268-8885-03b49adf5593' //테스트 계정
-export default function LikeDisLike ({ id }:IProps){
+export default function LikeDisLike ({ id, handleCloseToast }:IProps){
     const [getLikeDisLikeNum, setLikeDisLkieNum] = useState({
         likeNum: 0,
         disLikeNum: 0
@@ -25,29 +28,36 @@ export default function LikeDisLike ({ id }:IProps){
         }
     })
 
+    const member = useSelector((state: RootState) => state.login.member);
+
 
     const handleLikeDisLike = async (check: string) => {
-        const formData = new FormData()
-        formData.append("check", check)
-        formData.append('likeNum', getJson.likeNum.toString())
-        formData.append('dislikeNum', getJson.disLikeNum.toString())
-        formData.append('memberId', memberId)
-        formData.append('questionId', `${id}`)
+        if(member.id){
+            const formData = new FormData()
+            formData.append("check", check)
+            formData.append('likeNum', getJson.likeNum.toString())
+            formData.append('dislikeNum', getJson.disLikeNum.toString())
+            formData.append('memberId', member.id)
+            formData.append('questionId', `${id}`)
 
-        const response = await fetch(`/api/question/item/likedislike?id=${id}`,{
-            method: "POST",
-            body: formData,
-        })
-
-        const json = await response.json()
-        if(json['result'].hasOwnProperty('likeNum')){
-            setLikeDisLkieNum({
-                likeNum: json['result']['likeNum'],
-                disLikeNum: json['result']['dislikeNum'],
+            const response = await fetch(`/api/question/item/likedislike?id=${id}`,{
+                method: "POST",
+                body: formData,
             })
+
+            const json = await response.json()
+            if(json['result'].hasOwnProperty('likeNum')){
+                setLikeDisLkieNum({
+                    likeNum: json['result']['likeNum'],
+                    disLikeNum: json['result']['dislikeNum'],
+                })
+            }else{
+                return handleCloseToast(json['result'])
+            }
         }else{
-            return alert(json['result'])
+            return handleCloseToast('로그인 후 이용가능 합니다.')
         }
+        
 
     }
 

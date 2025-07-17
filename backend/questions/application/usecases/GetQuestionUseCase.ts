@@ -1,7 +1,6 @@
 import { QuestionRepository } from '../../domain/repositories/QuestionRepository';
 import { QuestionTable } from '../../domain/table/QuestionTable';
 import { QuestionDto } from '../dtos/QuestionDto';
-import { NextRequest } from 'next/server';
 import { AnswerTable } from '@/backend/questions/domain/table/AnswerTable';
 import {QuestionLikedQuestionJoinTable} from "@/backend/questions/domain/table/QuestionLikedQuestionJoinTable";
 /**
@@ -9,6 +8,7 @@ import {QuestionLikedQuestionJoinTable} from "@/backend/questions/domain/table/Q
  * 작성일: 2025-07-03
  * 수정일: 2025-07-08
  * */
+
 export class GetQuestionUseCase {
   private repository: QuestionRepository;
 
@@ -16,17 +16,10 @@ export class GetQuestionUseCase {
     this.repository = repository;
   }
 
-  async execute(request: NextRequest): Promise<{ question: QuestionDto[] }> {
-    const queryFirstRegex = /latest|popular=([^&]+)/;
-    const querySecRegex = /search=(.*)/;
+  async execute(popular: string | null, latest: string | null, q: string): Promise<{ question: QuestionDto[] }> {
+    const column = popular || latest || ''
 
-    const firMatch = request['url'].match(queryFirstRegex);
-    const secMatch = request['url'].match(querySecRegex);
-
-    const column = (firMatch && firMatch[1]) || 'created_at';
-    const title = (secMatch && decodeURIComponent(secMatch[1])) || '';
-
-    const questions: QuestionTable[] = await this.repository.findAll(title, column);
+    const questions: QuestionTable[] = await this.repository.findAll(q, column);
 
     const questionDtos: QuestionDto[] = questions.map((item) => ({
       id: item['id'],
@@ -79,7 +72,7 @@ export class GetQuestionUseCase {
       content: item['content'],
       createdAt: item['created_at'],
       deletedAt: item['deleted_at'],
-      updatedAt: item['updated_at']
+      updatedAt: item['updated_at'],
     }))
 
 

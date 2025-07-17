@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'next/navigation'
 import style from "./boarditem.module.scss";
+import dayjs from 'dayjs';
 import {getLastName} from "@/app/utils/board/name";
 import Profile from "@/app/components/common/Profile";
 import {formatDate} from "@/app/utils/board/date";
@@ -11,6 +12,9 @@ import { createClient } from '@/app/utils/supabase/client';
 import AsidePicture from '@/app/components/board/AsidePicture';
 import BoardItemModal from '@/app/components/board/Modal';
 import LikeDisLike from "@/app/components/board/LikeDisLike";
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/store/store';
+import { Slide, toast, ToastContainer } from 'react-toastify';
 
 interface Item{
   catergoryId: number | null
@@ -30,14 +34,18 @@ interface Item{
 interface Json{
   id: number
   content: string
-  memberId: string
+  memberId: {
+    id: string
+    nickname: string
+    name: string
+    img: string
+  }
   questionId: number
   createdAt: string
   updatedAt: string | null
   deletedAt: string | null
 }
 
-const ID = "1a9d99ce-1c9f-4272-b140-c4921ee77794"
 export default function Item(){
   const supabase = createClient()
   const [getItem, setItem] = useState<Item>()
@@ -50,6 +58,9 @@ export default function Item(){
     img: ''
   })
 
+  const member = useSelector((state: RootState) => state.login.member);
+
+
   const params = useParams();
   const { id } = params;
 
@@ -58,7 +69,6 @@ export default function Item(){
   const inputRef = useRef<HTMLInputElement>(null)
   const inputValRef = useRef<string | null>('')
 
-  //내일 로그인한 유저하고 다른유저일때 확인하는거 코드 작성해야함!
 
   const handleSearch = (evt:React.ChangeEvent<HTMLInputElement>) => {
     const inputVal = evt['target']['value']
@@ -86,7 +96,7 @@ export default function Item(){
     setSendIsLoading(true)
     const formData = new FormData()
     formData.append("content", `${inputValRef['current']}`)
-    formData.append("memberId", "1a9d99ce-1c9f-4272-b140-c4921ee77794") //테스트 계정
+    formData.append("memberId", member.id)
     formData.append("question_id",  `${id}`)
     await fetch(`/api/question/item/chat?item=${id}`, {
       method: "POST",
@@ -115,6 +125,22 @@ export default function Item(){
       body: formData,
     })
   }
+
+  const handleCloseToast = (text: string) => {
+    toast.error(text, {
+      position: "top-center",
+      autoClose: false,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: 0,
+      theme: "light",
+      transition: Slide,
+      toastId: 1
+    });
+  }
+
 
  useEffect(() => {
     async function getItem(){
@@ -168,7 +194,7 @@ export default function Item(){
                 <section className={style.container_content_left_top}>
                   <div className={style.profile}>
                     {
-                      isLoading ? <></> : <Profile text={getLastName(getItem?.member.nickname as string)}/>
+                      isLoading ? <></> : getItem?.member.img ? <Profile img={getItem?.member.img}/> :<Profile text={getLastName(getItem?.member.nickname as string)}/>
                     }
                     <p className={style.nickname_text}>{getItem?.member.nickname}</p>
                     <p className={style.date_text}>{formatDate(getItem?.createdAt || '')}</p>
@@ -189,11 +215,49 @@ export default function Item(){
                 <div className={style.chat}>
                   {
                     getComment.map((item) => {
+                      const date = dayjs(item.createdAt, "YYYY-MM-DD HH:mm:ss")
+                      const year = date.format("YYYY년MM월DD일")
+                      const time = date.format("HH:mm:ss")
                       return (
-                        item.memberId === ID ? <ul key={item.id} className={style.my_chat} >
-                          <li ref={commentRef}>{item.content}</li>
+                        item.memberId.id === member.id ? <ul key={item.id} className={style.my_chat} >
+                          <li ref={commentRef}>
+                            <div>
+                              <div className={style.chat_box}>
+                                <span>{item.content}</span>
+                              </div>
+                              <span className={style.date}>{year}<br/>{time}</span>
+                            </div>
+                            {
+                              member.img ? <div className={style.user}>
+                                  <Profile img={member.img}/>
+                                  <span className={style.nickname}>{member.nickname}</span>
+                                </div>:
+                                <div className={style.user}>
+                                  <Profile text={getLastName(member.nickname)}/>
+                                  <span className={style.nickname}>{member.nickname}</span>
+                                </div>
+                            }
+                          </li>
+
                         </ul> : <ul key={item.id} className={style.other_chat}>
-                                  <li ref={commentRef} >{item.content}</li>
+                                  <li ref={commentRef} >
+                                    {
+                                      item.memberId.img ? <div className={style.user}>
+                                          <Profile img={item.memberId.img}/>
+                                          <span className={style.nickname}>{item.memberId.nickname}</span>
+                                        </div>:
+                                        <div className={style.user}>
+                                          <Profile text={getLastName(item.memberId.nickname as string)}/>
+                                          <span className={style.nickname}>{item.memberId.nickname}</span>
+                                        </div>
+                                    }
+                                    <div>
+                                      <div className={style.other_chat_box}>
+                                        <span>{item.content}</span>
+                                      </div>
+                                      <span className={style.date}>{year}<br/>{time}</span>
+                                    </div>
+                                  </li>
                                 </ul>
                       )
                     })
@@ -201,11 +265,12 @@ export default function Item(){
                 </div>
               </section>
               <div className={style.button_container}>
-                <Input typeStyle={'send'}
+                <Input typeStyle={member.id ? 'send' : 'not_send'}
                        type={'text'}
                        ref={inputRef}
+                       disabled={!member.id}
                        onChange={(evt:React.ChangeEvent<HTMLInputElement>) => {handleSearch(evt)}}
-                       placeholder={"내용을 입력하세요"}
+                       placeholder={member.id ? "내용을 입력하세요" : "로그인 후 사용이 가능합니다"}
                        onKeyPress={(evt: React.KeyboardEvent<HTMLInputElement>) => {handleKeyPress(evt)}}
                 />
                 {
@@ -219,7 +284,7 @@ export default function Item(){
                             onClick={() => {handleInput()}}/>
                 }
               </div>
-              <LikeDisLike id={id}/>
+              <LikeDisLike id={id} handleCloseToast={handleCloseToast}/>
             </section>
           </section>
           <aside className={style.container_content_right}>
@@ -229,6 +294,7 @@ export default function Item(){
         {
           isModal && <BoardItemModal isModal={isModal} setIsModal={setIsModal}/>
         }
+        <ToastContainer />
       </main>
   );
 };

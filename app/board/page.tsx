@@ -11,6 +11,9 @@ import usePagination from "@/app/hooks/usePagination";
 import {formatTimeAgo} from "@/app/utils/board/date";
 import { getLastName } from '@/app/utils/board/name';
 import { useRouter } from 'next/navigation';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/store/store';
+import { Slide, toast, ToastContainer } from 'react-toastify';
 
 /**
  * 작성자: 김동우
@@ -44,6 +47,8 @@ export default function Board(){
     const inputRef = useRef(null)
     const inputValRef = useRef<string | null>('')
     const textRef = useRef('created_at')
+
+    const member = useSelector((state: RootState) => state.login.member);
 
     const router = useRouter()
 
@@ -91,7 +96,24 @@ export default function Board(){
 
 
     const goToWritePage = () => {
-        router.push('/board/write')
+        if(member.id){
+            router.push('/board/write')
+        }else{
+            toast.error('로그인 후 이용가능 합니다.', {
+                position: "top-center",
+                autoClose: false,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: 0,
+                theme: "light",
+                transition: Slide,
+                toastId: 1
+            });
+            return
+        }
+
     }
 
 
@@ -99,7 +121,7 @@ export default function Board(){
         if(keyword === "like_num") url = "popular"
 
         const hangle = inputValRef['current']
-        const res = await fetch(`/api/question/${url}=${keyword}&search=${hangle}`, { next: { revalidate: 3600 } })
+        const res = await fetch(`/api/question/search?${url}=${keyword}&q=${hangle}`, { next: { revalidate: 3600 } })
         const { result } = await res.json()
         if(result){
             const questions = [...result['question']]
@@ -183,7 +205,11 @@ export default function Board(){
                                                 <p className={style.content}>{item.content}</p>
                                                 <div className={style.question_bottom}>
                                                     <div className={style.profile_box}>
-                                                        <Profile text={getLastName(item.member.nickname as string)}/>
+                                                        {
+                                                            item.member.img ? <Profile img={item.member.img}/> :
+                                                              <Profile text={getLastName(item.member.nickname as string)}/>
+                                                        }
+
                                                         <span className={style.nickname}>{item.member.nickname}</span>
                                                     </div>
                                                     <span className={style.date}>{formatTimeAgo(item.createdAt)}</span>
@@ -231,6 +257,7 @@ export default function Board(){
                 <aside className={style.container_content_right}>
                     <Aside />
                 </aside>
+                <ToastContainer/>
             </div>
         </main>
     )

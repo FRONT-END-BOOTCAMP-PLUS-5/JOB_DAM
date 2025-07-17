@@ -1,6 +1,6 @@
 @use "../../../styles/mixin";
 
-.search, .write, .send{
+.search, .write, .send, .not_send{
   width: 86%;
   border: 1px solid #eaecef;
   height: 42px;
@@ -15,4 +15,9 @@
 
 .send{
   border: 2px solid #667eea;
+}
+
+.not_send{
+  background-color: #ccc;
+  border: 1px solid #667eea;
 }

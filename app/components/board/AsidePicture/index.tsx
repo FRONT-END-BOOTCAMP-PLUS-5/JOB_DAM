@@ -23,7 +23,6 @@ export default function AsidePicture({ img, setIsModal }:IProps){
 
   useEffect(() => {
     const check = !img?.length
-    console.log(img, "img")
     setLoading(check)
   },[img?.length])
 

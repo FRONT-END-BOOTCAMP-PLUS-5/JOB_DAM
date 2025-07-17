@@ -38,7 +38,7 @@ export default function Aside(){
 
   return (
     <>
-      <h4 className={style.title}>🏆 이주의 멘토</h4>
+      <h4 className={style.title}>🏆 오늘의 멘토</h4>
       { loading  ? new Array(5).fill(1).map((_, idx) => {
         return (
           <Skeleton key={idx}
@@ -53,7 +53,10 @@ export default function Aside(){
         return (
             <div className={style.container} key={item.id}>
               <span>
-                <Profile text={getLastName(item.name as string)}/>
+                {
+                  item.img ? <Profile img={item.img}/> :
+                    <Profile text={getLastName(item.nickname as string)}/>
+                }
               </span>
               <div className={style.company}>
                 <span className={style.name}>

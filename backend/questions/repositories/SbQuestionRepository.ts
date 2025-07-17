@@ -62,22 +62,22 @@ export class SbQuestionRepository implements QuestionRepository {
       .from('question')
       .select(
         `id,
-                 title,
-                 content,
-                 created_at,
-                 deleted_at,
-                 updated_at,
-                 category_id,
-                 like_num,
-                 dislike_num,
-                 view,
-                 member_id(
-                  id,
-                  name,
-                  img,
-                  nickname
-                 )
-                 `)
+         title,
+         content,
+         created_at,
+         deleted_at,
+         updated_at,
+         category_id,
+         like_num,
+         dislike_num,
+         view,
+         member_id(
+          id,
+          name,
+          img,
+          nickname
+          )
+          `)
       .like('title', `%${title}%`)
     const orderSupabase = column === 'created_at' ?
       supabase.order(`${column}`, { ascending: false }) :
@@ -128,7 +128,7 @@ export class SbQuestionRepository implements QuestionRepository {
   async getAllMessages(id: string){
     const {data, error} = await this.supabase
       .from("answer")
-      .select("*")
+      .select("*, member_id(id, name, nickname, img)")
       .eq('question_id', id)
 
     if (error) throw new Error(error.message);
