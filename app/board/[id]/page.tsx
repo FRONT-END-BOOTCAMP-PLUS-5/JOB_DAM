@@ -46,6 +46,7 @@ interface Json{
   deletedAt: string | null
 }
 
+
 export default function Item(){
   const supabase = createClient()
   const [getItem, setItem] = useState<Item>()
@@ -84,10 +85,11 @@ export default function Item(){
   }
 
   const getAllMessages = async () => {
-    const response = await fetch(`/api/question/item/chat?item=${id}`, { next: { revalidate: 3600 } })
+    const response = await fetch(`/api/question/item/chat?item=${id}`)
     const json = await response.json()
     const copyJson = [...json['result']['answer']]
     setComment(copyJson)
+
   }
 
   const sendMessage = async () => {
@@ -158,21 +160,17 @@ export default function Item(){
     getItem()
     getAllMessages()
 
-    const channel = supabase.channel(`board-item-${id}`)
+     supabase.channel(`board-item-${id}`)
       .on('postgres_changes',{
         event: 'INSERT',
         schema: 'public',
-        table: 'answer'
+        table: "answer",
       }, payload => {
         if(payload.eventType === 'INSERT' &&
           !payload.errors){
           getAllMessages()
         }
       }).subscribe()
-
-    return () => {
-      channel.unsubscribe()
-    }
   }, [])
 
   useEffect(() => {
@@ -185,7 +183,7 @@ export default function Item(){
           <section className={style.container_content_left}>
             { isLoading ?
                 <div className={style.container_content_left_top}>
-                  <div className={style.item_title} style={{textAlign: 'center'}}>
+                  <div className={style.item_title}>
                     🤔음 질문이 뭐였지<span className={style.dot1}></span>
                     <span className={style.dot2}></span>
                     <span className={style.dot3}></span>
