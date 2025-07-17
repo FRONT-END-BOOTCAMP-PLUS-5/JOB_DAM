@@ -7,9 +7,9 @@ import { GetMemberCountUseCase } from '@/backend/members/application/usecases/Ge
 export async function GET() {
     
     const supabase: SupabaseClient = await createClient();
-    const memberCRepository = new MemberCountRepository(supabase);
-    const getMCount = new GetMemberCountUseCase(memberCRepository);
-    const memberCount = await getMCount.execute();
+    const membersCountRepository = new MemberCountRepository(supabase);
+    const getMemberCount = new GetMemberCountUseCase(membersCountRepository);
+    const memberCount = await getMemberCount.execute();
     
     return NextResponse.json(memberCount);
 }

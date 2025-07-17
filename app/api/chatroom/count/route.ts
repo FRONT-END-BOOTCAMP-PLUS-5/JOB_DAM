@@ -8,8 +8,8 @@ export async function GET() {
     
     const supabase: SupabaseClient = await createClient();
     const chatroomCRepository = new ChatroomCountRepository(supabase);
-    const getCCount = new GetMentorRoomCountUseCase(chatroomCRepository);
-    const memberCount = await getCCount.execute();
+    const getClassroomCount = new GetMentorRoomCountUseCase(chatroomCRepository);
+    const memberCount = await getClassroomCount.execute();
     
     return NextResponse.json(memberCount);
 }
