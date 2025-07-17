@@ -9,16 +9,20 @@ import { Rating } from '@mui/material';
 import dayjs from 'dayjs';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store/store';
+import Spinner from '@/app/components/common/Spinner';
 
 const ReviewPage = () => {
-  const { getReviews } = reviewService;
   const member = useSelector((state: RootState) => state.login.member);
 
+  const { getReviews } = reviewService;
+
   const [reviewList, setReviewList] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (member?.id) {
       getReviews(member?.id).then((res) => {
+        setLoading(false);
         setReviewList(res.result);
       });
     }
@@ -27,8 +31,10 @@ const ReviewPage = () => {
   return (
     <section className={styles.section}>
       <Title text="리뷰 보기" />
+      {loading && <Spinner />}
 
-      {reviewList.length > 0 &&
+      {!loading &&
+        reviewList.length > 0 &&
         reviewList?.map((item, index) => (
           <ul key={item?.content + index} className={styles.review_item}>
             <li className={styles.mentor}>
