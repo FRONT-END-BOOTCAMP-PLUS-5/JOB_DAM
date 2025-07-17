@@ -7,7 +7,8 @@ export class Question {
         public deleted_at: string,
         public updated_at: string,
         public category_id: number,
-        public recommend: number,
+        public like_num: number,
+        public dislike_num: number,
         public view: number,
         public member_id: {
             id: string,
@@ -16,4 +17,18 @@ export class Question {
             nickname: string | null
         }[],
     ) {}
+}
+
+export class QuestionLikeDisLike{
+    constructor(
+        public id: number,
+        public like_num: number,
+        public dislike_num: number
+    ){}
+}
+
+export class QuestionView{
+  constructor(
+    public view :number
+  ) {}
 }

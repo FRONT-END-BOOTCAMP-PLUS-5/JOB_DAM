@@ -7,10 +7,17 @@ import { GetQuestionUseCase } from '@/backend/questions/application/usecases/Get
 
 export async function GET(request: NextRequest) {
   try {
+    const {searchParams} = new URL(request.url);
+    const popular = searchParams.get('popular');
+    const latest = searchParams.get('latest');
+    const q = searchParams.get('q') as string;
+
+
+
     const supabase: SupabaseClient = await createClient();
     const questionRepository = new SbQuestionRepository(supabase);
     const getQuestionUseCase = new GetQuestionUseCase(questionRepository); // 가져온 데이터 가공
-    const questions = await getQuestionUseCase.execute(request); // 가공된 데이터 반환
+    const questions = await getQuestionUseCase.execute(popular, latest, q); // 가공된 데이터 반환
     return NextResponse.json({ result: { ...questions }, status: 200 });
   } catch (err) {
     if (err instanceof Error) {

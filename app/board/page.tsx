@@ -11,6 +11,9 @@ import usePagination from "@/app/hooks/usePagination";
 import {formatTimeAgo} from "@/app/utils/board/date";
 import { getLastName } from '@/app/utils/board/name';
 import { useRouter } from 'next/navigation';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/store/store';
+import { Slide, toast, ToastContainer } from 'react-toastify';
 
 /**
  * 작성자: 김동우
@@ -26,7 +29,8 @@ export interface IProps {
     deletedAt?: string
     updatedAt?: string
     categoryId: number
-    recommend: number
+    likeNum: number
+    dislikeNum: number
     view: number
     member: {
         id: string
@@ -43,6 +47,8 @@ export default function Board(){
     const inputRef = useRef(null)
     const inputValRef = useRef<string | null>('')
     const textRef = useRef('created_at')
+
+    const member = useSelector((state: RootState) => state.login.member);
 
     const router = useRouter()
 
@@ -82,7 +88,7 @@ export default function Board(){
 
     // 최신순,인기순 버튼 누를때 style 하고 api 실행해서 해당 페이지 데이터 보여줌
     const handleChangeActive = (type: string) => {
-        textRef['current'] = type === 'latest' ? 'created_at' : 'recommend'
+        textRef['current'] = type === 'latest' ? 'created_at' : 'like_num'
 
         setActiveBtn(type)
         getboardData(type, textRef['current'])
@@ -90,24 +96,47 @@ export default function Board(){
 
 
     const goToWritePage = () => {
-        router.push('/board/write')
+        if(member.id){
+            router.push('/board/write')
+        }else{
+            toast.error('로그인 후 이용가능 합니다.', {
+                position: "top-center",
+                autoClose: false,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: 0,
+                theme: "light",
+                transition: Slide,
+                toastId: 1
+            });
+            return
+        }
+
     }
 
 
     const getboardData = async (url: string = `${activeBtn}`, keyword:string =`${textRef['current']}`) => {
-        if(keyword === "recommend") url = "popular"
+        if(keyword === "like_num") url = "popular"
 
         const hangle = inputValRef['current']
-        const res = await fetch(`/api/question/${url}=${keyword}&search=${hangle}`, { next: { revalidate: 3600 } })
+        const res = await fetch(`/api/question/search?${url}=${keyword}&q=${hangle}`, { next: { revalidate: 3600 } })
         const { result } = await res.json()
-        const questions = [...result['question']]
-        const lastPg = Math.ceil(questions['length'] / 5)
-        lastPage['current'] = lastPg
+        if(result){
+            const questions = [...result['question']]
+            const lastPg = Math.ceil(questions['length'] / 5)
+            lastPage['current'] = lastPg
+            setJson(questions)
+        }
 
-        setJson(questions)
+
         setLoading(false)
     }
 
+    const goToItem = (id: number) => {
+        router.push(`/board/${id}`)
+    }
 
     useEffect(() => {
         getboardData()
@@ -164,16 +193,23 @@ export default function Board(){
                                     }) : currentItems.length ? (
                                       currentItems.map((item:IProps) => {
                                           return (
-                                            <div key={item.id} className={style.question}>
+                                            <div key={item.id} className={style.question} onClick={() => {
+                                                const id = item.id
+                                                goToItem(id)
+                                            }}>
                                                 <h3 className={style.question_title}>{item.title}</h3>
                                                 <div className={style.question_sub_box}>
-                                                    <span>👍{item.recommend}</span>
+                                                    <span>👍{item.likeNum}</span>
                                                     <span>👁️{item.view}<span>조회</span></span>
                                                 </div>
                                                 <p className={style.content}>{item.content}</p>
                                                 <div className={style.question_bottom}>
                                                     <div className={style.profile_box}>
-                                                        <Profile text={getLastName(item.member.nickname as string)}/>
+                                                        {
+                                                            item.member.img ? <Profile img={item.member.img}/> :
+                                                              <Profile text={getLastName(item.member.nickname as string)}/>
+                                                        }
+
                                                         <span className={style.nickname}>{item.member.nickname}</span>
                                                     </div>
                                                     <span className={style.date}>{formatTimeAgo(item.createdAt)}</span>
@@ -221,6 +257,7 @@ export default function Board(){
                 <aside className={style.container_content_right}>
                     <Aside />
                 </aside>
+                <ToastContainer/>
             </div>
         </main>
     )

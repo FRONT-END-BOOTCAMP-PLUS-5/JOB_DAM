@@ -15,7 +15,7 @@
   }
 }
 
-.search {
+.search, .send{
   @include mixin.customButton(60px, 30px);
   @include mixin.flexCenter(row);
   border: 2px solid #667eea;
@@ -30,6 +30,12 @@
   > .text {
     font-size: 14px;
     font-weight: bold;
+  }
+}
+
+.send{
+  > .text {
+    font-size: 12px;
   }
 }
 
@@ -112,3 +118,8 @@
     color: #fff;
   }
 }
+
+
+
+
+
