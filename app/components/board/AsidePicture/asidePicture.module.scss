@@ -1,0 +1,62 @@
+@use "../../../styles/mixin";
+
+.title{
+  font-weight: bold;
+  color: #333;
+}
+
+.container{
+  @include mixin.flexCenter(row);
+  width: 100%;
+  gap: 17px;
+}
+
+.name{
+  @include mixin.flexCenter(row);
+  gap: 5px;
+
+  .badge{
+    font-size: 9px;
+    width: 38px;
+    height: 16px;
+    text-align: center;
+    border-radius: 8px;
+    color: #b36f1b;
+    background-image: linear-gradient(90deg, #ffcf10 30%, #ffba39 60%);
+  }
+}
+.company{
+  @include mixin.flexCenter(column);
+  align-items: flex-start;
+  font-size: 13px;
+  width: 120px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+
+  .position{
+    color: #8a8a8a;
+    font-size: 10px;
+  }
+}
+
+.grade{
+  min-width: 40px;
+  font-weight: bold;
+  font-size: 14px;
+  color: #fff;
+  text-align: center;
+  border-radius: 12px;
+  margin-left: 10px;
+  padding: 3px;
+  background-image: linear-gradient(90deg, #6876e0 30%, #7354ad 60%);
+}
+
+.non_data{
+  font-size: 14px;
+  text-align: center;
+}
+
+.picture_box{
+  cursor: pointer;
+}

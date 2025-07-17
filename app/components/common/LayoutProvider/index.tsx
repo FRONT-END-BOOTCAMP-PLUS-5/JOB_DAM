@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import Header from '../Header';
 import Footer from '../Footer';
 import Container from '../Container';
+import { Suspense } from 'react';
 
 export default function LayoutProvider({ children }: { children: React.ReactNode }) {
   const path_name = usePathname();
@@ -26,7 +27,10 @@ export default function LayoutProvider({ children }: { children: React.ReactNode
   return (
     <>
       <Header />
-      <Container>{children}</Container>
+
+      <Container>
+        <Suspense>{children}</Suspense>
+      </Container>
       <Footer />
     </>
   );

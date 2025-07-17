@@ -10,7 +10,7 @@
   text-align: center;
 
   @include mixin.tablet {
-    min-width: 1000px;
+    min-width: 970px;
     padding: 0 20px;
     height: 174px;
     text-align: left;
@@ -37,5 +37,27 @@
     span {
       margin-left: 5px;
     }
+  }
+}
+
+.board{
+  border-top: none;
+
+  @include mixin.tablet {
+    min-width: 250px;
+  }
+
+  h2 {
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: 16px;
+
+  }
+
+
+  div {
+    font-size: 11px;
+    color: #666;
+
   }
 }

@@ -1,5 +1,5 @@
 'use client'
-import style from "./dragdropimage.module.scss"
+import style from "./dragDropImage.module.scss"
 import Button from '@/app/components/common/Button';
 import { useRef, useEffect, Dispatch, SetStateAction } from 'react';
 import FileImage from '../FileImage';

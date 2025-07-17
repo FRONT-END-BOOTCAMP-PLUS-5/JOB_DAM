@@ -63,5 +63,37 @@
       background-color: #667eea;
       color: #fff;
     }
+
+    & .mypage_section {
+      display: flex;
+      gap: 12px;
+    }
+  }
+}
+
+.alarm_section {
+  @include mixin.positionCenter(absolute);
+  border-radius: 8px;
+  background: #fff;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  & .alarm_item {
+    font-size: 16px;
+    display: flex;
+    gap: 12px;
+
+    &_title {
+      font-size: 16px;
+      font-weight: bold;
+      min-width: 200px;
+    }
+
+    &_date {
+      font-size: 16px;
+      color: #555;
+    }
   }
 }

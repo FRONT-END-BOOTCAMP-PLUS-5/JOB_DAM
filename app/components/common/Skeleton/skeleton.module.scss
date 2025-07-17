@@ -12,10 +12,10 @@
   }
 }
 
-.aside_container {
+.aside_container, .aside_picture_container {
   width: 100%;
 
-  .top > .aside::after {
+  .top > .aside::after, .aside_picture::after {
     content: '';
     position: absolute;
     top: 0;
@@ -28,13 +28,22 @@
 
   .top {
     @include mixin.flexCenter(column);
-    .aside {
+    .aside, .aside_picture{
       width: 95%;
       height: 34px;
       background-color: #f2f2f2;
       overflow: hidden;
       position: relative;
       border-radius: 8px;
+    }
+
+    .aside{
+      min-width: 245px;
+    }
+
+    .aside_picture{
+      height: 150px;
+      min-width: 250px;
     }
   }
 }

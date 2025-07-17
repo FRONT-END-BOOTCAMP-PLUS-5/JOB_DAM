@@ -1,4 +1,6 @@
 .section {
+  height: 500px;
+
   & .review_item {
     display: flex;
     flex-direction: column;

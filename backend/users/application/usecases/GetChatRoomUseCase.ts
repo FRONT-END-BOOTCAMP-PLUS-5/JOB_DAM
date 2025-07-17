@@ -23,13 +23,22 @@ export class GetChatRoomUseCase {
           id: cm.member.id,
           name: cm.member.name,
           nickname: cm.member.nickname,
+          img: cm.member.img,
         },
         chatRoomId: cm.chat_room_id,
       })),
       createMember: cr.member,
       progress: cr.progress,
       maxPeople: cr.max_people,
-      review: cr.review,
+      review: cr.review.map((cr) => ({
+        id: cr.id,
+        createdAt: cr.created_at,
+        deletedAt: cr.deleted_at,
+        content: cr.content,
+        rating: cr.rating,
+        chatRoomId: cr.chat_room_id,
+        memberId: cr.member_id,
+      })),
     }));
 
     return {
