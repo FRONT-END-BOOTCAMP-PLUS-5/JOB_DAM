@@ -1,54 +1,57 @@
 "use client"
 
-import styles from './startpage.module.scss'
-import { useState } from 'react'
-import Link from 'next/link'
+import styles from './startpage.module.scss';
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { membersNum } from '../services/count/member';
+import { questionsNum } from '../services/count/question';
+import { mentorsNum } from '../services/count/mentor';
+import { chatroomsNum } from '../services/count/chatroom';
 
 const StartPage = () => {
-    const [memberNum, setMemberNum] = useState<number>(0)
-    const [questionNum, setQuestionNum] = useState<number>(0)
-    const [mentorNum, setMentorNum] = useState<number>(0)
-    const [mentorRoomNum, setMentorRoomNum] = useState<number>(0)
+    const [memberNum, setMemberNum] = useState<number>(0);
+    const [questionNum, setQuestionNum] = useState<number>(0);
+    const [mentorNum, setMentorNum] = useState<number>(0);
+    const [mentorRoomNum, setMentorRoomNum] = useState<number>(0);
+
+    useEffect(()=> {
+        findMemNum();
+        findQuestionNum();
+        findMentorNum();
+        findMentorRoomNum();
+    }, [])
 
     const findMemNum = async () => {
-        const response = await fetch(`/api/member/count`)
+        const response = await membersNum();
         if (!response) {
-            return
+            return;
         }
-        const data = await response.json();
-        setMemberNum(data.result.length)
-    }
-    findMemNum()
+        setMemberNum(response.data.result.length);
+    };
 
     const findQuestionNum = async () => {
-        const response = await fetch(`/api/question/count`)
+        const response = await questionsNum();
         if (!response) {
-            return
+            return;
         }
-        const data = await response.json();
-        setQuestionNum(data.result.length)
+        setQuestionNum(response.data.result.length);
     }
-    findQuestionNum()
 
     const findMentorNum = async () => {
-        const response = await fetch(`/api/mentor/count`)
+        const response = await mentorsNum();
         if (!response) {
-            return
+            return;
         }
-        const data = await response.json();
-        setMentorNum(data.result.length)
+        setMentorNum(response.data.result.length);
     }
-    findMentorNum()
 
     const findMentorRoomNum = async () => {
-        const response = await fetch(`/api/chatroom/count`)
+        const response = await chatroomsNum();
         if (!response) {
-            return
+            return;
         }
-        const data = await response.json();
-        setMentorRoomNum(data.result.length)
+        setMentorRoomNum(response.data.result.length);
     }
-    findMentorRoomNum()
 
     return (
         <main>
