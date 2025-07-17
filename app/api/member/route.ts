@@ -3,6 +3,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 import { SbMemberRepository } from '../../../backend/members/repositories/SbMemberRepository';
 import { UpdateMemberPasswordUseCase } from '@/backend/members/application/usecases/UpdateMemberPasswordUseCase';
+import { GetOneMemberUseCase } from '@/backend/members/application/usecases/GetOneMemberUseCase';
 
 export async function GET(request: NextRequest) {
   try {
@@ -23,7 +24,7 @@ export async function GET(request: NextRequest) {
     // clientData 없이 Repository 생성 (로그인용)
     const memberRepository = new SbMemberRepository(supabase);
 
-    const memberData = await memberRepository.findOne(email, password);
+    const memberData = await new GetOneMemberUseCase(memberRepository).execute(email, password);
 
     return NextResponse.json({ result: memberData, status: 200 });
   } catch (err) {

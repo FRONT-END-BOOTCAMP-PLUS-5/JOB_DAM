@@ -2,6 +2,7 @@ import { createAdminClient } from '@/app/utils/supabase/server';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 import { SbStorageRepository } from '../../../backend/storages/repositories/SbStorageRepository';
+import { UploadFileUseCase } from '@/backend/storages/application/usecases/UploadFileUseCases';
 
 export async function POST(request: NextRequest) {
   try {
@@ -35,7 +36,7 @@ export async function POST(request: NextRequest) {
     const storageRepository = new SbStorageRepository(supabase);
 
     // 파일 업로드 실행
-    const imageUrl = await storageRepository.uploadFile(file);
+    const imageUrl = await new UploadFileUseCase(storageRepository).execute(file);
 
     return NextResponse.json({
       imageUrl,
