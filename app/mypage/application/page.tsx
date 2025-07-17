@@ -25,7 +25,7 @@ const Application = () => {
   const { applicationMentor, getMentorApplication } = mentorService;
 
   const onClickApplicationMentor = async () => {
-    const { data, error } = await applicationMentor({
+    const { data } = await applicationMentor({
       id: user?.id,
       company: company,
       level: level,
@@ -37,7 +37,6 @@ const Application = () => {
       getMentorInfo(user?.id);
     } else {
       toast.error('멘토 신청이 완료 되었습니다.');
-      console.log('error ', error.message);
     }
   };
 

@@ -23,8 +23,6 @@ export const mentorService = {
   getMentorApplication: async (memberId?: string): Promise<{ mentor: ApplicationMentorList[] }> => {
     const { data, error } = await axios.get(`/api/mentor${memberId ? '?id=' + memberId : ''}`).catch((error) => error);
 
-    console.log('data', data.result);
-
     if (error) throw new Error(error.message);
 
     return data.result;

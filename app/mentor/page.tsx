@@ -58,7 +58,6 @@ const MentorPage = () => {
 
   useEffect(() => {
     getMentorList().then((res) => {
-      console.log('res', res);
       if (res.data) {
         setMentors(res.data.members);
         setLoading(false);
