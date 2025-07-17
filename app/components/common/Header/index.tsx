@@ -13,6 +13,7 @@ import { Badge, Button, Chip, Modal } from '@mui/material';
 import { chatroomService } from '@/app/services/chatroom/chatroom';
 import { DeleteRefreshToken } from '@/app/services/login/refreshToken';
 import { useRouter } from 'next/navigation';
+import Spinner from '../Spinner';
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -60,6 +61,16 @@ const Header = () => {
       )
       .subscribe();
   }, [supabase]);
+
+  if (!member || !member.id) {
+    return (
+      <header className={styles.header}>
+        <div className={styles.header_container}>
+          <Spinner size={50} />
+        </div>
+      </header>
+    );
+  }
 
   return (
     <header className={styles.header}>
