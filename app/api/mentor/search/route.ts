@@ -6,8 +6,8 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   const supabase: SupabaseClient = await createClient();
-  const mentorRepository = new SbMemberRepository(supabase);
 
+  const mentorRepository = new SbMemberRepository(supabase);
   const getMentorListUseCase = new GetMentorListUseCase(mentorRepository);
   const mentor = await getMentorListUseCase.execute();
 

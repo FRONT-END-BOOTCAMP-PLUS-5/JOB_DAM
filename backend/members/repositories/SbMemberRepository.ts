@@ -4,6 +4,7 @@ import { MemberRepository } from '../domain/repositories/MemberRepository';
 import { sign_up_form_type } from '@/app/types/signup/signup';
 import { MemberMentorRank } from '@/backend/members/domain/entities/MemberMentorRank';
 import { MemberMentorApplicationJoinTable } from '@/backend/members/domain/table/MemberMentorApplicationJoinTable';
+import { MemberMentor } from '../domain/entities/MemberMentor';
 
 export class SbMemberRepository implements MemberRepository {
   private supabase;
@@ -75,8 +76,17 @@ export class SbMemberRepository implements MemberRepository {
     return data;
   }
 
-  async findAllMentor(): Promise<Member[]> {
-    const { data, error } = await this.supabase.from('member').select('*').eq('type', 1);
+  async findAllMentor(): Promise<MemberMentor[]> {
+    const { data, error } = await this.supabase
+      .from('member')
+      .select(
+        `
+      id,name,email,img,nickname,grade, point, type,
+      mentor_application(level, company),
+      review(rating)
+      `,
+      )
+      .eq('type', 1);
 
     if (error) throw new Error(error.message);
 
