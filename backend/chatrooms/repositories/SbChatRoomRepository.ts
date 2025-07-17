@@ -1,6 +1,7 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import { ChatRoomRepository } from '../domain/repositories/ChatRoomRepositorys';
 import { ChatRoom } from '../domain/entities/ChatRoom';
+import { AlarmChatRoom } from '../domain/entities/AlarmChatRoom';
 
 interface ClientProp {
   title?: string;
@@ -14,13 +15,13 @@ export class SbChatRoomRepository implements ChatRoomRepository {
   private supabase;
   private clientData;
 
-  constructor(supabase: SupabaseClient, clientData: ClientProp) {
+  constructor(supabase: SupabaseClient, clientData?: ClientProp) {
     this.supabase = supabase;
     this.clientData = clientData;
   }
 
   async insertChatRoom(): Promise<ChatRoom> {
-    const { title, description, max_people, member_id, created_member_id } = this.clientData;
+    const { title, description, max_people, member_id, created_member_id } = this.clientData ?? {};
 
     const { data, error } = await this.supabase
       .from('chat_room')
@@ -36,6 +37,11 @@ export class SbChatRoomRepository implements ChatRoomRepository {
       ])
       .select('*');
 
+    await this.supabase
+      .from('alarm_chat_room')
+      .insert({ send_member_id: member_id, response_member_id: created_member_id })
+      .select('*');
+
     if (error) throw new Error(error.message);
 
     return data;
@@ -45,5 +51,17 @@ export class SbChatRoomRepository implements ChatRoomRepository {
     const { error } = await this.supabase.from('chat_room').update({ progress: progress }).eq('id', chat_room_id);
 
     if (error) throw new Error(error.message);
+  }
+
+  async findByOneChatRoom(created_member_id: string): Promise<AlarmChatRoom[]> {
+    const { data, error } = await this.supabase
+      .from('chat_room')
+      .select('id, title, created_at')
+      .eq('created_member_id', created_member_id)
+      .eq('progress', 0);
+
+    if (error) throw new Error(error.message);
+
+    return data;
   }
 }
