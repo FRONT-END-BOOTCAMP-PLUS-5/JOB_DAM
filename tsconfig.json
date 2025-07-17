@@ -35,7 +35,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "app/types/signup/signup.ts"
-, "app/startpage/page.tsx"  ],
+, "app/page.tsx"  ],
   "exclude": [
     "node_modules"
   ]
