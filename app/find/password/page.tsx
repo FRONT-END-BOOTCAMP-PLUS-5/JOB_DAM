@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { useForm, useWatch } from 'react-hook-form';
 import { findMember, findPassword } from '@/app/services/find/findPassword';
 import { toast, ToastContainer } from 'react-toastify';
-import { useCertification } from '@/app/hooks/useCertification';
 import { useRouter } from 'next/navigation';
 
 interface FindPasswordForm {
@@ -67,7 +66,7 @@ export default function FindPasswordPage() {
   // 인증번호 화인 버튼 누르면 그 때 인증번호룰 본내야 함
   const handleCertification = async () => {
     //인증을 클릭하면 그 때 인증번호가 가야함
-    const randomNumber = Number(useCertification());
+    const randomNumber = Math.floor(10000 + Math.random() * 90000);
 
     setFormData({ ...formData, random: randomNumber });
     setSentRandomNumber(randomNumber); // 발송된 인증번호 저장

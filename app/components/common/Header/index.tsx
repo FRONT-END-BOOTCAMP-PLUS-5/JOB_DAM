@@ -19,7 +19,6 @@ const Header = () => {
   const router = useRouter();
   const member: Member = useSelector((state: RootState) => state.login.member);
   const { id } = member;
-  console.log(member);
 
   const handleLogout = async () => {
     await DeleteRefreshToken();

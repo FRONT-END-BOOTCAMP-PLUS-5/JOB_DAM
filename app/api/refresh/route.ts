@@ -59,7 +59,7 @@ export async function DELETE() {
     });
 
     return response;
-  } catch (error) {
+  } catch {
     return NextResponse.json({
       message: '로그아웃 처리 중 오류 발생',
       status: 400,

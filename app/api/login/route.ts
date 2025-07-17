@@ -1,4 +1,3 @@
-import { RefreshToken } from '@/app/services/login/refreshToken';
 import { passwordDecrypto } from '@/app/utils/signup/passwordCrypto';
 import { generateAccessToken, generateRefreshToken } from '@/app/utils/signup/token';
 import { verifyAccessToken } from '@/app/utils/signup/tokenVerify';

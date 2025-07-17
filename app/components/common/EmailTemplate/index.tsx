@@ -1,4 +1,3 @@
-import { useCertification } from '@/app/hooks/useCertification';
 import nodemailer from 'nodemailer';
 
 export const transporter = nodemailer.createTransport({
