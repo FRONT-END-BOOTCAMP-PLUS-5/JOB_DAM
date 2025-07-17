@@ -1,6 +1,5 @@
 'use client';
 
-
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styles from './chat.module.scss';
 import { chatService } from '../services/mypage/chat';
@@ -55,7 +54,6 @@ const ChatPage = () => {
     type: chatType,
   });
 
-
   const handleUpdatePoint = async () => {
     if (!selectChatRoom) return;
 
@@ -66,7 +64,6 @@ const ChatPage = () => {
 
     await updatePointMember(updateRef);
   };
-
 
   const handleSendMessage = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -100,7 +97,6 @@ const ChatPage = () => {
     },
 
     [chatType, insertChat, isConnected, newMessage, selectChatRoom?.id, sendMessage, updatePointMember, user?.id],
-
   );
 
   const onChangeMessage = (value: string) => {
@@ -116,7 +112,6 @@ const ChatPage = () => {
     };
 
     updateChatRoom(updateChatRoomRef).then((res) => {
-
       if (res.status === 200) {
         initChatRoom(user?.id);
         setSelectChatRoom(ChatRoomValue);
@@ -211,20 +206,23 @@ const ChatPage = () => {
   return (
     <main className={styles.chat_container}>
       <section className={styles.content_wrap}>
-        <ul className={styles.chat_room_list}>
-          {chatRoomLoading && <Spinner />}
-          {!chatRoomLoading && (!chatRoom || chatRoom.length === 0) && (
-            <div className={styles.not_found_data}>
+        {!chatRoomLoading && (!chatRoom || chatRoom.length === 0) && (
+          <section className={styles.not_found_container}>
+            <section className={styles.not_found_data}>
               <h3>진행중인 채팅이 없어요. </h3>
               <h4>멘토에게 채팅 신청을 하고 채팅방을 생성해보세요. </h4>
               <Button className={styles.mentor_move_button} variant="contained" href={'/mentor'}>
                 멘토 찾으러가기
               </Button>
-            </div>
-          )}
-          {!chatRoomLoading &&
-            chatRoom.length > 0 &&
-            chatRoom?.map((item, index) => (
+            </section>
+          </section>
+        )}
+
+        {chatRoomLoading && <Spinner />}
+
+        {!chatRoomLoading && chatRoom.length > 0 && (
+          <ul className={styles.chat_room_list}>
+            {chatRoom?.map((item, index) => (
               <li key={item?.title + item?.id + index} className={styles.chat_room_item}>
                 <button onClick={() => onClickChatRoom(item)}>
                   <span className={styles.profile_image}>
@@ -253,96 +251,95 @@ const ChatPage = () => {
                 </button>
               </li>
             ))}
-        </ul>
+          </ul>
+        )}
 
-        <section className={styles.chat_section}>
-          {chatLoading && <Spinner />}
-          {!chatLoading && chatRoom.length > 0 && (!selectChatRoom || selectChatRoom?.id === 0) && (
-            <div className={styles.not_select_chatRoom}>
-              <p>왼쪽에서 원하는 채팅방을 선택해주세요.</p>
-            </div>
-          )}
-          {!chatLoading && selectChatRoom && selectChatRoom?.id !== 0 && (
-            <>
-              <hgroup className={styles.section_title}>
-                <Chip className={styles.right_chat_room_title} variant="filled" label={selectChatRoom?.title} />
-                {selectChatRoom?.createMember?.id !== user?.id && selectChatRoom?.progress !== 2 && (
-                  <Button variant="contained" color="warning" onClick={() => setChatEndModal(true)}>
-                    종료하기
-                  </Button>
-                )}
-              </hgroup>
-              <div ref={containerRef} className={styles.item_container}>
-                {allMessages?.map((item, index) => {
-                  return (
-                    <section
-                      key={item?.content + index}
-                      className={`${styles.chat_item} ${item?.memberId === user?.id && styles.my_chat}`}
-                    >
-                      <section className={styles.content_top}>
-                        <div className={styles.chat_title}>
-                          <span className={styles.profile_image}>
-                            <Image src={chatMembers[item?.memberId]?.img ?? ''} alt="프로필 이미지" fill />
-                          </span>
-                          <span className={styles.chat_name}>{chatMembers[item?.memberId]?.name}</span>
-                          {selectChatRoom?.createMember?.id === item?.memberId && (
-                            <span className={styles.chat_bedge}>멘토</span>
-                          )}
-                        </div>
-                        <p className={styles.date}>{dayjs(item?.createdAt).format('MM.DD / HH:mm')}</p>
-                      </section>
-                      <section className={styles.content_bottom}>
-                        <div className={styles.content_bottom_title}>
-                          {item?.type === 1 && <Chip label="질문" color="primary" variant="filled" />}
-                          {item?.type === 2 && <Chip label="답변" color="primary" variant="filled" />}
-                          {item?.type === 1 && selectChatRoom?.createMember?.id === user?.id && (
-                            <Button color="secondary" onClick={() => setChatType(2)}>
-                              답변하기
-                            </Button>
-                          )}
-                        </div>
-                        <div className={styles.chat_content}>{item?.content}</div>
-                      </section>
-                    </section>
-                  );
-                })}
-              </div>
-
-              {selectChatRoom?.progress !== 2 && (
-                <div className={styles.chat_enter}>
-                  <section>
-                    <Chip
-                      label={CHAT_TYPE_TEXT[chatType]}
-                      variant="outlined"
-                      color={`${chatType !== 0 ? 'primary' : 'default'}`}
-                    />
-
-                    {selectChatRoom?.createMember?.id !== user?.id && (
-                      <Switch
-                        aria-label="Switch"
-                        checked={chatType === 1 ? true : false}
-                        onChange={(e) => setChatType(e.target.checked ? 1 : 0)}
-                      />
-                    )}
-                  </section>
-
-                  <TextField
-                    id="outlined-basic"
-                    className={styles.text_field}
-                    style={{ border: `1px solid ${chatType === 0 ? '#ddd' : '#667eea'}` }}
-                    label=""
-                    variant="outlined"
-                    placeholder="메시지 입력"
-                    fullWidth
-                    value={newMessage}
-                    onChange={(e) => onChangeMessage(e.target.value)}
-                    onKeyDown={(e) => handleSendMessage(e)}
-                  />
-                </div>
+        {chatLoading && <Spinner />}
+        {!chatLoading && chatRoom.length > 0 && (!selectChatRoom || selectChatRoom?.id === 0) && (
+          <div className={styles.not_select_chatRoom}>
+            <p>왼쪽에서 원하는 채팅방을 선택해주세요.</p>
+          </div>
+        )}
+        {!chatLoading && selectChatRoom && selectChatRoom?.id !== 0 && (
+          <section className={styles.chat_section}>
+            <hgroup className={styles.section_title}>
+              <Chip className={styles.right_chat_room_title} variant="filled" label={selectChatRoom?.title} />
+              {selectChatRoom?.createMember?.id !== user?.id && selectChatRoom?.progress !== 2 && (
+                <Button variant="contained" color="warning" onClick={() => setChatEndModal(true)}>
+                  종료하기
+                </Button>
               )}
-            </>
-          )}
-        </section>
+            </hgroup>
+            <div ref={containerRef} className={styles.item_container}>
+              {allMessages?.map((item, index) => {
+                return (
+                  <section
+                    key={item?.content + index}
+                    className={`${styles.chat_item} ${item?.memberId === user?.id && styles.my_chat}`}
+                  >
+                    <section className={styles.content_top}>
+                      <div className={styles.chat_title}>
+                        <span className={styles.profile_image}>
+                          <Image src={chatMembers[item?.memberId]?.img ?? ''} alt="프로필 이미지" fill />
+                        </span>
+                        <span className={styles.chat_name}>{chatMembers[item?.memberId]?.name}</span>
+                        {selectChatRoom?.createMember?.id === item?.memberId && (
+                          <span className={styles.chat_bedge}>멘토</span>
+                        )}
+                      </div>
+                      <p className={styles.date}>{dayjs(item?.createdAt).format('MM.DD / HH:mm')}</p>
+                    </section>
+                    <section className={styles.content_bottom}>
+                      <div className={styles.content_bottom_title}>
+                        {item?.type === 1 && <Chip label="질문" color="primary" variant="filled" />}
+                        {item?.type === 2 && <Chip label="답변" color="primary" variant="filled" />}
+                        {item?.type === 1 && selectChatRoom?.createMember?.id === user?.id && (
+                          <Button color="secondary" onClick={() => setChatType(2)}>
+                            답변하기
+                          </Button>
+                        )}
+                      </div>
+                      <div className={styles.chat_content}>{item?.content}</div>
+                    </section>
+                  </section>
+                );
+              })}
+            </div>
+
+            {selectChatRoom?.progress !== 2 && (
+              <div className={styles.chat_enter}>
+                <section>
+                  <Chip
+                    label={CHAT_TYPE_TEXT[chatType]}
+                    variant="outlined"
+                    color={`${chatType !== 0 ? 'primary' : 'default'}`}
+                  />
+
+                  {selectChatRoom?.createMember?.id !== user?.id && (
+                    <Switch
+                      aria-label="Switch"
+                      checked={chatType === 1 ? true : false}
+                      onChange={(e) => setChatType(e.target.checked ? 1 : 0)}
+                    />
+                  )}
+                </section>
+
+                <TextField
+                  id="outlined-basic"
+                  className={styles.text_field}
+                  style={{ border: `1px solid ${chatType === 0 ? '#ddd' : '#667eea'}` }}
+                  label=""
+                  variant="outlined"
+                  placeholder="메시지 입력"
+                  fullWidth
+                  value={newMessage}
+                  onChange={(e) => onChangeMessage(e.target.value)}
+                  onKeyDown={(e) => handleSendMessage(e)}
+                />
+              </div>
+            )}
+          </section>
+        )}
       </section>
       <ConfirmModal
         modalOpen={chatEndModal}
