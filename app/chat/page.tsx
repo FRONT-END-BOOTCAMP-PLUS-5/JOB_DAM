@@ -1,5 +1,6 @@
 'use client';
 
+
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styles from './chat.module.scss';
 import { chatService } from '../services/mypage/chat';
@@ -54,6 +55,7 @@ const ChatPage = () => {
     type: chatType,
   });
 
+
   const handleUpdatePoint = async () => {
     if (!selectChatRoom) return;
 
@@ -64,6 +66,7 @@ const ChatPage = () => {
 
     await updatePointMember(updateRef);
   };
+
 
   const handleSendMessage = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -91,10 +94,13 @@ const ChatPage = () => {
       insertChat(chatRef).then((res) => {
         if (res) {
           setNewMessage('');
+          setChatType(0);
         }
       });
     },
+
     [chatType, insertChat, isConnected, newMessage, selectChatRoom?.id, sendMessage, updatePointMember, user?.id],
+
   );
 
   const onChangeMessage = (value: string) => {
@@ -110,6 +116,7 @@ const ChatPage = () => {
     };
 
     updateChatRoom(updateChatRoomRef).then((res) => {
+
       if (res.status === 200) {
         initChatRoom(user?.id);
         setSelectChatRoom(ChatRoomValue);

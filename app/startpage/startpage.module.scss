@@ -1,0 +1,194 @@
+.up {
+    background: linear-gradient(to bottom right, #6879E2, #7450A9);
+    height: 60vh;
+    display: flex;
+}
+
+.d_none {
+    display: none;
+}
+
+.up_left {
+    padding-left: 20%;
+    padding-top: 7.5%;
+}
+
+.up_left_h1 {
+    font-weight: bold;
+    font-size: 30px;
+    color: white;
+}
+
+.up_left_center {
+    padding-top: 15px;
+}
+
+.up_left_h4 {
+    color: white;
+}
+
+.up_left_start {
+    background-color: white;
+    color: #6879E2;
+    border-radius: 5px;
+    border: 0px;
+    width: 35%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    font-weight: bold;
+}
+
+.up_left_flex {
+    display: flex;
+    padding-top: 25px;
+}
+
+.up_left_go_to_community {
+    margin-left: 4%;
+    padding-left: 4%;
+    padding-right: 4%;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.up_right {
+    background-color: rgba(255, 255, 255, 0.2);
+    width: 30%;
+    height: 30vh;
+    border-radius: 10px;
+    margin-left: 10%;
+    margin-top: 6.5%;
+}
+
+.current {
+    color: white;
+}
+
+.why_jobdam {
+    text-align: center;
+    color: #7455AF;
+    font-size: 18px;
+    padding-bottom: 15px;
+}
+
+.jobdam_description {
+    text-align: center;
+    font-size: 13px;
+}
+
+.jobdam_description_div {
+    padding-top: 50px;
+    padding-bottom: 30px;
+}
+
+.up_three_boxes {
+    margin-top: 20px;
+    display: flex;
+}
+
+.first_box {
+    width: 23%;
+    border: 0.5px solid gray;
+    margin-left: 8%;
+    padding-bottom: 60px;
+}
+
+.first_box_logo {
+    background-color: #705EBD;
+    font-size: 45px;
+    width: 20%;
+    display: flex;
+    justify-content: center;
+    border-radius: 10px;
+    margin-left: 40%;
+    margin-top: 40px;
+}
+
+.first_box_bold_p {
+    font-weight: bold;
+    font-size: 19px;
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.first_box_p {
+    text-align: center;
+}
+
+.down_three_boxes {
+    margin-top: 20px;
+    display: flex;
+    margin-bottom: 50px;
+}
+
+.bottom {
+    height: 50vh;
+    background: linear-gradient(to bottom right, #6879E2, #7450A9);
+}
+
+.bottom_bold_p {
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 95px;
+    font-size: 25px;
+}
+
+.bottom_p {
+    color: white;
+    text-align: center;
+    padding-top: 15px;
+}
+
+.bottom_start_now {
+    background-color: white;
+    color: #6879E2;
+    border-radius: 5px;
+    border: 0px;
+    width: 15%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    font-weight: bold;
+    padding: 15px 0px 15px 0px;
+    margin-left: 42%;
+    margin-top: 30px;
+}
+
+.current {
+    font-weight: bold;
+    padding-left: 7%;
+    padding-top: 20px;
+}
+
+.current_first_line {
+    display: flex;
+    margin-top: 15px;
+}
+
+.current_number {
+    color: #FFD602;
+    font-weight: bold;
+    font-size: 30px;
+    text-align: center;
+}
+
+.current_option {
+    padding-left: 25%;
+}
+
+.current_description {
+    color: white;
+    text-align: center;
+}
+
+.current_option_room_num {
+    padding-left: 21%;
+}

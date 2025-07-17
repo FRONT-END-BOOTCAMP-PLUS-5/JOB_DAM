@@ -66,6 +66,7 @@ interface Review {
   chatRoomId: number;
 }
 
+
 export interface UpdateChatPointRef {
   member_id: string;
   point: number;
