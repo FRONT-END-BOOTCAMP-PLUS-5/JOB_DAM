@@ -8,7 +8,7 @@ import { questionsNum } from '../services/count/question';
 import { mentorsNum } from '../services/count/mentor';
 import { chatroomsNum } from '../services/count/chatroom';
 
-const StartPage = () => {
+function StartPage(){
     const [memberNum, setMemberNum] = useState<number>(0);
     const [questionNum, setQuestionNum] = useState<number>(0);
     const [mentorNum, setMentorNum] = useState<number>(0);

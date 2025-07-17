@@ -1,5 +1,11 @@
 'use client';
 
+import StartPage from './startpage/page'
+
 export default function Home() {
-  return <div>메인</div>;
+  return (
+    <div>
+      <StartPage/>
+    </div>
+  );
 }
