@@ -1,11 +1,12 @@
-import { ApplicationMentor } from '@/app/types/mypage/mentor';
+import { ApplicationMentor, ApplicationMentorList } from '@/app/types/mypage/mentor';
 import axios from 'axios';
 
 export const mentorService = {
   applicationMentor: async (mentorApplication: ApplicationMentor) => {
-    const { company, level, workPeriod } = mentorApplication;
+    const { id, company, level, workPeriod } = mentorApplication;
 
     const param = {
+      member_id: id,
       company: company,
       level: level,
       work_period: workPeriod,
@@ -19,13 +20,14 @@ export const mentorService = {
     };
   },
 
-  getMentorApplication: async (memberId?: string) => {
+  getMentorApplication: async (memberId?: string): Promise<{ mentor: ApplicationMentorList[] }> => {
     const { data, error } = await axios.get(`/api/mentor${memberId ? '?id=' + memberId : ''}`).catch((error) => error);
 
-    return {
-      data: data,
-      error: error && error.message,
-    };
+    console.log('data', data.result);
+
+    if (error) throw new Error(error.message);
+
+    return data.result;
   },
 
   getMentorList: async () => {

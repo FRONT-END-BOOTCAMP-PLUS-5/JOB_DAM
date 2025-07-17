@@ -4,6 +4,8 @@
   display: flex;
   gap: 24px;
   flex-direction: column;
+  height: 500px;
+  width: 500px;
 
   & .input_box {
     display: flex;
@@ -41,5 +43,25 @@
     border: 1px solid #667eea;
     border-radius: 4px;
     padding: 40px;
+  }
+
+  & .mentor_info_section {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    & div {
+      display: flex;
+      gap: 12px;
+
+      & span {
+        font-weight: 500;
+      }
+
+      & p {
+        color: #444;
+        min-width: 100px;
+      }
+    }
   }
 }
