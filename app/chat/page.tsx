@@ -11,19 +11,20 @@ import { Member } from '../store/isLogin/loginSlice';
 import { Button, Chip, Switch, TextField } from '@mui/material';
 import { useChatScroll } from '../hooks/useChatScroll';
 import { useRealtimeChat } from '../hooks/useRealTimeChat';
-import ChatEndModal from '../components/chat/ChatEndModal';
 import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { ChatRoomValue } from '../constants/initialValue';
 import { CHAT_ROOM_PROGRESS, CHAT_TYPE_TEXT } from '../constants/chat';
 import { chatroomService } from '../services/chatroom/chatroom';
 import Spinner from '../components/common/Spinner';
 import { createClient } from '../utils/supabase/client';
+import ConfirmModal from '../components/chat/ConfirmModal';
 
 const ChatPage = () => {
   const member = useSelector((state: RootState) => state.login.member);
   const param = useSearchParams();
   const supabase = createClient();
+  const router = useRouter();
 
   const [user, setUser] = useState<Member>(member);
   const [chatRoom, setChatRoom] = useState<ChatRoom[]>([]);
@@ -32,10 +33,11 @@ const ChatPage = () => {
   const [chatType, setChatType] = useState<0 | 1 | 2>(0);
   const [chatMembers, setChatMembers] = useState<{ [key: string]: { name: string; img?: string } }>({});
   const [selectChatRoom, setSelectChatRoom] = useState<ChatRoom>(ChatRoomValue);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [chatEndModal, setChatEndModal] = useState(false);
   const [chatRoomLoading, setChatRoomLoading] = useState(true);
   const [chatLoading, setChatLoading] = useState(false);
   const [chatRoomName, setChatRoomName] = useState('');
+  const [reviewMoveModal, setReviewMoveModal] = useState(false);
 
   const { getChatRoom, insertChat, updateChatRoom, getChat } = chatService;
   const { updatePointMember } = chatroomService;
@@ -99,7 +101,7 @@ const ChatPage = () => {
     return setNewMessage(value);
   };
 
-  const handleUpdateChatRoom = () => {
+  const endUpdateChatRoom = () => {
     if (!selectChatRoom?.id) return;
 
     const updateChatRoomRef = {
@@ -112,10 +114,11 @@ const ChatPage = () => {
         initChatRoom(user?.id);
         setSelectChatRoom(ChatRoomValue);
         setChatMembers({});
+        setReviewMoveModal(true);
       }
     });
 
-    setModalOpen(false);
+    setChatEndModal(false);
   };
 
   const onClickChatRoom = (chatRoomData: ChatRoom) => {
@@ -158,6 +161,11 @@ const ChatPage = () => {
     });
 
     setChatRoomLoading(false);
+  };
+
+  const handelReviewMove = () => {
+    router.push('/mypage/chat');
+    setReviewMoveModal(false);
   };
 
   // 유저 정보 셋팅
@@ -252,7 +260,7 @@ const ChatPage = () => {
               <hgroup className={styles.section_title}>
                 <Chip className={styles.right_chat_room_title} variant="filled" label={selectChatRoom?.title} />
                 {selectChatRoom?.createMember?.id !== user?.id && selectChatRoom?.progress !== 2 && (
-                  <Button variant="contained" color="warning" onClick={() => setModalOpen(true)}>
+                  <Button variant="contained" color="warning" onClick={() => setChatEndModal(true)}>
                     종료하기
                   </Button>
                 )}
@@ -329,11 +337,23 @@ const ChatPage = () => {
           )}
         </section>
       </section>
-      <ChatEndModal
-        modalOpen={modalOpen}
-        onClickApprove={handleUpdateChatRoom}
-        onCloseModal={() => setModalOpen(false)}
-      />
+      <ConfirmModal
+        modalOpen={chatEndModal}
+        onClickApprove={endUpdateChatRoom}
+        onCloseModal={() => setChatEndModal(false)}
+      >
+        <h1>채팅을 종료 하시겠습니까?</h1>
+      </ConfirmModal>
+
+      <ConfirmModal
+        modalOpen={reviewMoveModal}
+        confirmText={'작성하러 가기'}
+        onClickApprove={handelReviewMove}
+        onCloseModal={() => setReviewMoveModal(false)}
+      >
+        <h1>채팅이 종료되었어요.</h1>
+        <h2>이제 리뷰를 작성할수있어요.</h2>
+      </ConfirmModal>
     </main>
   );
 };

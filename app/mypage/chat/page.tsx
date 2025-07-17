@@ -146,7 +146,7 @@ const ChatPage = () => {
                 <hgroup>
                   <Chip
                     label={CHAT_ROOM_PROGRESS[item?.progress]}
-                    color={item?.progress === 1 ? 'primary' : 'default'}
+                    color={item?.progress === 0 ? 'warning' : item?.progress === 1 ? 'primary' : 'default'}
                   />
                   <span className={styles.title}>{item?.title}</span>
                   <span className={styles.member_num}>
