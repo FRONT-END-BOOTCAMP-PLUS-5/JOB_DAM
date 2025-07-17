@@ -4,6 +4,8 @@
   display: flex;
   gap: 24px;
   flex-direction: column;
+  max-width: 544px;
+  max-height: 500px;
 
   & .user_image {
     border: 1px solid #ddd;

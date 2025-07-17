@@ -11,16 +11,20 @@ import { Member } from '../store/isLogin/loginSlice';
 import { Button, Chip, Switch, TextField } from '@mui/material';
 import { useChatScroll } from '../hooks/useChatScroll';
 import { useRealtimeChat } from '../hooks/useRealTimeChat';
-import ChatEndModal from '../components/chat/ChatEndModal';
 import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { ChatRoomValue } from '../constants/initialValue';
 import { CHAT_ROOM_PROGRESS, CHAT_TYPE_TEXT } from '../constants/chat';
 import { chatroomService } from '../services/chatroom/chatroom';
+import Spinner from '../components/common/Spinner';
+import { createClient } from '../utils/supabase/client';
+import ConfirmModal from '../components/chat/ConfirmModal';
 
 const ChatPage = () => {
   const member = useSelector((state: RootState) => state.login.member);
   const param = useSearchParams();
+  const supabase = createClient();
+  const router = useRouter();
 
   const [user, setUser] = useState<Member>(member);
   const [chatRoom, setChatRoom] = useState<ChatRoom[]>([]);
@@ -28,8 +32,12 @@ const ChatPage = () => {
   const [initialMessage, setIntialMessage] = useState<Chat[]>([]);
   const [chatType, setChatType] = useState<0 | 1 | 2>(0);
   const [chatMembers, setChatMembers] = useState<{ [key: string]: { name: string; img?: string } }>({});
-  const [selectChatRoom, setSelectChatRoom] = useState<ChatRoom>();
-  const [modalOpen, setModalOpen] = useState(false);
+  const [selectChatRoom, setSelectChatRoom] = useState<ChatRoom>(ChatRoomValue);
+  const [chatEndModal, setChatEndModal] = useState(false);
+  const [chatRoomLoading, setChatRoomLoading] = useState(true);
+  const [chatLoading, setChatLoading] = useState(false);
+  const [chatRoomName, setChatRoomName] = useState('');
+  const [reviewMoveModal, setReviewMoveModal] = useState(false);
 
   const { getChatRoom, insertChat, updateChatRoom, getChat } = chatService;
   const { updatePointMember } = chatroomService;
@@ -40,7 +48,7 @@ const ChatPage = () => {
     sendMessage,
     isConnected,
   } = useRealtimeChat({
-    roomName: `chat-room-${selectChatRoom?.id}`,
+    roomName: chatRoomName,
     username: user?.name,
     userId: user?.id,
     type: chatType,
@@ -60,6 +68,7 @@ const ChatPage = () => {
   const handleSendMessage = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
       if (!selectChatRoom?.id) return;
+      if (selectChatRoom?.progress === 2) return initChatRoom(user?.id);
 
       const chatRef = {
         member_id: user?.id,
@@ -92,7 +101,7 @@ const ChatPage = () => {
     return setNewMessage(value);
   };
 
-  const handleUpdateChatRoom = () => {
+  const endUpdateChatRoom = () => {
     if (!selectChatRoom?.id) return;
 
     const updateChatRoomRef = {
@@ -105,14 +114,17 @@ const ChatPage = () => {
         initChatRoom(user?.id);
         setSelectChatRoom(ChatRoomValue);
         setChatMembers({});
+        setReviewMoveModal(true);
       }
     });
 
-    setModalOpen(false);
+    setChatEndModal(false);
   };
 
   const onClickChatRoom = (chatRoomData: ChatRoom) => {
+    setChatLoading(true);
     setSelectChatRoom(chatRoomData);
+    setChatRoomName(`chat-room-${selectChatRoom?.id}`);
 
     chatRoomData?.chatMember.forEach((item) =>
       setChatMembers((prev) => ({ ...prev, [item.member.id]: { name: item?.member.name, img: item?.member?.img } })),
@@ -120,6 +132,7 @@ const ChatPage = () => {
 
     getChat(chatRoomData?.id).then((res) => {
       setIntialMessage(res.result);
+      setChatLoading(false);
     });
   };
 
@@ -131,8 +144,8 @@ const ChatPage = () => {
     return sortedMessages;
   }, [initialMessage, realtimeMessages]);
 
-  const initChatRoom = (memberId: string) => {
-    getChatRoom(memberId).then((res) => {
+  const initChatRoom = async (memberId: string) => {
+    await getChatRoom(memberId).then((res) => {
       if (res) {
         // 현재 진행중인 채팅방 filter
         const progressFilter = res.filter((item) => item?.progress !== 0);
@@ -146,6 +159,13 @@ const ChatPage = () => {
         }
       }
     });
+
+    setChatRoomLoading(false);
+  };
+
+  const handelReviewMove = () => {
+    router.push('/mypage/chat');
+    setReviewMoveModal(false);
   };
 
   // 유저 정보 셋팅
@@ -161,11 +181,32 @@ const ChatPage = () => {
     scrollToBottom();
   }, [allMessages, scrollToBottom]);
 
+  useEffect(() => {
+    const channel = supabase.channel('end_chat_room' + user?.id);
+
+    channel
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'chat_room',
+          filter: `id=in.(${chatRoom?.map((item) => item.id).join(',')})`,
+        },
+        () => {
+          initChatRoom(user?.id);
+          setSelectChatRoom(ChatRoomValue);
+        },
+      )
+      .subscribe();
+  }, [supabase, chatRoom]);
+
   return (
     <main className={styles.chat_container}>
       <section className={styles.content_wrap}>
         <ul className={styles.chat_room_list}>
-          {(!chatRoom || chatRoom.length === 0) && (
+          {chatRoomLoading && <Spinner />}
+          {!chatRoomLoading && (!chatRoom || chatRoom.length === 0) && (
             <div className={styles.not_found_data}>
               <h3>진행중인 채팅이 없어요. </h3>
               <h4>멘토에게 채팅 신청을 하고 채팅방을 생성해보세요. </h4>
@@ -174,7 +215,7 @@ const ChatPage = () => {
               </Button>
             </div>
           )}
-          {chatRoom &&
+          {!chatRoomLoading &&
             chatRoom.length > 0 &&
             chatRoom?.map((item, index) => (
               <li key={item?.title + item?.id + index} className={styles.chat_room_item}>
@@ -208,17 +249,18 @@ const ChatPage = () => {
         </ul>
 
         <section className={styles.chat_section}>
-          {chatRoom.length > 0 && (!selectChatRoom || selectChatRoom?.id === 0) && (
+          {chatLoading && <Spinner />}
+          {!chatLoading && chatRoom.length > 0 && (!selectChatRoom || selectChatRoom?.id === 0) && (
             <div className={styles.not_select_chatRoom}>
               <p>왼쪽에서 원하는 채팅방을 선택해주세요.</p>
             </div>
           )}
-          {selectChatRoom && selectChatRoom?.id !== 0 && (
+          {!chatLoading && selectChatRoom && selectChatRoom?.id !== 0 && (
             <>
               <hgroup className={styles.section_title}>
                 <Chip className={styles.right_chat_room_title} variant="filled" label={selectChatRoom?.title} />
                 {selectChatRoom?.createMember?.id !== user?.id && selectChatRoom?.progress !== 2 && (
-                  <Button variant="contained" color="warning" onClick={() => setModalOpen(true)}>
+                  <Button variant="contained" color="warning" onClick={() => setChatEndModal(true)}>
                     종료하기
                   </Button>
                 )}
@@ -295,11 +337,23 @@ const ChatPage = () => {
           )}
         </section>
       </section>
-      <ChatEndModal
-        modalOpen={modalOpen}
-        onClickApprove={handleUpdateChatRoom}
-        onCloseModal={() => setModalOpen(false)}
-      />
+      <ConfirmModal
+        modalOpen={chatEndModal}
+        onClickApprove={endUpdateChatRoom}
+        onCloseModal={() => setChatEndModal(false)}
+      >
+        <h1>채팅을 종료 하시겠습니까?</h1>
+      </ConfirmModal>
+
+      <ConfirmModal
+        modalOpen={reviewMoveModal}
+        confirmText={'작성하러 가기'}
+        onClickApprove={handelReviewMove}
+        onCloseModal={() => setReviewMoveModal(false)}
+      >
+        <h1>채팅이 종료되었어요.</h1>
+        <h2>이제 리뷰를 작성할수있어요.</h2>
+      </ConfirmModal>
     </main>
   );
 };

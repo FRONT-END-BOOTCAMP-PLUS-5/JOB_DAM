@@ -22,6 +22,8 @@ export function useRealtimeChat({ roomName, username, userId, type }: UseRealtim
   useEffect(() => {
     const newChannel = supabase.channel(roomName);
 
+    setMessages([]);
+
     newChannel
       .on('broadcast', { event: EVENT_MESSAGE_TYPE }, (payload) => {
         setMessages((current) => [...current, payload.payload as Chat]);
