@@ -185,4 +185,4 @@ const StartPage = () => {
     )
 }
 
-export { StartPage }
+export default StartPage;
