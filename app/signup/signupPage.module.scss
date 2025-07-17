@@ -86,4 +86,24 @@
       color: blue;
     }
   }
+
+  .signup_button {
+    width: 100%;
+    height: 4.4vh;
+    border-radius: 10px;
+    margin: 10px;
+    border: 1px solid #e0e0e0;
+    padding-inline: 10px;
+    background-color: #333;
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed !important;
+      pointer-events: none;
+    }
+  }
 }

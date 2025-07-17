@@ -19,7 +19,7 @@ export default function SignupPage() {
     handleSubmit,
     setValue,
     control,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<sign_up_form_type>({
     mode: 'onBlur',
     defaultValues: {
@@ -119,7 +119,9 @@ export default function SignupPage() {
               <p className={styles.signup_check_text}>(선택) 마케팅 정보 수신에 동의합니다</p>
             </div>
 
-            <Button type="submit" typeStyle="submit" text="회원가입" />
+            <button type="submit" disabled={isSubmitting} className={styles.signup_button}>
+              회원가입
+            </button>
           </div>
 
           <span className={styles.signup_login_link}>

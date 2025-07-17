@@ -18,7 +18,7 @@ export default function LoginForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormInput>({
     mode: 'onBlur',
   });
@@ -85,7 +85,9 @@ export default function LoginForm() {
         </div>
         <Link href="/find/password">비밀번호 찾기</Link>
       </div>
-      <input type="submit" className={styles.login_button} value="로그인" />
+      <button type="submit" className={styles.login_button} disabled={isSubmitting}>
+        로그인
+      </button>
       <span>
         아직 회원이 아니신가요? <Link href="/signup">회원가입</Link>
       </span>
