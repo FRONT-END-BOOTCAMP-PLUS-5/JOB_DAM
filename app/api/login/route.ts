@@ -1,3 +1,4 @@
+import { RefreshToken } from '@/app/services/login/refreshToken';
 import { passwordDecrypto } from '@/app/utils/signup/passwordCrypto';
 import { generateAccessToken, generateRefreshToken } from '@/app/utils/signup/token';
 import { verifyAccessToken } from '@/app/utils/signup/tokenVerify';
@@ -57,9 +58,14 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const accessToken = request.cookies.get('access_token')?.value;
+    const refreshToken = request.cookies.get('refresh_token')?.value;
 
     if (!accessToken) {
       return NextResponse.json({ message: '토큰이 없습니다', status: 401 });
+    }
+
+    if (!refreshToken) {
+      return NextResponse.json({ message: '로그인을 다시 해주세요', status: 401 });
     }
 
     // 1️⃣ 토큰 검증만 하고
@@ -73,6 +79,8 @@ export async function GET(request: NextRequest) {
     // 3️⃣ 사용자 정보만 반환 (토큰 갱신 X)
     return NextResponse.json({
       user: memberData,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
       status: 200,
     });
   } catch (error) {

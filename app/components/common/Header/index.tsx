@@ -3,19 +3,23 @@
 import Link from 'next/link';
 import styles from './header.module.scss';
 import { RootState } from '@/app/store/store';
-import { useSelector } from 'react-redux';
-import { Member } from '@/app/store/isLogin/loginSlice';
-import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Member, resetLoginMemberData } from '@/app/store/isLogin/loginSlice';
+import { DeleteRefreshToken } from '@/app/services/login/refreshToken';
+import { useRouter } from 'next/navigation';
 
 const Header = () => {
-  const member = useSelector((state: RootState) => state.login.member);
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const member: Member = useSelector((state: RootState) => state.login.member);
+  const { id } = member;
+  console.log(member);
 
-  const [user, setUser] = useState<Member>(member);
-
-  useEffect(() => {
-    setUser(member);
-  }, [member]);
-
+  const handleLogout = async () => {
+    await DeleteRefreshToken();
+    dispatch(resetLoginMemberData());
+    router.refresh();
+  };
   return (
     <header className={styles.header}>
       <section className={styles.header_container}>
@@ -28,7 +32,7 @@ const Header = () => {
           <Link href="/chat">채팅하기</Link>
         </nav>
         <div className={styles.user_nav}>
-          {!user.id && (
+          {!id && (
             <>
               <Link className={`${styles.button} ${styles.login}`} href="/login">
                 로그인
@@ -39,10 +43,15 @@ const Header = () => {
             </>
           )}
 
-          {user.id && (
-            <Link className={`${styles.button} ${styles.login}`} href="/mypage">
-              마이페이지
-            </Link>
+          {id && (
+            <>
+              <button className={`${styles.button} ${styles.login}`} onClick={handleLogout}>
+                로그아웃
+              </button>
+              <Link className={`${styles.button} ${styles.login}`} href="/mypage">
+                마이페이지
+              </Link>
+            </>
           )}
         </div>
       </section>

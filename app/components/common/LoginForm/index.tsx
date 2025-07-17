@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { toast, ToastContainer } from 'react-toastify';
 import { loginMember } from '@/app/services/login/login';
 import { useDispatch } from 'react-redux';
-import { setLoginState } from '@/app/store/isLogin/loginSlice';
+import { setLoginMemberData } from '@/app/store/isLogin/loginSlice';
 import { useRouter } from 'next/navigation';
 
 interface FormInput {
@@ -36,7 +36,7 @@ export default function LoginForm() {
 
       if (response.data.status === 200) {
         // 🔹 POST 응답에서 바로 유저 정보를 Redux에 저장
-        dispatch(setLoginState.setLoginMemberData(response.data.user));
+        dispatch(setLoginMemberData(response.data.user));
         toast.success('로그인 성공', {
           position: 'top-right',
           autoClose: 1000,
