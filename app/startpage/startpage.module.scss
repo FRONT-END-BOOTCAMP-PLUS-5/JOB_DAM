@@ -4,13 +4,18 @@
     display: flex;
 }
 
+.d_none {
+    display: none;
+}
+
 .up_left {
     padding-left: 20%;
-    padding-top: 6%;
+    padding-top: 7.5%;
 }
 
 .up_left_h1 {
     font-weight: bold;
+    font-size: 30px;
     color: white;
 }
 
@@ -44,6 +49,8 @@
     margin-left: 4%;
     padding-left: 4%;
     padding-right: 4%;
+    display: flex;
+    align-items: center;
     border-radius: 5px;
     background-color: rgba(255, 255, 255, 0.2);
     color: white;
@@ -129,7 +136,8 @@
     color: white;
     font-weight: bold;
     text-align: center;
-    padding-top: 55px;
+    padding-top: 95px;
+    font-size: 25px;
 }
 
 .bottom_p {
