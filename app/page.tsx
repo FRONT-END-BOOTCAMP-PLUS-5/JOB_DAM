@@ -7,11 +7,8 @@ import { membersNum } from './services/count/member';
 import { questionsNum } from './services/count/question';
 import { mentorsNum } from './services/count/mentor';
 import { chatroomsNum } from './services/count/chatroom';
-import useAuthInit from './hooks/useAuthInit';
 
 function StartPage() {
-  useAuthInit();
-
   const [memberNum, setMemberNum] = useState<number>(0);
   const [questionNum, setQuestionNum] = useState<number>(0);
   const [mentorNum, setMentorNum] = useState<number>(0);
