@@ -82,21 +82,21 @@ function StartPage(){
                     <h1 className={styles.d_none}> 현재 카테고리별 개수 </h1>
                     <h3 className={styles.current}> 📊 실시간 현황 </h3>
                     <div className={styles.current_first_line}>
-                        <div className={styles.current_option}>
+                        <div className={styles.current_option1}>
                             <p className={styles.current_number}> {memberNum} </p>
                             <p className={styles.current_description}> 멤버 수 </p>
                         </div>
-                        <div className={styles.current_option}>
+                        <div className={styles.current_option2}>
                             <p className={styles.current_number}> {questionNum} </p>
                             <p className={styles.current_description}> 질문 수 </p>
                         </div>
                     </div>
-                    <div className={styles.current_first_line}>
-                        <div className={styles.current_option}>
+                    <div className={styles.current_second_line}>
+                        <div className={styles.current_option3}>
                             <p className={styles.current_number}>{mentorNum}</p>
                             <p className={styles.current_description}> 멘토 수 </p>
                         </div>
-                        <div className={styles.current_option_room_num}>
+                        <div className={styles.current_option4}>
                             <p className={styles.current_number}>{mentorRoomNum}</p>
                             <p className={styles.current_description}> 멘토링 방 수 </p>
                         </div>

@@ -59,20 +59,16 @@
 .up_right {
     background-color: rgba(255, 255, 255, 0.2);
     width: 30%;
-    height: 30vh;
+    height: 35vh;
     border-radius: 10px;
     margin-left: 10%;
-    margin-top: 6.5%;
-}
-
-.current {
-    color: white;
+    margin-top: 5.5%;
 }
 
 .why_jobdam {
     text-align: center;
     color: #7455AF;
-    font-size: 18px;
+    font-size: 25px;
     padding-bottom: 15px;
 }
 
@@ -93,9 +89,10 @@
 
 .first_box {
     width: 23%;
-    border: 0.5px solid gray;
+    border: 8px solid rgba(175, 175, 175, 0.3);
     margin-left: 8%;
     padding-bottom: 60px;
+    border-radius: 13px;
 }
 
 .first_box_logo {
@@ -166,22 +163,48 @@
     font-weight: bold;
     padding-left: 7%;
     padding-top: 20px;
+    color: white;
 }
 
 .current_first_line {
     display: flex;
-    margin-top: 15px;
+    height:45%;
+    align-items: center;
+    justify-content: center; 
+}
+
+.current_second_line {
+    display: flex;
+    height:45%;
+    justify-content: center; 
 }
 
 .current_number {
     color: #FFD602;
     font-weight: bold;
     font-size: 30px;
-    text-align: center;
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+    height: auto;
+    margin: 0; 
+    position: static;
 }
 
-.current_option {
-    padding-left: 25%;
+.current_option1 {
+    width:50%;
+}
+
+.current_option2 {
+    width:50%;
+}
+
+.current_option3 {
+    width:50%;
+}
+
+.current_option4 {
+    width:50%;
 }
 
 .current_description {
@@ -189,6 +212,3 @@
     text-align: center;
 }
 
-.current_option_room_num {
-    padding-left: 21%;
-}
