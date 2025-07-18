@@ -68,11 +68,8 @@ export class GetQuestionUseCase {
     const answerDto = answers.map((item) => ({
       id: item['id'],
       memberId: item['member_id'],
-      questionId: item['question_id'],
       content: item['content'],
       createdAt: item['created_at'],
-      deletedAt: item['deleted_at'],
-      updatedAt: item['updated_at'],
     }))
 
 

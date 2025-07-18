@@ -8,12 +8,6 @@ import {QuestionLikedQuestionJoinDto} from "@/backend/questions/application/dtos
  * 작성자: 김동우
  * 작성일: 2025-07-04
  * */
-interface IComment{
-  member_id: string // comment 작성자
-  question_id: number //현재 상세페이지 id
-  title: string
-  content: string
-}
 export class CreateQuestionUseCase {
   private repository: QuestionRepository;
 
@@ -66,7 +60,7 @@ export class CreateQuestionUseCase {
     };
   }
 
-  async sendMessage(formData: FormData):Promise<QuestionAnswerDto>{
+  async sendMessage(formData: FormData):Promise<null>{
     const content = formData.get("content")  as string
     const member_id = formData.get("memberId") as string
     const question_id= parseInt(formData.get("question_id") as string)
@@ -77,19 +71,9 @@ export class CreateQuestionUseCase {
       question_id
     }
 
-    const answer:QuestionAnswer = await this.repository.sendMessage(commentUser)
+    await this.repository.sendMessage(commentUser)
 
-    const answerDto = {
-      id: answer['id'],
-      memberId: answer['member_id'],
-      questionId: answer['question_id'],
-      content: answer['content'],
-      createdAt: answer['created_at'],
-      deletedAt: answer['deleted_at'],
-      updatedAt: answer['updated_at']
-    }
-
-    return answerDto
+    return null
   }
 
   async upsertLikeDisLike(formData: FormData):Promise<QuestionLikedQuestionJoinDto>{
