@@ -23,24 +23,32 @@ export class SbChatRoomRepository implements ChatRoomRepository {
   async insertChatRoom(): Promise<ChatRoom> {
     const { title, description, max_people, member_id, created_member_id } = this.clientData ?? {};
 
-    const { data, error } = await this.supabase
-      .from('chat_room')
-      .insert([{ title, description, max_people, created_member_id }])
-      .select('*')
-      .single();
+    // const { data, error } = await this.supabase
+    //   .from('chat_room')
+    //   .insert([{ title, description, max_people, created_member_id }])
+    //   .select('*')
+    //   .single();
 
-    await this.supabase
-      .from('chat_member')
-      .insert([
-        { member_id: created_member_id, chat_room_id: data.id },
-        { member_id, chat_room_id: data.id },
-      ])
-      .select('*');
+    // await this.supabase
+    //   .from('chat_member')
+    //   .insert([
+    //     { member_id: created_member_id, chat_room_id: data.id },
+    //     { member_id, chat_room_id: data.id },
+    //   ])
+    //   .select('*');
 
-    await this.supabase
-      .from('alarm_chat_room')
-      .insert({ send_member_id: member_id, response_member_id: created_member_id })
-      .select('*');
+    // await this.supabase
+    //   .from('alarm_chat_room')
+    //   .insert({ send_member_id: member_id, response_member_id: created_member_id })
+    //   .select('*');
+
+    const { data, error } = await this.supabase.rpc('create_chat_room_with_members', {
+      p_title: title,
+      p_description: description,
+      p_max_people: max_people,
+      p_created_member_id: created_member_id,
+      p_member_id: member_id,
+    });
 
     if (error) throw new Error(error.message);
 

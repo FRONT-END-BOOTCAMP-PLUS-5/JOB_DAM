@@ -27,7 +27,7 @@ const MentorPage = () => {
   const { getMentorList } = mentorService;
   const { addChatRoom } = chatroomService;
 
-  const handleAddChatRoom = () => {
+  const handleAddChatRoom = async () => {
     const chatRoomData = {
       title: chatRoomTitle,
       description: chatRoomDescription,
@@ -36,7 +36,7 @@ const MentorPage = () => {
       member_id: user?.id,
     };
 
-    addChatRoom(chatRoomData).then((res) => {
+    await addChatRoom(chatRoomData).then((res) => {
       if (res.result.status === 200) {
         setApplyCompleteModal(true);
         reset();
