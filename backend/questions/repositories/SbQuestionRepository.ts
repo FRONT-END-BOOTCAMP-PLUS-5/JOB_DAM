@@ -128,7 +128,7 @@ export class SbQuestionRepository implements QuestionRepository {
   async getAllMessages(id: string){
     const {data, error} = await this.supabase
       .from("answer")
-      .select("*, member_id(id, name, nickname, img)")
+      .select("id, content, created_at, member_id(id, name, nickname, img)")
       .eq('question_id', id)
 
     if (error) throw new Error(error.message);
@@ -136,15 +136,16 @@ export class SbQuestionRepository implements QuestionRepository {
   }
 
   async sendMessage(commentUser: IComment){
+    const member_id = commentUser['member_id'] as string
+    const question_id = commentUser['question_id'] as number
+    const content = commentUser['content'] as string
     const {data, error} = await this.supabase
       .from("answer")
-      .insert([{
-        member_id: commentUser['member_id'],
-        question_id: commentUser['question_id'],
-        content: commentUser['content']
-      }])
-      .select("*")
-      .single()
+      .insert({
+        member_id,
+        question_id,
+        content
+      })
 
     if (error) throw new Error(error.message);
     return data;
