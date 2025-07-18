@@ -13,7 +13,7 @@ interface JsonType {
   id: number
   name: string
   img: string | null
-  grade: number
+  point: number
   nickname: string
   member: {
     company: string
@@ -65,7 +65,7 @@ export default function Aside(){
                 </span>
                 <span className={style.position}>{item.member.company}-{item.member.level}</span>
               </div>
-              <span className={style.grade}>{item.grade}P</span>
+              <span className={style.grade}>{item.point}P</span>
             </div>
         )
       })  : <NonData typeStyle={'board'}/>
