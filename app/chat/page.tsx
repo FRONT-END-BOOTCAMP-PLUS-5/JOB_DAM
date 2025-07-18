@@ -196,7 +196,17 @@ const ChatPage = () => {
           setSelectChatRoom(ChatRoomValue);
         },
       )
-      .subscribe();
+      .subscribe(async (status) => {
+        console.log('end_chat_room-status', status);
+
+        if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+          channel.unsubscribe().then(() => {
+            supabase.channel(`end_chat_room`).subscribe((status) => {
+              console.log('end_chat_room-retry', status);
+            });
+          });
+        }
+      });
   }, [supabase, chatRoom]);
 
   return (

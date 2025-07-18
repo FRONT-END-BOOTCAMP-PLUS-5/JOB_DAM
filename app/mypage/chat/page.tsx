@@ -109,8 +109,18 @@ const ChatPage = () => {
           chatRoomInit(member?.id);
         },
       )
-      .subscribe();
-  }, [supabase, chatRoom]);
+      .subscribe(async (status) => {
+        console.log('mypage_chat_room-status', status);
+
+        if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+          channel.unsubscribe().then(() => {
+            supabase.channel(`mypage_chat_room`).subscribe((status) => {
+              console.log('mypage_chat_room-retry', status);
+            });
+          });
+        }
+      });
+  }, [supabase, member]);
 
   return (
     <section>
