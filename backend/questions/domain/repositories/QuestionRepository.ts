@@ -40,7 +40,7 @@ export interface QuestionRepository {
   insertStorage(fileName: string, file: File): Promise<string>
   findItem(id: string): Promise<Question[]>
   getAllMessages(id: string): Promise<QuestionAnswer[]>
-  sendMessage(commentUser: IComment): Promise<QuestionAnswer>
+  sendMessage(commentUser: IComment): Promise<null>
   getLikeDisLike(id: string): Promise<QuestionLikedQuestion[]>
   insertLikedQuestion({ member_id, question_id, like_type}:ILikedQuestion): Promise<LikedQuestion>
   updateQuestionLikeDisLike({question_id, like_num, dislike_num, check}: IQuestionLikeDisLike):Promise<QuestionLikeDisLike>

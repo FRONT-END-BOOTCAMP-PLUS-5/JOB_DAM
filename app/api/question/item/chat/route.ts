@@ -29,8 +29,8 @@ export async function POST(request: NextRequest) {
     const supabase: SupabaseClient = await createClient();
     const questionRepository = new SbQuestionRepository(supabase);
     const getQuestionAnswerUseCase = new CreateQuestionUseCase(questionRepository)
-    const answers = await getQuestionAnswerUseCase.sendMessage(formData);
-    return NextResponse.json({ result: {...answers}, status: 200 });
+    await getQuestionAnswerUseCase.sendMessage(formData);
+    return NextResponse.json({ result: 'success', status: 200 });
   } catch (err) {
     if (err instanceof Error) {
       return NextResponse.json({ message: err.message, status: 503 });

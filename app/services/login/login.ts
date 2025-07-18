@@ -12,7 +12,7 @@ export const loginMember = async (memberData: { email: string; password: string 
     withCredentials: true,
   });
 
-  const { message, status } = response.data;
+  const { message } = response.data;
 
   if (message === '회원 정보가 없습니다.') {
     toast.error('회원 정보가 없습니다.', toastConfig);
@@ -20,8 +20,6 @@ export const loginMember = async (memberData: { email: string; password: string 
     toast.error('비밀번호가 일치하지 않습니다.', toastConfig);
   } else if (message === '일치하는 이메일이 없습니다.') {
     toast.error('일치하는 이메일이 없습니다.', toastConfig);
-  } else if (status === 200) {
-    toast.success('로그인 성공', toastConfig);
   }
 
   return response;

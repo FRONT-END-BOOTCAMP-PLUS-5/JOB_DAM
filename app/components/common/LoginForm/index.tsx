@@ -35,13 +35,14 @@ export default function LoginForm() {
       }
 
       if (response.data.status === 200) {
+        console.log(response);
         // 🔹 POST 응답에서 바로 유저 정보를 Redux에 저장
         dispatch(setLoginMemberData(response.data.user));
         toast.success('로그인 성공', {
           position: 'top-right',
           autoClose: 1000,
+          onClose: () => router.push('/'),
         });
-        router.push('/');
       }
     } catch {
       toast.error('로그인 실패');

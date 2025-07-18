@@ -41,7 +41,7 @@ const Header = () => {
   }, [member]);
 
   useEffect(() => {
-    const channel = supabase.channel('alarm_chat_room' + member?.id);
+    const channel = supabase.channel('alarm_chat_room');
 
     channel
       .on(
