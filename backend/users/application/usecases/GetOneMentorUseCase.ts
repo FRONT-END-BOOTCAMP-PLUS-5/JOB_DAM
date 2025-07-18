@@ -9,18 +9,16 @@ export class GetOneMentorUseCase {
     this.repository = repository;
   }
 
-  async execute(memberId: string): Promise<{ mentor: MentorDto }> {
-    const mentor: MentorTable = await this.repository.findOne(memberId);
+  async execute(memberId: string): Promise<{ mentor: MentorDto[] }> {
+    const mentor: MentorTable[] = await this.repository.findOne(memberId);
 
-    const mentorDtos: MentorDto = {
-      memberId: mentor.member_id,
-      company: mentor.company,
-      level: mentor.level,
-      workPeriod: mentor.work_period,
-      createdAt: mentor.created_at,
-      deletedAt: mentor.deleted_at,
-      updatedAt: mentor.updated_at,
-    };
+    const mentorDtos: MentorDto[] = mentor?.map((item) => ({
+      memberId: item?.member_id,
+      company: item?.company,
+      level: item?.level,
+      workPeriod: item?.work_period,
+      createdAt: item?.created_at,
+    }));
 
     return {
       mentor: mentorDtos,

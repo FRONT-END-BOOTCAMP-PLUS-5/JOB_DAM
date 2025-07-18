@@ -24,7 +24,7 @@ const MentorPage = () => {
   const [applyCompleteModal, setApplyCompleteModal] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const { getMentorList } = mentorService();
+  const { getMentorList } = mentorService;
   const { addChatRoom } = chatroomService;
 
   const handleAddChatRoom = () => {
@@ -72,17 +72,21 @@ const MentorPage = () => {
         {!loading &&
           mentors?.length > 0 &&
           mentors?.map((item, index) => (
-            <section className={styles.mentor_card} key={item?.name + index}>
-              <div className={styles.profile_image}>
-                <Image src={item?.img ?? ''} alt="프로필 이미지" fill />
+            <section className={styles.mentor_card} key={item?.nickname + index}>
+              <div className={styles.flex}>
+                <section className={styles.profile_image}>
+                  <Image src={item?.img ?? ''} alt="프로필 이미지" fill />
+                </section>
+                <section className={styles.mentor_info}>
+                  <h1>
+                    {item?.mentorApplication?.company} / {item?.grade === 0 ? '주니어' : '시니어'}
+                  </h1>
+                  <h2>
+                    {item?.nickname} ({item?.name})
+                  </h2>
+                  <h3>포인트: {item?.point}</h3>
+                </section>
               </div>
-              <section>
-                <h1>회사 / {item?.grade === 0 ? '주니어' : '시니어'}</h1>
-                <h2>
-                  {item?.nickname} ({item?.name})
-                </h2>
-                <h3>포인트: {item?.point}</h3>
-              </section>
               {user?.id !== item?.id && user?.type !== 1 && (
                 <button
                   className={styles.apply_button}

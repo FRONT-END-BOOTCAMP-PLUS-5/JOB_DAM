@@ -1,31 +1,39 @@
+import { passwordDecrypto } from '@/app/utils/signup/passwordCrypto';
 import { generateAccessToken, generateRefreshToken } from '@/app/utils/signup/token';
 import { verifyAccessToken } from '@/app/utils/signup/tokenVerify';
 import { createClient } from '@/app/utils/supabase/server';
-import { SbMemberRepository } from '@/backend/members/repositories/SbMemberRepository';
+import { GetLoginUserIdUseCase } from '@/backend/login/application/usecases/GetLoginUserIdUseCase';
+import { GetLoginUserUseCase } from '@/backend/login/application/usecases/GetLoginUserUseCase';
+import { SbLoginRepository } from '@/backend/login/repository/SbLoginRepository';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json();
+
     const supabase = await createClient();
 
-    const memberRepository = new SbMemberRepository(supabase);
-    const memberData = await memberRepository.findOne(email, password);
+    const loginRepository = new SbLoginRepository(supabase);
 
-    if (!memberData) {
-      return NextResponse.json({ message: '아이디 또는 비밀번호가 일치하지 않습니다', status: 401 });
+    const memberEmail = await new GetLoginUserUseCase(loginRepository).execute(email);
+    const decryptoPassword = passwordDecrypto(memberEmail.password);
+
+    if (!memberEmail) {
+      return NextResponse.json({ status: 409, message: '일치하는 이메일이 없습니다.' });
+    } else {
+      if (decryptoPassword !== password) {
+        return NextResponse.json({ status: 409, message: '비밀번호가 일치하지 않습니다.' });
+      }
     }
 
-    const access_token = generateAccessToken(memberData.id);
-    const refresh_token = generateRefreshToken(memberData.id);
+    const access_token = generateAccessToken(memberEmail.id.toString());
+    const refresh_token = generateRefreshToken(memberEmail.id.toString());
 
-    const response = NextResponse.json({ user: memberData, status: 200 });
+    const response = NextResponse.json({
+      user: { ...memberEmail, access_token, refresh_token },
+      status: 200,
+    });
 
-    // 쿠키 설정
-    // 1. 동일 사이트 내에서만 쿠키 전송
-    // 2. 30일 동안 쿠키 유지
-    // 3. 모든 경로에서 쿠키 접근 가능
-    // 4. 쿠키 접근 시 보안 옵션 적용
     response.cookies.set('access_token', access_token, {
       sameSite: 'lax',
       maxAge: 60 * 15,
@@ -42,22 +50,21 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (error) {
-    if (error instanceof Error && error.message?.includes('이메일이 일치하지 않습니다.')) {
-      return NextResponse.json({ message: '이메일이 일치하지 않습니다', status: 401 });
-    }
-    if (error instanceof Error && error.message?.includes('비밀번호가 일치하지 않습니다.')) {
-      return NextResponse.json({ message: '비밀번호가 일치하지 않습니다', status: 401 });
-    }
-    return NextResponse.json({ message: '로그인에 실패했습니다', status: 500 });
+    throw error;
   }
 }
 
 export async function GET(request: NextRequest) {
   try {
     const accessToken = request.cookies.get('access_token')?.value;
+    const refreshToken = request.cookies.get('refresh_token')?.value;
 
     if (!accessToken) {
       return NextResponse.json({ message: '토큰이 없습니다', status: 401 });
+    }
+
+    if (!refreshToken) {
+      return NextResponse.json({ message: '로그인을 다시 해주세요', status: 401 });
     }
 
     // 1️⃣ 토큰 검증만 하고
@@ -65,12 +72,14 @@ export async function GET(request: NextRequest) {
 
     // 2️⃣ DB에서 사용자 정보 조회
     const supabase = await createClient();
-    const memberRepository = new SbMemberRepository(supabase);
-    const memberData = await memberRepository.findById(userId);
+    const loginRepository = new SbLoginRepository(supabase);
+    const memberData = await new GetLoginUserIdUseCase(loginRepository).execute(userId);
 
     // 3️⃣ 사용자 정보만 반환 (토큰 갱신 X)
     return NextResponse.json({
       user: memberData,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
       status: 200,
     });
   } catch (error) {

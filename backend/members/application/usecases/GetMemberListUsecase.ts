@@ -19,7 +19,7 @@ export class GetMemberListUsecase {
       id: item['id'],
       name: item['name'],
       img: item['img'],
-      grade: item['grade'],
+      point: item['point'],
       nickname: item['nickname'],
       member: item['mentor_application']
     }));

@@ -48,6 +48,13 @@ const ReviewPage = () => {
             <li className={styles.content}>{item?.content}</li>
           </ul>
         ))}
+
+      {!loading && reviewList.length === 0 && (
+        <section className={styles.none_review}>
+          <p>작성된 리뷰가 없어요.</p>
+          <p>멘토와 채팅을 하고 종료 후 리뷰를 작성해 보세요!</p>
+        </section>
+      )}
     </section>
   );
 };

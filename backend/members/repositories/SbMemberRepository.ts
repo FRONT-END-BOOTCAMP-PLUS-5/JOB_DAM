@@ -4,6 +4,7 @@ import { MemberRepository } from '../domain/repositories/MemberRepository';
 import { sign_up_form_type } from '@/app/types/signup/signup';
 import { MemberMentorRank } from '@/backend/members/domain/entities/MemberMentorRank';
 import { MemberMentorApplicationJoinTable } from '@/backend/members/domain/table/MemberMentorApplicationJoinTable';
+import { MemberMentor } from '../domain/entities/MemberMentor';
 
 export class SbMemberRepository implements MemberRepository {
   private supabase;
@@ -25,8 +26,8 @@ export class SbMemberRepository implements MemberRepository {
   async findTopGradeMembers(): Promise<MemberMentorRank[]> {
     const { data, error } = await this.supabase
       .from('member')
-      .select('id, name, img, grade, nickname, mentor_application!inner (company,level)')
-      .order('grade', { ascending: false })
+      .select('id, name, img, point, nickname, mentor_application!inner (company,level)')
+      .order('point', { ascending: false })
       .limit(5);
 
     if (error) throw new Error(error.message);
@@ -75,8 +76,44 @@ export class SbMemberRepository implements MemberRepository {
     return data;
   }
 
-  async findAllMentor(): Promise<Member[]> {
-    const { data, error } = await this.supabase.from('member').select('*').eq('type', 1);
+  async findByEmail(email: string): Promise<Member | null> {
+    const { data, error } = await this.supabase.from('member').select('*').eq('email', email).single();
+
+    if (error) {
+      // 데이터가 없을 때는 null 반환 (에러가 아님)
+      if (error.code === 'PGRST116') {
+        return null;
+      }
+      throw new Error(error.message);
+    }
+
+    return data;
+  }
+
+  async findAllMentor(): Promise<MemberMentor[]> {
+    const { data, error } = await this.supabase
+      .from('member')
+      .select(
+        `
+      id,name,email,img,nickname,grade, point, type,
+      mentor_application(level, company),
+      review(rating)
+      `,
+      )
+      .eq('type', 1);
+
+    if (error) throw new Error(error.message);
+
+    return data;
+  }
+
+  async updatePassword(email: string, password: string): Promise<Member> {
+    const { data, error } = await this.supabase
+      .from('member')
+      .update({ password: password })
+      .eq('email', email)
+      .select()
+      .single();
 
     if (error) throw new Error(error.message);
 

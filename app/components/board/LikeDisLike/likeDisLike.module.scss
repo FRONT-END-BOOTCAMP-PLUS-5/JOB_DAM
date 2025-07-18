@@ -1,0 +1,30 @@
+@use '../../../styles/mixin';
+
+.container{
+  @include mixin.flexCenter(row);
+  gap: 10px;
+  margin-bottom: 10px;
+  .like_box, .dislike_box{
+    @include mixin.flexCenter(column);
+    background-color: #fff;
+    border: 1px solid #c5c6cc;
+    float: left;
+    width: 60px;
+    height: 51px;
+    text-align: center;
+    color: #f3614c;
+    border-radius: 4px;
+    cursor: pointer;
+
+    span{
+      font-weight: bold;
+    }
+
+
+  }
+  button:active{
+    transform: scale(0.9);
+    background-color: #1a70dc;
+    box-shadow: 0 2px 25px rgba(26, 112, 220, .3607843137);
+  }
+}

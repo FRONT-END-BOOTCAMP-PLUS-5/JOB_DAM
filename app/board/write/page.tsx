@@ -7,6 +7,9 @@ import Button from '@/app/components/common/Button';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { CircularProgress } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/store/store';
+import { toast, ToastContainer, Slide } from 'react-toastify';
 
 export default function BoardWrite(){
   const [getTitleVal, setTitleVal] = useState('')
@@ -17,6 +20,8 @@ export default function BoardWrite(){
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
 
+  const member = useSelector((state: RootState) => state.login.member);
+
   const router = useRouter()
 
   const handleWrite = async() => {
@@ -26,7 +31,7 @@ export default function BoardWrite(){
 
     formData.append("title", getTitleVal)
     formData.append("content", getContentVal)
-    formData.append("memberId", "0bd61fbf-71fd-44e1-a590-1e53af363c3c") //테스트 계정
+    formData.append("memberId", member.id) //테스트 계정
     const result= await fetch('/api/question/write', {
       method: "POST",
       body: formData,
@@ -38,6 +43,29 @@ export default function BoardWrite(){
       router.push(`/board/${id}`)
     }
   }
+
+  useEffect(() => {
+    if(!member.id){
+      toast.error('로그인 후 이용가능 합니다.', {
+        position: "top-center",
+        autoClose: false,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: 0,
+        theme: "light",
+        transition: Slide,
+        toastId: 1,
+        onOpen: () => {
+          setTimeout(() => {
+            return router.push("/login")
+          },1000)
+        }
+      });
+
+    }
+  },[])
 
   useEffect(() => {
     const res = !(getTitleVal.trim() != '' && getContentVal.trim() != '')
@@ -83,6 +111,7 @@ export default function BoardWrite(){
                 }}
         />
       </section>
+      <ToastContainer />
     </main>
   );
 };

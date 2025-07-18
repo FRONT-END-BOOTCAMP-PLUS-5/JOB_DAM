@@ -3,7 +3,6 @@
 import Input from '@/app/components/common/Input';
 import { useForm, useWatch } from 'react-hook-form';
 import Link from 'next/link';
-import Button from '@/app/components/common/Button/index';
 import ImageForm from '@/app/components/common/ImageForm';
 import { ToastContainer } from 'react-toastify';
 import { sign_up_form_type } from '@/app/types/signup/signup';
@@ -19,7 +18,7 @@ export default function SignupPage() {
     handleSubmit,
     setValue,
     control,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<sign_up_form_type>({
     mode: 'onBlur',
     defaultValues: {
@@ -42,12 +41,11 @@ export default function SignupPage() {
   return (
     <article className={styles.signup_page_container}>
       <div className={styles.signup_page_container_background}>
-        <header className={styles.signup_title_container}>
-          <h1 className={styles.signup_title_text}>회원가입</h1>
-          <p>당신의 커리어 여정을 함께 시작하세요</p>
-        </header>
-
         <form className={styles.signup_container} onSubmit={handleSubmit(onSubmit)}>
+          <header className={styles.signup_title_container}>
+            <h1 className={styles.signup_title_text}>회원가입</h1>
+            <p>당신의 커리어 여정을 함께 시작하세요</p>
+          </header>
           <ImageForm register={register} setValue={setValue} errors={errors} />
           <div className={styles.signup_form_container}>
             <Input
@@ -100,33 +98,36 @@ export default function SignupPage() {
               required
               type="password"
             />
-          </div>
 
-          <div className={styles.signup_check_box_container}>
-            <input type="checkbox" className={styles.signup_check_box} {...register('service_terms', {})} />
-            <p>
-              (필수) <span className={styles.signup_check_box_text}>서비스 이용약관</span>에 동의합니다
-            </p>
-          </div>
+            <div className={styles.signup_check_box_container}>
+              <input type="checkbox" className={styles.signup_check_box} {...register('service_terms', {})} />
+              <p>
+                (필수) <span className={styles.signup_check_box_text}>서비스 이용약관</span>에 동의합니다
+              </p>
+            </div>
 
-          <div className={styles.signup_check_box_container}>
-            <input type="checkbox" className={styles.signup_check_box} {...register('privacy_terms', {})} />
-            <p>
-              (필수) <span className={styles.signup_check_box_text}>개인정보 처리방침</span>에 동의합니다
-            </p>
-          </div>
+            <div className={styles.signup_check_box_container}>
+              <input type="checkbox" className={styles.signup_check_box} {...register('privacy_terms', {})} />
+              <p>
+                (필수) <span className={styles.signup_check_box_text}>개인정보 처리방침</span>에 동의합니다
+              </p>
+            </div>
 
-          <div className={styles.signup_check_box_container}>
-            <input type="checkbox" className={styles.signup_check_box} {...register('marketing_terms')} />
-            <p className={styles.signup_check_text}>(선택) 마케팅 정보 수신에 동의합니다</p>
-          </div>
+            <div className={styles.signup_check_box_container}>
+              <input type="checkbox" className={styles.signup_check_box} {...register('marketing_terms')} />
+              <p className={styles.signup_check_text}>(선택) 마케팅 정보 수신에 동의합니다</p>
+            </div>
 
-          <Button type="submit" typeStyle="submit" text="회원가입" />
+            <button type="submit" disabled={isSubmitting} className={styles.signup_button}>
+              회원가입
+            </button>
+          </div>
 
           <span className={styles.signup_login_link}>
             이미 회원이신가요?
             <Link href="/login">로그인</Link>
           </span>
+
           <ToastContainer autoClose={1000} role="alert" />
         </form>
       </div>

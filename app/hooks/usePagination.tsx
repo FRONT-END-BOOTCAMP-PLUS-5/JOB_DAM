@@ -14,7 +14,8 @@ interface IProps {
     deletedAt?: string
     updatedAt?: string
     categoryId: number
-    recommend: number
+    likeNum: number
+    dislikeNum: number
     view: number
     member: {
         id: string

@@ -22,4 +22,12 @@ export const chatroomService = {
 
     return data.status;
   },
+
+  getOneChatRoom: async (created_member_id: string) => {
+    const { data, error } = await axios.get('/api/chatroom?id=' + created_member_id).catch((error) => error);
+
+    if (error) throw new Error(error.message);
+
+    return data.result;
+  },
 };

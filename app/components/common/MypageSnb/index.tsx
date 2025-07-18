@@ -4,18 +4,10 @@ import styles from './mypageSnb.module.scss';
 const MYPAGE_SNB = [
   { name: '계정', links: [{ text: '내 정보 보기', href: '/mypage' }] },
   {
-    name: '나의 질문',
-    links: [
-      { text: '작성한 질문', href: '/question' },
-      { text: '좋아요 누른 질문', href: '/mypage/like/question' },
-    ],
-  },
-  {
     name: '멘토 정보',
     links: [
       { text: '멘토 신청하기', href: '/mypage/application' },
       { text: '작성한 리뷰', href: '/mypage/review' },
-      { text: '좋아요 누른 멘토', href: '/mypage/like/mentor' },
     ],
   },
   {

@@ -1,11 +1,12 @@
-import { ApplicationMentor } from '@/app/types/mypage/mentor';
+import { ApplicationMentor, ApplicationMentorList } from '@/app/types/mypage/mentor';
 import axios from 'axios';
 
-export const mentorService = () => {
-  const applicationMentor = async (mentorApplication: ApplicationMentor) => {
-    const { company, level, workPeriod } = mentorApplication;
+export const mentorService = {
+  applicationMentor: async (mentorApplication: ApplicationMentor) => {
+    const { id, company, level, workPeriod } = mentorApplication;
 
     const param = {
+      member_id: id,
       company: company,
       level: level,
       work_period: workPeriod,
@@ -17,18 +18,17 @@ export const mentorService = () => {
       data: data,
       error: error && error.message,
     };
-  };
+  },
 
-  const getMentorApplication = async (memberId?: string) => {
+  getMentorApplication: async (memberId?: string): Promise<{ mentor: ApplicationMentorList[] }> => {
     const { data, error } = await axios.get(`/api/mentor${memberId ? '?id=' + memberId : ''}`).catch((error) => error);
 
-    return {
-      data: data,
-      error: error && error.message,
-    };
-  };
+    if (error) throw new Error(error.message);
 
-  const getMentorList = async () => {
+    return data.result;
+  },
+
+  getMentorList: async () => {
     const { data, error } = await axios.get('/api/mentor/search').catch((error) => error);
 
     if (error) throw new Error(error.message);
@@ -36,11 +36,5 @@ export const mentorService = () => {
     return {
       data,
     };
-  };
-
-  return {
-    applicationMentor,
-    getMentorApplication,
-    getMentorList,
-  };
+  },
 };
