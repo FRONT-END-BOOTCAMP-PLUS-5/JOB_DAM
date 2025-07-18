@@ -10,12 +10,9 @@ import { RootState } from '../store/store';
 import { useSelector } from 'react-redux';
 import Image from 'next/image';
 import Spinner from '../components/common/Spinner';
-import { toast } from 'react-toastify';
-import { useRouter } from 'next/navigation';
 
 const MentorPage = () => {
   const member = useSelector((state: RootState) => state.login.member);
-  const router = useRouter();
 
   const [mentors, setMentors] = useState<Mentors[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -53,13 +50,6 @@ const MentorPage = () => {
     setChatRoomDescription('');
     setChatRoomMaxPeople(1);
   };
-
-  useEffect(() => {
-    if (!member.id) {
-      toast.warning('로그인 후 이용해주세요.');
-      router.push('/login');
-    }
-  }, [member]);
 
   useEffect(() => {
     getMentorList().then((res) => {
