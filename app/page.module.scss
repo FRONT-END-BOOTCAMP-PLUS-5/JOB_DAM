@@ -186,3 +186,11 @@
     text-align: center;
 }
 
+.up {
+    background:
+		linear-gradient(to bottom, transparent 80px, #7C75CD 30px) 0 0 / 100vw 82px repeat-y,
+		linear-gradient(to right, transparent 80px, #7C75CD 30px) 0 0 / 82px 150vh repeat-x
+	    white,
+        linear-gradient(to bottom right, #687AE3, #764FA6);
+}
+
