@@ -30,8 +30,8 @@ export const validation = async (data: sign_up_form_type, router: AppRouterInsta
       toast.success('회원가입에 성공했습니다!', {
         position: 'top-right',
         autoClose: 1000,
+        onClose: () => router.push('/login'),
       });
-      router.push('/login');
     }
   } else {
     // 서버 에러 처리
