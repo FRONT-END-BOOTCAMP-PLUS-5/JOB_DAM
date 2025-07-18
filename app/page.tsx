@@ -64,8 +64,8 @@ function StartPage(){
                     </div>
                     <div className={styles.up_left_center}>
                         <div className={styles.up_left_h4}>
-                            <h5>전문가 멘토링부터 실무 Q&A까지, <br />
-                            성장하는 개발자들의 든든한 파트너가 되어드립니다.</h5>
+                            <h4>전문가 멘토링부터 실무 Q&A까지, <br />
+                            성장하는 개발자들의 든든한 파트너가 되어드립니다.</h4>
                         </div>
                     </div>
                     <nav className={styles.up_left_flex}>
