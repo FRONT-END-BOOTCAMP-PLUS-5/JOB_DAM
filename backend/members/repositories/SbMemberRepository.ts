@@ -26,8 +26,8 @@ export class SbMemberRepository implements MemberRepository {
   async findTopGradeMembers(): Promise<MemberMentorRank[]> {
     const { data, error } = await this.supabase
       .from('member')
-      .select('id, name, img, grade, nickname, mentor_application!inner (company,level)')
-      .order('grade', { ascending: false })
+      .select('id, name, img, point, nickname, mentor_application!inner (company,level)')
+      .order('point', { ascending: false })
       .limit(5);
 
     if (error) throw new Error(error.message);
