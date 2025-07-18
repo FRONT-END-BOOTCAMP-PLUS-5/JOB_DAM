@@ -18,7 +18,6 @@ import { chatroomService } from '../services/chatroom/chatroom';
 import Spinner from '../components/common/Spinner';
 import { createClient } from '../utils/supabase/client';
 import ConfirmModal from '../components/chat/ConfirmModal';
-import { toast } from 'react-toastify';
 
 const ChatPage = () => {
   const member = useSelector((state: RootState) => state.login.member);
@@ -140,11 +139,7 @@ const ChatPage = () => {
   const allMessages = useMemo(() => {
     const mergedMessages = [...initialMessage, ...realtimeMessages];
 
-    const uniqueMessages = mergedMessages.filter(
-      (message, index, self) => index === self.findIndex((m) => m.id === message.id),
-    );
-
-    return uniqueMessages;
+    return mergedMessages;
   }, [initialMessage, realtimeMessages]);
 
   const initChatRoom = async (memberId: string) => {
@@ -153,7 +148,6 @@ const ChatPage = () => {
         // 현재 진행중인 채팅방 filter
         const progressFilter = res.filter((item) => item?.progress !== 0);
         setChatRoom(progressFilter);
-
         onClickChatRoom(progressFilter[0]);
         setChatRoomName(`chat-room-${progressFilter[0].id}`);
 
@@ -162,6 +156,7 @@ const ChatPage = () => {
           const paramFilter = progressFilter.filter((v) => v.id === Number(param.get('id')))[0];
 
           onClickChatRoom(paramFilter);
+          setChatRoomName(`chat-room-${paramFilter.id}`);
         }
       }
     });
@@ -178,9 +173,6 @@ const ChatPage = () => {
   useEffect(() => {
     if (member.id) {
       initChatRoom(member.id);
-    } else {
-      toast.warning('로그인 후 이용해주세요.');
-      router.push('/login');
     }
   }, [member]);
 
@@ -189,7 +181,7 @@ const ChatPage = () => {
   }, [allMessages, scrollToBottom]);
 
   useEffect(() => {
-    const channel = supabase.channel('end_chat_room' + member?.id);
+    const channel = supabase.channel(`end_chat_room`);
 
     channel
       .on(
@@ -198,7 +190,6 @@ const ChatPage = () => {
           event: 'UPDATE',
           schema: 'public',
           table: 'chat_room',
-          filter: `id=in.(${chatRoom?.map((item) => item.id).join(',')})`,
         },
         () => {
           initChatRoom(member?.id);
