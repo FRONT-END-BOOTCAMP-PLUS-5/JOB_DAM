@@ -19,12 +19,13 @@ export class SbMentorRepository implements MentorRepository {
     this.clientData = clientData;
   }
 
-  async insertMentor(): Promise<Mentor> {
+  async insertMentor(member_id: string): Promise<Mentor> {
     const { data, error } = await this.supabase
       .from(MENTOR_TABLE_NAME)
-      .insert([{ ...this.clientData, member_id: '0bd61fbf-71fd-44e1-a590-1e53af363c3c' }])
+      .insert({ ...this.clientData, member_id: member_id })
       .select('*')
       .single();
+
     if (error) throw new Error(error.message);
     return data as Mentor;
   }
@@ -36,11 +37,14 @@ export class SbMentorRepository implements MentorRepository {
     return data as Mentor[];
   }
 
-  async findOne(member_id: string): Promise<Mentor> {
-    const { data, error } = await this.supabase.from(MENTOR_TABLE_NAME).select().eq('member_id', member_id).single();
+  async findOne(member_id: string): Promise<Mentor[]> {
+    const { data, error } = await this.supabase
+      .from(MENTOR_TABLE_NAME)
+      .select('member_id, company, level, work_period, created_at')
+      .eq('member_id', member_id);
 
     if (error) throw new Error(error.message);
 
-    return data as Mentor;
+    return data as Mentor[];
   }
 }

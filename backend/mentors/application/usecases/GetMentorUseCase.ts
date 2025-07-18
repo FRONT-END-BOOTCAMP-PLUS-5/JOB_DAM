@@ -18,8 +18,6 @@ export class GetMentorUseCase {
       level: mentor.level,
       workPeriod: mentor.work_period,
       createdAt: mentor.created_at,
-      deletedAt: mentor.deleted_at,
-      updatedAt: mentor.updated_at,
     }));
 
     return {

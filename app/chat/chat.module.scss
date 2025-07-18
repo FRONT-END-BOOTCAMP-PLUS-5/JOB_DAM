@@ -243,19 +243,28 @@
   }
 }
 
-.not_found_data {
+.not_found_container {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 60px 0;
+  width: 100%;
+  height: 100%;
+
+  & .not_found_data {
+    padding: 52px;
+    background: rgba(102, 126, 234, 0.1);
+    border-radius: 8px;
+    @include mixin.flexCenter(column);
+  }
 
   & h3 {
     margin-bottom: 12px;
   }
 
   & h4 {
-    margin-bottom: 8px;
+    margin-bottom: 24px;
   }
 
   & .mentor_move_button {

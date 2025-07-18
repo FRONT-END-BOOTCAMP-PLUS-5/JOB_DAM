@@ -1,6 +1,6 @@
 import { MemberRepository } from '@/backend/members/domain/repositories/MemberRepository';
-import { MemberDto } from '../dtos/MemberDto';
-import { Member } from '@/backend/members/domain/entities/Member';
+import { MemberMentor } from '../../domain/entities/MemberMentor';
+import { MemberMentorDto } from '../dtos/MemberMentor';
 
 export class GetMentorListUseCase {
   private repository: MemberRepository;
@@ -9,23 +9,19 @@ export class GetMentorListUseCase {
     this.repository = repository;
   }
 
-  async execute(): Promise<{ members: MemberDto[] }> {
-    const members: Member[] = await this.repository.findAllMentor();
+  async execute(): Promise<{ members: MemberMentorDto[] }> {
+    const members: MemberMentor[] = await this.repository.findAllMentor();
 
-    // Fix: Map to MemberDto, not MemberData, and include all required properties
-    const memberDtos: MemberDto[] = members.map((member) => ({
+    const memberDtos: MemberMentorDto[] = members.map((member) => ({
       id: member.id,
-      name: member.name,
       email: member.email,
-      createdAt: member.created_at,
       img: member.img,
+      name: member.name,
       nickname: member.nickname,
-      password: member.password,
-      updatedAt: member.updated_at,
       grade: member.grade,
       point: member.point ?? 0,
       type: member.type,
-      deletedAt: member.deleted_at,
+      mentorApplication: member.mentor_application,
     }));
 
     return {

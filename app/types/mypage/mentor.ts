@@ -1,14 +1,14 @@
 export interface ApplicationMentor {
+  id: string;
   company: string;
   level: string;
   workPeriod: string;
 }
 
-export interface ApplicationMentorInfo {
+export interface ApplicationMentorList {
   memberId: string;
   level: string;
   workPeriod: string;
   createdAt: string;
-  deletedAt: string;
-  updatedAt: string;
+  company: string;
 }

@@ -1,14 +1,14 @@
 export interface Mentors {
   id: string;
-  name: string;
   email: string;
-  password: string;
-  createdAt: string;
-  updatedAt: string | null;
   img: string | null;
+  name: string;
   nickname: string;
-  grade: number | null;
-  point: number | null;
-  type: number | null;
-  deletedAt: string | null;
+  grade: number;
+  point: number;
+  type: number;
+  mentorApplication: {
+    company: string;
+    level: string;
+  };
 }

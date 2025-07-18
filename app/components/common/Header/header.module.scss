@@ -14,7 +14,7 @@
   }
 
   &_nav {
-    width: calc(100% - (100px + 180px));
+    flex: 1;
     gap: 24px;
     font-size: 14px;
     @include mixin.flexCenter(row);
