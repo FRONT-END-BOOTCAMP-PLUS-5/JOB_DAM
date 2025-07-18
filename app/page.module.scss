@@ -19,6 +19,10 @@
     color: white;
 }
 
+.up_left_h3 {
+    font-weight: bold;
+}
+
 .up_left_center {
     padding-top: 15px;
 }
@@ -168,21 +172,22 @@
 
 .current_first_line {
     display: flex;
-    height:45%;
+    height: 40%;
     align-items: center;
-    justify-content: center; 
+    justify-content: center;
 }
 
 .current_second_line {
     display: flex;
-    height:45%;
+    height:40%;
+    align-items: center;
     justify-content: center; 
 }
 
 .current_number {
     color: #FFD602;
     font-weight: bold;
-    font-size: 30px;
+    font-size: clamp(20px, 2vw, 40px);
     display: flex;
     align-items: center; 
     justify-content: center;

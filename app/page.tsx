@@ -59,13 +59,13 @@ function StartPage(){
                 <section className={styles.up_left}>
                     <h1 className={styles.d_none}> 홍보 글 </h1>
                     <div className={styles.up_left_h1}>
-                        당신의 커리어 여정을 <br />
-                        함께 나아가세요
+                        <h3 className={styles.up_left_h3}>당신의 커리어 여정을 <br />
+                        함께 나아가세요</h3>
                     </div>
                     <div className={styles.up_left_center}>
                         <div className={styles.up_left_h4}>
-                            전문가 멘토링부터 실무 Q&A까지, <br />
-                            성장하는 개발자들의 든든한 파트너가 되어드립니다.
+                            <h5>전문가 멘토링부터 실무 Q&A까지, <br />
+                            성장하는 개발자들의 든든한 파트너가 되어드립니다.</h5>
                         </div>
                     </div>
                     <nav className={styles.up_left_flex}>
@@ -83,22 +83,22 @@ function StartPage(){
                     <h3 className={styles.current}> 📊 실시간 현황 </h3>
                     <div className={styles.current_first_line}>
                         <div className={styles.current_option1}>
-                            <p className={styles.current_number}> {memberNum} </p>
-                            <p className={styles.current_description}> 멤버 수 </p>
+                            <h1 className={styles.current_number}> {memberNum} </h1>
+                            <h5 className={styles.current_description}> 멤버 수 </h5>
                         </div>
                         <div className={styles.current_option2}>
-                            <p className={styles.current_number}> {questionNum} </p>
-                            <p className={styles.current_description}> 질문 수 </p>
+                            <h1 className={styles.current_number}> {questionNum} </h1>
+                            <h5 className={styles.current_description}> 질문 수 </h5>
                         </div>
                     </div>
                     <div className={styles.current_second_line}>
                         <div className={styles.current_option3}>
-                            <p className={styles.current_number}>{mentorNum}</p>
-                            <p className={styles.current_description}> 멘토 수 </p>
+                            <h1 className={styles.current_number}>{mentorNum}</h1>
+                            <h5 className={styles.current_description}> 멘토 수 </h5>
                         </div>
                         <div className={styles.current_option4}>
-                            <p className={styles.current_number}>{mentorRoomNum}</p>
-                            <p className={styles.current_description}> 멘토링 방 수 </p>
+                            <h1 className={styles.current_number}>{mentorRoomNum}</h1>
+                            <h5 className={styles.current_description}> 멘토링 방 수 </h5>
                         </div>
                     </div>
                 </section>
