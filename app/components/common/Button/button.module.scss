@@ -15,7 +15,8 @@
   }
 }
 
-.search, .send{
+.search,
+.send {
   @include mixin.customButton(60px, 30px);
   @include mixin.flexCenter(row);
   border: 2px solid #667eea;
@@ -33,7 +34,7 @@
   }
 }
 
-.send{
+.send {
   > .text {
     font-size: 12px;
   }
@@ -58,7 +59,7 @@
 
 .submit {
   width: 100%;
-  margin-top: 5%;
+  margin: 3%;
   padding: 12px 16px;
   border-radius: 10px;
   border: none;
@@ -88,26 +89,25 @@
   color: #fff;
 }
 
-
-.write_non_disabled, .write_disabled{
+.write_non_disabled,
+.write_disabled {
   width: 100%;
   background-color: #ccc;
   height: 50px;
   border-radius: 6px;
   font-size: 19px;
   margin-bottom: 20px;
-  span{
+  span {
     font-weight: bold;
   }
 }
 
-.write_non_disabled{
+.write_non_disabled {
   background-image: linear-gradient(90deg, #6876e0 30%, #7354ad 60%);
   color: #fff;
 }
 
-
-.choose{
+.choose {
   max-width: 200px;
   height: 32px;
   padding: 5px;
@@ -118,8 +118,3 @@
     color: #fff;
   }
 }
-
-
-
-
-
