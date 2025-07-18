@@ -7,7 +7,6 @@ import { Chat, ChatRoom, UpdateChatPointRef } from '../types/mypage/chat';
 import dayjs from 'dayjs';
 import { RootState } from '../store/store';
 import { useSelector } from 'react-redux';
-import { Member } from '../store/isLogin/loginSlice';
 import { Button, Chip, Switch, TextField } from '@mui/material';
 import { useChatScroll } from '../hooks/useChatScroll';
 import { useRealtimeChat } from '../hooks/useRealTimeChat';
@@ -26,7 +25,6 @@ const ChatPage = () => {
   const supabase = createClient();
   const router = useRouter();
 
-  const [user, setUser] = useState<Member>(member);
   const [chatRoom, setChatRoom] = useState<ChatRoom[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [initialMessage, setIntialMessage] = useState<Chat[]>([]);
@@ -49,8 +47,8 @@ const ChatPage = () => {
     isConnected,
   } = useRealtimeChat({
     roomName: chatRoomName,
-    username: user?.name,
-    userId: user?.id,
+    username: member?.name,
+    userId: member?.id,
     type: chatType,
   });
 
@@ -68,10 +66,10 @@ const ChatPage = () => {
   const handleSendMessage = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
       if (!selectChatRoom?.id) return;
-      if (selectChatRoom?.progress === 2) return initChatRoom(user?.id);
+      if (selectChatRoom?.progress === 2) return initChatRoom(member?.id);
 
       const chatRef = {
-        member_id: user?.id,
+        member_id: member?.id,
         chat_room_id: selectChatRoom?.id,
         content: newMessage,
         type: chatType,
@@ -96,7 +94,7 @@ const ChatPage = () => {
       });
     },
 
-    [chatType, insertChat, isConnected, newMessage, selectChatRoom?.id, sendMessage, updatePointMember, user?.id],
+    [chatType, insertChat, isConnected, newMessage, selectChatRoom?.id, sendMessage, updatePointMember, member?.id],
   );
 
   const onChangeMessage = (value: string) => {
@@ -113,7 +111,7 @@ const ChatPage = () => {
 
     updateChatRoom(updateChatRoomRef).then((res) => {
       if (res.status === 200) {
-        initChatRoom(user?.id);
+        initChatRoom(member?.id);
         setSelectChatRoom(ChatRoomValue);
         setChatMembers({});
         setReviewMoveModal(true);
@@ -172,8 +170,6 @@ const ChatPage = () => {
 
   // 유저 정보 셋팅
   useEffect(() => {
-    setUser(member);
-
     if (member.id) {
       initChatRoom(member.id);
     }
@@ -184,7 +180,7 @@ const ChatPage = () => {
   }, [allMessages, scrollToBottom]);
 
   useEffect(() => {
-    const channel = supabase.channel('end_chat_room' + user?.id);
+    const channel = supabase.channel('end_chat_room' + member?.id);
 
     channel
       .on(
@@ -195,8 +191,9 @@ const ChatPage = () => {
           table: 'chat_room',
           filter: `id=in.(${chatRoom?.map((item) => item.id).join(',')})`,
         },
-        () => {
-          initChatRoom(user?.id);
+        (payload) => {
+          console.log('payload', payload);
+          initChatRoom(member?.id);
           setSelectChatRoom(ChatRoomValue);
         },
       )
@@ -264,7 +261,7 @@ const ChatPage = () => {
           <section className={styles.chat_section}>
             <hgroup className={styles.section_title}>
               <Chip className={styles.right_chat_room_title} variant="filled" label={selectChatRoom?.title} />
-              {selectChatRoom?.createMember?.id !== user?.id && selectChatRoom?.progress !== 2 && (
+              {selectChatRoom?.createMember?.id !== member?.id && selectChatRoom?.progress !== 2 && (
                 <Button variant="contained" color="warning" onClick={() => setChatEndModal(true)}>
                   종료하기
                 </Button>
@@ -275,7 +272,7 @@ const ChatPage = () => {
                 return (
                   <section
                     key={item?.content + index}
-                    className={`${styles.chat_item} ${item?.memberId === user?.id && styles.my_chat}`}
+                    className={`${styles.chat_item} ${item?.memberId === member?.id && styles.my_chat}`}
                   >
                     <section className={styles.content_top}>
                       <div className={styles.chat_title}>
@@ -293,7 +290,7 @@ const ChatPage = () => {
                       <div className={styles.content_bottom_title}>
                         {item?.type === 1 && <Chip label="질문" color="primary" variant="filled" />}
                         {item?.type === 2 && <Chip label="답변" color="primary" variant="filled" />}
-                        {item?.type === 1 && selectChatRoom?.createMember?.id === user?.id && (
+                        {item?.type === 1 && selectChatRoom?.createMember?.id === member?.id && (
                           <Button color="secondary" onClick={() => setChatType(2)}>
                             답변하기
                           </Button>
@@ -315,7 +312,7 @@ const ChatPage = () => {
                     color={`${chatType !== 0 ? 'primary' : 'default'}`}
                   />
 
-                  {selectChatRoom?.createMember?.id !== user?.id && (
+                  {selectChatRoom?.createMember?.id !== member?.id && (
                     <Switch
                       aria-label="Switch"
                       checked={chatType === 1 ? true : false}

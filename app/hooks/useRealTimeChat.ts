@@ -22,6 +22,8 @@ export function useRealtimeChat({ roomName, username, userId, type }: UseRealtim
   useEffect(() => {
     const newChannel = supabase.channel(roomName);
 
+    console.log('create-channel', roomName);
+
     setMessages([]);
 
     newChannel
