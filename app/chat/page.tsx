@@ -139,7 +139,11 @@ const ChatPage = () => {
   const allMessages = useMemo(() => {
     const mergedMessages = [...initialMessage, ...realtimeMessages];
 
-    return mergedMessages;
+    const uniqueMessages = mergedMessages.filter(
+      (message, index, self) => index === self.findIndex((m) => m.id === message.id),
+    );
+
+    return uniqueMessages;
   }, [initialMessage, realtimeMessages]);
 
   const initChatRoom = async (memberId: string) => {
