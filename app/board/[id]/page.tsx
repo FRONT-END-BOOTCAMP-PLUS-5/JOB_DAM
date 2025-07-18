@@ -90,7 +90,7 @@ export default function Item(){
         setComment(copyJson)
     }
 
-    const sendMessage = () => {
+    const sendMessage = async () => {
         if(!inputValRef['current']) return
 
         setSendIsLoading(true)
@@ -98,7 +98,7 @@ export default function Item(){
         formData.append("content", `${inputValRef['current']}`)
         formData.append("memberId", member.id)
         formData.append("question_id",  `${id}`)
-        fetch(`/api/question/item/chat?item=${id}`, {
+        await fetch(`/api/question/item/chat?item=${id}`, {
             method: "POST",
             body: formData,
         })
