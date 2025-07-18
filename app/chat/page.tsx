@@ -273,9 +273,6 @@ const ChatPage = () => {
                     key={item?.content + index}
                     className={`${styles.chat_item} ${item?.memberId === member?.id && styles.my_chat}`}
                   >
-                    <div>{'isConnected: ' + isConnected}</div>
-                    <div>{'chatRoomName: ' + chatRoomName}</div>
-
                     <section className={styles.content_top}>
                       <div className={styles.chat_title}>
                         <span className={styles.profile_image}>
