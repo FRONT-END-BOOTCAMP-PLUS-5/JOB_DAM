@@ -19,6 +19,10 @@
     color: white;
 }
 
+.up_left_h3 {
+    font-weight: bold;
+}
+
 .up_left_center {
     padding-top: 15px;
 }
@@ -59,20 +63,16 @@
 .up_right {
     background-color: rgba(255, 255, 255, 0.2);
     width: 30%;
-    height: 30vh;
+    height: 35vh;
     border-radius: 10px;
     margin-left: 10%;
-    margin-top: 6.5%;
-}
-
-.current {
-    color: white;
+    margin-top: 5.5%;
 }
 
 .why_jobdam {
     text-align: center;
     color: #7455AF;
-    font-size: 18px;
+    font-size: 25px;
     padding-bottom: 15px;
 }
 
@@ -93,9 +93,11 @@
 
 .first_box {
     width: 23%;
-    border: 0.5px solid gray;
+    border: 0px;
+    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.25);
     margin-left: 8%;
     padding-bottom: 60px;
+    border-radius: 13px;
 }
 
 .first_box_logo {
@@ -122,7 +124,7 @@
 }
 
 .down_three_boxes {
-    margin-top: 20px;
+    margin-top: 40px;
     display: flex;
     margin-bottom: 50px;
 }
@@ -136,14 +138,19 @@
     color: white;
     font-weight: bold;
     text-align: center;
-    padding-top: 95px;
-    font-size: 25px;
+    padding-top: 80px;
+    font-size: 40px;
 }
 
 .bottom_p {
     color: white;
     text-align: center;
-    padding-top: 15px;
+    padding-top: 25px;
+}
+
+.bottom_start_now_nav {
+    display: flex;
+    justify-content: center;
 }
 
 .bottom_start_now {
@@ -151,14 +158,13 @@
     color: #6879E2;
     border-radius: 5px;
     border: 0px;
-    width: 15%;
+    width: 10%;
     display: flex;
     align-items: center;
     justify-content: center;
     height: 40px;
     font-weight: bold;
-    padding: 15px 0px 15px 0px;
-    margin-left: 42%;
+    padding: 25px 0px 25px 0px;
     margin-top: 30px;
 }
 
@@ -166,22 +172,49 @@
     font-weight: bold;
     padding-left: 7%;
     padding-top: 20px;
+    color: white;
 }
 
 .current_first_line {
     display: flex;
-    margin-top: 15px;
+    height: 40%;
+    align-items: center;
+    justify-content: center;
+}
+
+.current_second_line {
+    display: flex;
+    height:40%;
+    align-items: center;
+    justify-content: center; 
 }
 
 .current_number {
     color: #FFD602;
     font-weight: bold;
-    font-size: 30px;
-    text-align: center;
+    font-size: clamp(20px, 2vw, 40px);
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+    height: auto;
+    margin: 0; 
+    position: static;
 }
 
-.current_option {
-    padding-left: 25%;
+.current_option1 {
+    width:50%;
+}
+
+.current_option2 {
+    width:50%;
+}
+
+.current_option3 {
+    width:50%;
+}
+
+.current_option4 {
+    width:50%;
 }
 
 .current_description {
@@ -189,6 +222,3 @@
     text-align: center;
 }
 
-.current_option_room_num {
-    padding-left: 21%;
-}
