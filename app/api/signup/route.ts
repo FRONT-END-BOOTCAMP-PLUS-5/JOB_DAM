@@ -15,8 +15,8 @@ export async function POST(request: NextRequest) {
     email: body.email,
     password: passwordCrypto(body.password),
     img: body.img || null,
-    type: body.type,
-    grade: body.grade,
+    type: body.type || 0,
+    grade: body.grade || 0,
     point: body.point || 0,
   };
 

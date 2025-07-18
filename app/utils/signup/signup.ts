@@ -1,4 +1,3 @@
-import { TOAST_MESSAGES } from '@/app/constants/signup';
 import { signUpService } from '@/app/services/signup/signup';
 import { sign_up_form_type } from '@/app/types/signup/signup';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
@@ -20,14 +19,15 @@ export const validation = async (data: sign_up_form_type, router: AppRouterInsta
   const memberData = data;
 
   const signUpResponse = await signUpService(memberData);
+  console.log(signUpResponse);
 
-  if (signUpResponse.status === 200) {
+  if (signUpResponse.data.status === 200) {
     if (signUpResponse.data.message) {
       // 중복 체크 실패
       toast.error(signUpResponse.data.message);
     } else {
       // 회원가입 성공
-      toast.success(TOAST_MESSAGES.SUCCESS, {
+      toast.success('회원가입에 성공했습니다!', {
         position: 'top-right',
         autoClose: 1000,
       });
@@ -35,6 +35,6 @@ export const validation = async (data: sign_up_form_type, router: AppRouterInsta
     }
   } else {
     // 서버 에러 처리
-    toast.error(TOAST_MESSAGES.NETWORK_ERROR);
+    toast.error(signUpResponse.data.message);
   }
 };
