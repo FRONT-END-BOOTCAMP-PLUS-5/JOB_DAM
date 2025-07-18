@@ -139,9 +139,7 @@ const ChatPage = () => {
   const allMessages = useMemo(() => {
     const mergedMessages = [...initialMessage, ...realtimeMessages];
 
-    const sortedMessages = mergedMessages.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
-
-    return sortedMessages;
+    return mergedMessages;
   }, [initialMessage, realtimeMessages]);
 
   const initChatRoom = async (memberId: string) => {
@@ -150,6 +148,8 @@ const ChatPage = () => {
         // 현재 진행중인 채팅방 filter
         const progressFilter = res.filter((item) => item?.progress !== 0);
         setChatRoom(progressFilter);
+        setChatRoomName(`chat-room-${progressFilter[0].id}`);
+        onClickChatRoom(progressFilter[0]);
 
         // param에 id가 있으면 채팅방 셋팅
         if (progressFilter.length > 0 && param.get('id')) {
@@ -191,8 +191,7 @@ const ChatPage = () => {
           table: 'chat_room',
           filter: `id=in.(${chatRoom?.map((item) => item.id).join(',')})`,
         },
-        (payload) => {
-          console.log('payload', payload);
+        () => {
           initChatRoom(member?.id);
           setSelectChatRoom(ChatRoomValue);
         },
@@ -223,7 +222,7 @@ const ChatPage = () => {
               <li key={item?.title + item?.id + index} className={styles.chat_room_item}>
                 <button onClick={() => onClickChatRoom(item)}>
                   <span className={styles.profile_image}>
-                    <Image src={item?.createMember?.img} alt="프로필 이미지" fill />
+                    {item?.createMember?.img && <Image src={item?.createMember?.img ?? ''} alt="프로필 이미지" fill />}
                   </span>
                   <div className={styles.chat_room_title}>
                     <span className={styles.title}>
@@ -274,6 +273,9 @@ const ChatPage = () => {
                     key={item?.content + index}
                     className={`${styles.chat_item} ${item?.memberId === member?.id && styles.my_chat}`}
                   >
+                    <div>{'isConnected: ' + isConnected}</div>
+                    <div>{'chatRoomName: ' + chatRoomName}</div>
+
                     <section className={styles.content_top}>
                       <div className={styles.chat_title}>
                         <span className={styles.profile_image}>
