@@ -8,14 +8,13 @@ import { Mentors } from '../types/mentor/search';
 import { chatroomService } from '../services/chatroom/chatroom';
 import { RootState } from '../store/store';
 import { useSelector } from 'react-redux';
-import { Member } from '../store/isLogin/loginSlice';
 import Image from 'next/image';
 import Spinner from '../components/common/Spinner';
 
 const MentorPage = () => {
   const member = useSelector((state: RootState) => state.login.member);
+
   const [mentors, setMentors] = useState<Mentors[]>([]);
-  const [user, setUser] = useState<Member>(member);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectMentorId, setSelectMentorId] = useState('');
   const [chatRoomTitle, setChatRoomTitle] = useState('');
@@ -33,7 +32,7 @@ const MentorPage = () => {
       description: chatRoomDescription,
       created_member_id: selectMentorId,
       max_people: chatRoomMaxPeople,
-      member_id: user?.id,
+      member_id: member?.id,
     };
 
     await addChatRoom(chatRoomData).then((res) => {
@@ -51,10 +50,6 @@ const MentorPage = () => {
     setChatRoomDescription('');
     setChatRoomMaxPeople(1);
   };
-
-  useEffect(() => {
-    setUser(member);
-  }, [member]);
 
   useEffect(() => {
     getMentorList().then((res) => {
@@ -87,7 +82,7 @@ const MentorPage = () => {
                   <h3>포인트: {item?.point}</h3>
                 </section>
               </div>
-              {user?.id !== item?.id && user?.type !== 1 && (
+              {member?.id !== item?.id && member?.type !== 1 && (
                 <button
                   className={styles.apply_button}
                   onClick={() => {

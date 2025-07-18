@@ -148,7 +148,6 @@ const ChatPage = () => {
         // 현재 진행중인 채팅방 filter
         const progressFilter = res.filter((item) => item?.progress !== 0);
         setChatRoom(progressFilter);
-
         onClickChatRoom(progressFilter[0]);
         setChatRoomName(`chat-room-${progressFilter[0].id}`);
 
@@ -157,6 +156,7 @@ const ChatPage = () => {
           const paramFilter = progressFilter.filter((v) => v.id === Number(param.get('id')))[0];
 
           onClickChatRoom(paramFilter);
+          setChatRoomName(`chat-room-${paramFilter.id}`);
         }
       }
     });
@@ -181,7 +181,7 @@ const ChatPage = () => {
   }, [allMessages, scrollToBottom]);
 
   useEffect(() => {
-    const channel = supabase.channel('end_chat_room' + member?.id);
+    const channel = supabase.channel(`end_chat_room`);
 
     channel
       .on(
@@ -190,7 +190,6 @@ const ChatPage = () => {
           event: 'UPDATE',
           schema: 'public',
           table: 'chat_room',
-          filter: `id=in.(${chatRoom?.map((item) => item.id).join(',')})`,
         },
         () => {
           initChatRoom(member?.id);
@@ -274,9 +273,6 @@ const ChatPage = () => {
                     key={item?.content + index}
                     className={`${styles.chat_item} ${item?.memberId === member?.id && styles.my_chat}`}
                   >
-                    <div>{'isConnected: ' + isConnected}</div>
-                    <div>{'chatRoomName: ' + chatRoomName}</div>
-
                     <section className={styles.content_top}>
                       <div className={styles.chat_title}>
                         <span className={styles.profile_image}>
