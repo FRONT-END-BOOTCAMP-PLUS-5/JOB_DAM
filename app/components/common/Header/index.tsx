@@ -85,7 +85,7 @@ const Header = () => {
           )}
 
           {member.id && (
-            <section className={styles.mypage_section}>
+            <>
               <Link className={`${styles.button} ${styles.login}`} href="/mypage">
                 마이페이지
               </Link>
@@ -99,7 +99,7 @@ const Header = () => {
                   </Button>
                 </Badge>
               )}
-            </section>
+            </>
           )}
 
           <Modal open={modalAlarm} onClose={() => setModalAlarm(false)}>
