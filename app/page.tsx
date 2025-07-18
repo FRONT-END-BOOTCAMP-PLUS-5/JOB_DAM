@@ -58,32 +58,32 @@ function StartPage() {
         {
             logo: '👨🏻‍💻',
             title: '전문가 멘토링',
-            description: (<p>현업에서 활동하는 시니어 개발자들과 1:1 멘토<br/>링을 통해 실무 경험과 커리어 인사이트를 얻으<br/>세요.</p>),
+            description: (<p>현업에서 활동하는 시니어 개발자들과 1:1 멘토<br />링을 통해 실무 경험과 커리어 인사이트를 얻으<br />세요.</p>),
         },
         {
             logo: '💬',
             title: '실시간 Q&A',
-            description: (<p>막힌 부분이 있다면 언제든 질문하세요. 커뮤니<br/>티 전문가들이 신속하고 정확한 답변을 제공합<br/>니다.</p>),
+            description: (<p>막힌 부분이 있다면 언제든 질문하세요. 커뮤니<br />티 전문가들이 신속하고 정확한 답변을 제공합<br />니다.</p>),
         },
         {
             logo: '🎯',
             title: '맞춤형 성장 로드맵',
-            description: (<p>개인의 목표와 현재 수준에 맞는 학습 계획을<br/> 세우고, 단계별로 체계적인 성장을 이뤄나가세<br/>요.</p>),
+            description: (<p>개인의 목표와 현재 수준에 맞는 학습 계획을<br /> 세우고, 단계별로 체계적인 성장을 이뤄나가세<br />요.</p>),
         },
         {
             logo: '🤝',
             title: '네트워킹',
-            description: (<p>같은 분야의 개발자들과 네트워크를 형성하고,<br/> 서로의 경험을 공유하며 함께 성장하세요.</p>),
+            description: (<p>같은 분야의 개발자들과 네트워크를 형성하고,<br /> 서로의 경험을 공유하며 함께 성장하세요.</p>),
         },
         {
             logo: '📚',
             title: '실무 중심 콘텐츠',
-            description: (<p>이론보다는 실제 프로젝트에서 사용되는 살아<br/>있는 지식과 노하우를 배우세요.</p>),
+            description: (<p>이론보다는 실제 프로젝트에서 사용되는 살아<br />있는 지식과 노하우를 배우세요.</p>),
         },
         {
             logo: '🏆',
             title: '성과 추적',
-            description: (<p>학습 진도와 성장 과정을 시각화하여 동기 부여<br/>를 유지하고 목표를 달성하세요.</p>),
+            description: (<p>학습 진도와 성장 과정을 시각화하여 동기 부여<br />를 유지하고 목표를 달성하세요.</p>),
         },
     ];
 
@@ -92,16 +92,10 @@ function StartPage() {
             <div className={styles.up}>
                 <section className={styles.up_left}>
                     <h1 className={styles.d_none}> 홍보 글 </h1>
-                    <div className={styles.up_left_h1}>
-                        <h3 className={styles.up_left_h3}>당신의 커리어 여정을 <br />
-                            함께 나아가세요</h3>
-                    </div>
-                    <div className={styles.up_left_center}>
-                        <div className={styles.up_left_h4}>
-                            <h4>전문가 멘토링부터 실무 Q&A까지, <br />
-                                성장하는 개발자들의 든든한 파트너가 되어드립니다.</h4>
-                        </div>
-                    </div>
+                    <h3 className={styles.up_left_h3}>당신의 커리어 여정을 <br />
+                        함께 나아가세요</h3>
+                    <h4 className={styles.up_left_h4}>전문가 멘토링부터 실무 Q&A까지, <br />
+                        성장하는 개발자들의 든든한 파트너가 되어드립니다.</h4>
                     <nav className={styles.up_left_flex}>
                         <h1 className={styles.d_none}> 시작 메뉴 </h1>
                         <Link href="/login" className={styles.up_left_start}>
@@ -158,7 +152,7 @@ function StartPage() {
                 </section>
                 <section className={styles.down_three_boxes}>
                     <h1 className={styles.d_none}> 카테고리 목록 </h1>
-                    {categories.slice(3,6).map((category, index) => (
+                    {categories.slice(3, 6).map((category, index) => (
                         <CategoryBox
                             key={index}
                             logo={category.logo}
