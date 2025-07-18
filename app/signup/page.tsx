@@ -3,7 +3,6 @@
 import Input from '@/app/components/common/Input';
 import { useForm, useWatch } from 'react-hook-form';
 import Link from 'next/link';
-import Button from '@/app/components/common/Button/index';
 import ImageForm from '@/app/components/common/ImageForm';
 import { ToastContainer } from 'react-toastify';
 import { sign_up_form_type } from '@/app/types/signup/signup';
