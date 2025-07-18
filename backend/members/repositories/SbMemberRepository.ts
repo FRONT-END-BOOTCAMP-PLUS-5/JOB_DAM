@@ -75,8 +75,35 @@ export class SbMemberRepository implements MemberRepository {
     return data;
   }
 
+  async findByEmail(email: string): Promise<Member | null> {
+    const { data, error } = await this.supabase.from('member').select('*').eq('email', email).single();
+
+    if (error) {
+      // 데이터가 없을 때는 null 반환 (에러가 아님)
+      if (error.code === 'PGRST116') {
+        return null;
+      }
+      throw new Error(error.message);
+    }
+
+    return data;
+  }
+
   async findAllMentor(): Promise<Member[]> {
     const { data, error } = await this.supabase.from('member').select('*').eq('type', 1);
+
+    if (error) throw new Error(error.message);
+
+    return data;
+  }
+
+  async updatePassword(email: string, password: string): Promise<Member> {
+    const { data, error } = await this.supabase
+      .from('member')
+      .update({ password: password })
+      .eq('email', email)
+      .select()
+      .single();
 
     if (error) throw new Error(error.message);
 

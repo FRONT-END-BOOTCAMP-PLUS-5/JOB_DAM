@@ -3,6 +3,8 @@ import { verifyRefreshToken } from '@/app/utils/signup/tokenVerify';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
+  const member = await request.json();
+
   try {
     const refreshToken = request.cookies.get('refresh_token')?.value;
 
@@ -17,6 +19,7 @@ export async function POST(request: NextRequest) {
 
     const response = NextResponse.json({
       accessToken: newAccessToken,
+      user: member,
       status: 200,
     });
 
@@ -33,17 +36,33 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function DELETE(request: NextRequest) {
+export async function DELETE() {
   try {
-    const refreshToken = request.cookies.get('refresh_token')?.value;
+    const response = NextResponse.json({
+      message: '로그아웃 처리 완료',
+      status: 200,
+    });
 
-    if (!refreshToken) {
-      const response = NextResponse.json({ message: '리프레시 토큰 삭제 성공', status: 200 });
-      response.cookies.delete('refresh_token');
+    // access_token 삭제
+    response.cookies.set({
+      name: 'access_token',
+      value: '',
+      maxAge: 0,
+      path: '/',
+    });
 
-      return response;
-    }
+    response.cookies.set({
+      name: 'refresh_token',
+      value: '',
+      maxAge: 0,
+      path: '/',
+    });
+
+    return response;
   } catch {
-    return NextResponse.json({ message: '리프레시 토큰 삭제 실패', status: 400 });
+    return NextResponse.json({
+      message: '로그아웃 처리 중 오류 발생',
+      status: 400,
+    });
   }
 }

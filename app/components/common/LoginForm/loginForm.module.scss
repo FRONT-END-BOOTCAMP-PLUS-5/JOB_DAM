@@ -32,12 +32,24 @@
     height: 5.5vh;
     border-radius: 12px;
     padding: 10px;
-    font-size: 1.1rem;
+    font-size: 1.125rem;
     font-weight: 600;
     border: none;
     background-color: #6b70d6;
     color: white;
     margin-top: 5%;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed !important;
+      pointer-events: none;
+    }
+  }
+
+  .login_form_checkbox_input {
+    width: 20px;
+    height: 20px;
     cursor: pointer;
   }
 
@@ -54,6 +66,7 @@
   .login_form_checkbox_item {
     display: flex;
     gap: 10px;
+    align-items: center;
   }
 
   span {

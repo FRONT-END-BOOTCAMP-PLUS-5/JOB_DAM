@@ -9,7 +9,7 @@ export class Member {
     public deleted_at: string | null,
     public img: string | null,
     public grade: number,
-    public point: number | null,
+    public point: number,
     public type: number,
     public nickname: string,
   ) {}

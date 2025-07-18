@@ -7,6 +7,8 @@ export interface MemberRepository {
   findOne(email: string, password: string): Promise<Member>;
   findTopGradeMembers(): Promise<MemberMentorRank[]>;
   findById(userId: string): Promise<Member>;
+  findByEmail(email: string): Promise<Member | null>;
   findAllMentor(): Promise<Member[]>;
+  updatePassword(email: string, password: string): Promise<Member>;
   updatePointMember(member_id: string, point: number): void;
 }
