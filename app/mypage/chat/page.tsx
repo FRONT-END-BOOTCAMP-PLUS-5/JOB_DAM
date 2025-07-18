@@ -17,6 +17,7 @@ import { Button, Chip } from '@mui/material';
 import Link from 'next/link';
 import { CHAT_ROOM_PROGRESS } from '@/app/constants/chat';
 import Spinner from '@/app/components/common/Spinner';
+import { toast } from 'react-toastify';
 
 const ChatPage = () => {
   const member = useSelector((state: RootState) => state.login.member);
@@ -79,6 +80,8 @@ const ChatPage = () => {
   };
 
   const chatRoomInit = (userId: string) => {
+    if (!userId) return toast.warning('유저 정보를 불러오지 못했어요');
+
     getChatRoom(userId).then((res) => {
       setChatRoom(res);
       setLoading(false);
