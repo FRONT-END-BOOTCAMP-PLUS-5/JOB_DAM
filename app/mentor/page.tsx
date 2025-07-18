@@ -8,14 +8,16 @@ import { Mentors } from '../types/mentor/search';
 import { chatroomService } from '../services/chatroom/chatroom';
 import { RootState } from '../store/store';
 import { useSelector } from 'react-redux';
-import { Member } from '../store/isLogin/loginSlice';
 import Image from 'next/image';
 import Spinner from '../components/common/Spinner';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 
 const MentorPage = () => {
   const member = useSelector((state: RootState) => state.login.member);
+  const router = useRouter();
+
   const [mentors, setMentors] = useState<Mentors[]>([]);
-  const [user, setUser] = useState<Member>(member);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectMentorId, setSelectMentorId] = useState('');
   const [chatRoomTitle, setChatRoomTitle] = useState('');
@@ -33,7 +35,7 @@ const MentorPage = () => {
       description: chatRoomDescription,
       created_member_id: selectMentorId,
       max_people: chatRoomMaxPeople,
-      member_id: user?.id,
+      member_id: member?.id,
     };
 
     await addChatRoom(chatRoomData).then((res) => {
@@ -53,7 +55,10 @@ const MentorPage = () => {
   };
 
   useEffect(() => {
-    setUser(member);
+    if (!member.id) {
+      toast.warning('로그인 후 이용해주세요.');
+      router.push('/login');
+    }
   }, [member]);
 
   useEffect(() => {
@@ -87,7 +92,7 @@ const MentorPage = () => {
                   <h3>포인트: {item?.point}</h3>
                 </section>
               </div>
-              {user?.id !== item?.id && user?.type !== 1 && (
+              {member?.id !== item?.id && member?.type !== 1 && (
                 <button
                   className={styles.apply_button}
                   onClick={() => {

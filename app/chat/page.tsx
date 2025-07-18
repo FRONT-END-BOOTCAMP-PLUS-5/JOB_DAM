@@ -18,6 +18,7 @@ import { chatroomService } from '../services/chatroom/chatroom';
 import Spinner from '../components/common/Spinner';
 import { createClient } from '../utils/supabase/client';
 import ConfirmModal from '../components/chat/ConfirmModal';
+import { toast } from 'react-toastify';
 
 const ChatPage = () => {
   const member = useSelector((state: RootState) => state.login.member);
@@ -177,6 +178,9 @@ const ChatPage = () => {
   useEffect(() => {
     if (member.id) {
       initChatRoom(member.id);
+    } else {
+      toast.warning('로그인 후 이용해주세요.');
+      router.push('/login');
     }
   }, [member]);
 

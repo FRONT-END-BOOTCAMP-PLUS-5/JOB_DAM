@@ -5,18 +5,15 @@ import styles from './mypage.module.scss';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { useEffect, useState } from 'react';
-import { Member } from '../store/isLogin/loginSlice';
 import Image from 'next/image';
 import Spinner from '../components/common/Spinner';
 
 const Mypage = () => {
   const member = useSelector((state: RootState) => state.login.member);
 
-  const [user, setUser] = useState<Member>(member);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setUser(member);
     if (member?.id) {
       setLoading(false);
     }
@@ -28,18 +25,18 @@ const Mypage = () => {
       {loading && <Spinner size={80} />}
       {!loading && (
         <>
-          <div className={styles.user_image}>{user.img && <Image src={user?.img} alt="" fill />}</div>
+          <div className={styles.user_image}>{member.img && <Image src={member?.img} alt="" fill />}</div>
           <div className={styles.user_info}>
             <h5>이메일</h5>
-            <p>{user?.email}</p>
+            <p>{member?.email}</p>
           </div>
           <div className={styles.user_info}>
             <h5>이름</h5>
-            <p>{user?.name}</p>
+            <p>{member?.name}</p>
           </div>
           <div className={styles.user_info}>
             <h5>닉네임</h5>
-            <p>{user?.nickname}</p>
+            <p>{member?.nickname}</p>
           </div>
         </>
       )}
