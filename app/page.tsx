@@ -45,7 +45,7 @@ function StartPage() {
     }
     setMentorNum(response.data.result.length);
   };
-
+  
   const findMentorRoomNum = async () => {
     const response = await chatroomsNum();
     if (!response) {
@@ -164,10 +164,6 @@ function StartPage() {
             <div className={styles.current_option1}>
               <h1 className={styles.current_number}>{mentorRoomNum}</h1>
               <p className={styles.current_description}> 멘토링 방 수 </p>
-            </div>
-            <div className={styles.current_status_bar}>
-              <span className={styles.current_status_bar_text}> </span>
-              <span className={styles.current_status_bar}></span>
             </div>
           </div>
         </section>
