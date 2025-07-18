@@ -27,7 +27,7 @@ export function useRealtimeChat({ roomName, username, userId, type }: UseRealtim
     setMessages([]);
 
     newChannel
-      .on('broadcast', { event: EVENT_MESSAGE_TYPE }, (payload) => {
+      .on('broadcast', { event: 'message', table: 'chat', schema: 'public' }, (payload) => {
         setMessages((current) => [...current, payload.payload as Chat]);
       })
       .subscribe(async (status) => {

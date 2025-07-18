@@ -223,7 +223,7 @@ const ChatPage = () => {
               <li key={item?.title + item?.id + index} className={styles.chat_room_item}>
                 <button onClick={() => onClickChatRoom(item)}>
                   <span className={styles.profile_image}>
-                    <Image src={item?.createMember?.img} alt="프로필 이미지" fill />
+                    {item?.createMember?.img && <Image src={item?.createMember?.img ?? ''} alt="프로필 이미지" fill />}
                   </span>
                   <div className={styles.chat_room_title}>
                     <span className={styles.title}>
