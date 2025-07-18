@@ -21,6 +21,12 @@ function StartPage() {
         findMentorNum();
         findMentorRoomNum();
     }, []);
+    useEffect(() => {
+        findMemNum();
+        findQuestionNum();
+        findMentorNum();
+        findMentorRoomNum();
+    }, []);
 
     const findMemNum = async () => {
         const response = await membersNum();
@@ -44,14 +50,6 @@ function StartPage() {
             return;
         }
         setMentorNum(response.data.result.length);
-    };
-
-    const findMentorRoomNum = async () => {
-        const response = await chatroomsNum();
-        if (!response) {
-            return;
-        }
-        setMentorRoomNum(response.data.result.length);
     };
 
     const categories = [
@@ -86,6 +84,13 @@ function StartPage() {
             description: (<p>학습 진도와 성장 과정을 시각화하여 동기 부여<br />를 유지하고 목표를 달성하세요.</p>),
         },
     ];
+    const findMentorRoomNum = async () => {
+        const response = await chatroomsNum();
+        if (!response) {
+            return;
+        }
+        setMentorRoomNum(response.data.result.length);
+    };
 
     return (
         <main>
