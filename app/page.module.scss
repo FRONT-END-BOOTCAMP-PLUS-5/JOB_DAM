@@ -93,7 +93,8 @@
 
 .first_box {
     width: 23%;
-    border: 8px solid rgba(175, 175, 175, 0.3);
+    border: 0px;
+    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.25);
     margin-left: 8%;
     padding-bottom: 60px;
     border-radius: 13px;
@@ -123,7 +124,7 @@
 }
 
 .down_three_boxes {
-    margin-top: 20px;
+    margin-top: 40px;
     display: flex;
     margin-bottom: 50px;
 }
@@ -137,14 +138,19 @@
     color: white;
     font-weight: bold;
     text-align: center;
-    padding-top: 95px;
-    font-size: 25px;
+    padding-top: 80px;
+    font-size: 40px;
 }
 
 .bottom_p {
     color: white;
     text-align: center;
-    padding-top: 15px;
+    padding-top: 25px;
+}
+
+.bottom_start_now_nav {
+    display: flex;
+    justify-content: center;
 }
 
 .bottom_start_now {
@@ -152,14 +158,13 @@
     color: #6879E2;
     border-radius: 5px;
     border: 0px;
-    width: 15%;
+    width: 10%;
     display: flex;
     align-items: center;
     justify-content: center;
     height: 40px;
     font-weight: bold;
-    padding: 15px 0px 15px 0px;
-    margin-left: 42%;
+    padding: 25px 0px 25px 0px;
     margin-top: 30px;
 }
 

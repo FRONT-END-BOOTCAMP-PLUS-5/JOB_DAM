@@ -174,7 +174,7 @@ function StartPage(){
                         수천 명의 개발자들이 이미 Job담과 함께 성장하고 있습니다. <br />
                         당신도 지금 바로 합류해보세요!
                     </p>
-                    <nav>
+                    <nav className={styles.bottom_start_now_nav}>
                         <Link href="/login" className={styles.bottom_start_now}>
                             🚀무료로 시작하기
                         </Link>
