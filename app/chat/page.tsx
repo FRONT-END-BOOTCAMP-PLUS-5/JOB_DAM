@@ -148,8 +148,9 @@ const ChatPage = () => {
         // 현재 진행중인 채팅방 filter
         const progressFilter = res.filter((item) => item?.progress !== 0);
         setChatRoom(progressFilter);
-        setChatRoomName(`chat-room-${progressFilter[0].id}`);
+
         onClickChatRoom(progressFilter[0]);
+        setChatRoomName(`chat-room-${progressFilter[0].id}`);
 
         // param에 id가 있으면 채팅방 셋팅
         if (progressFilter.length > 0 && param.get('id')) {
