@@ -35,6 +35,7 @@ export const signUpService = async (member_data: sign_up_form_type) => {
       email: member_data.email,
       password: member_data.password,
       img: imageUrl, // 실제 스토리지 URL 또는 null
+      grade: 0,
     };
 
     // 회원가입 API 호출
