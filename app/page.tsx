@@ -129,52 +129,45 @@ function StartPage() {
     <main>
       <div className={styles.up}>
         <section className={styles.up_left}>
-          <h1 className={styles.d_none}> 홍보 글 </h1>
-          <div className={styles.up_left_h1}>
-            <h3 className={styles.up_left_h3}>
-              당신의 커리어 여정을 <br />
-              함께 나아가세요
-            </h3>
-          </div>
-          <div className={styles.up_left_center}>
-            <div className={styles.up_left_h4}>
-              <h4>
-                전문가 멘토링부터 실무 Q&A까지, <br />
-                성장하는 개발자들의 든든한 파트너가 되어드립니다.
-              </h4>
-            </div>
-          </div>
-          <nav className={styles.up_left_flex}>
-            <h1 className={styles.d_none}> 시작 메뉴 </h1>
+          <h1>
+            당신의 커리어 여정을 <br />
+            함께 나아가세요
+          </h1>
+          <p>
+            전문가 멘토링부터 실무 Q&A까지, <br />
+            성장하는 개발자들의 든든한 파트너가 되어드립니다.
+          </p>
+          <div className={styles.up_left_flex}>
             <Link href="/login" className={styles.up_left_start}>
               🚀 시작하기
             </Link>
             <Link href="/board" className={styles.up_left_go_to_community}>
               💬 커뮤니티 둘러보기
             </Link>
-          </nav>
+          </div>
         </section>
         <section className={styles.up_right}>
-          <h1 className={styles.d_none}> 현재 카테고리별 개수 </h1>
-          <h3 className={styles.current}> 📊 실시간 현황 </h3>
-          <div className={styles.current_first_line}>
+          <h2 className={styles.current}> 📊 실시간 현황 </h2>
+          <div className={styles.current_option}>
             <div className={styles.current_option1}>
               <h1 className={styles.current_number}> {memberNum} </h1>
-              <h5 className={styles.current_description}> 멤버 수 </h5>
+              <p className={styles.current_description}> 멤버 수 </p>
             </div>
-            <div className={styles.current_option2}>
+            <div className={styles.current_option1}>
               <h1 className={styles.current_number}> {questionNum} </h1>
-              <h5 className={styles.current_description}> 질문 수 </h5>
+              <p className={styles.current_description}> 질문 수 </p>
             </div>
-          </div>
-          <div className={styles.current_second_line}>
-            <div className={styles.current_option3}>
+            <div className={styles.current_option1}>
               <h1 className={styles.current_number}>{mentorNum}</h1>
-              <h5 className={styles.current_description}> 멘토 수 </h5>
+              <p className={styles.current_description}> 멘토 수 </p>
             </div>
-            <div className={styles.current_option4}>
+            <div className={styles.current_option1}>
               <h1 className={styles.current_number}>{mentorRoomNum}</h1>
-              <h5 className={styles.current_description}> 멘토링 방 수 </h5>
+              <p className={styles.current_description}> 멘토링 방 수 </p>
+            </div>
+            <div className={styles.current_status_bar}>
+              <span className={styles.current_status_bar_text}> </span>
+              <span className={styles.current_status_bar}></span>
             </div>
           </div>
         </section>
@@ -185,15 +178,13 @@ function StartPage() {
           개발자의, 개발자에 의한, 개발자를 위한 플랫폼으로 <br />더 나은 커리어를 만들어가세요
         </p>
       </section>
-      <div className={styles.six_boxes}>
+      <div>
         <section className={styles.up_three_boxes}>
-          <h1 className={styles.d_none}> 카테고리 목록 </h1>
           {categories.slice(0, 3).map((category, index) => (
             <CategoryBox key={index} logo={category.logo} title={category.title} description={category.description} />
           ))}
         </section>
         <section className={styles.down_three_boxes}>
-          <h1 className={styles.d_none}> 카테고리 목록 </h1>
           {categories.slice(3, 6).map((category, index) => (
             <CategoryBox key={index} logo={category.logo} title={category.title} description={category.description} />
           ))}
