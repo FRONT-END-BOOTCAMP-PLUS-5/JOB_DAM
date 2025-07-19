@@ -46,6 +46,14 @@ interface Json{
     deletedAt: string | null
 }
 
+
+interface IMember{
+    id: string
+    nickname: string
+    name: string
+    img: string | null
+}
+
 export default function Item(){
     const supabase = createClient()
     const [getComment, setComment] = useState<Json[]>([])
@@ -59,6 +67,7 @@ export default function Item(){
 
     const member = useSelector((state: RootState) => state.login.member);
 
+    const memberCache = useRef<Map<string, IMember>>(new Map())
 
     const params = useParams();
     const { id } = params;
@@ -83,8 +92,24 @@ export default function Item(){
         if(evt.code === 'Enter') handleInput()
     }
 
+    const getMemberData = async(memberId: string) => {
+        if (memberCache.current.has(memberId)) {
+            return memberCache.current.get(memberId);
+        }
+
+        const response = await fetch(`/api/member/one?id=${memberId}`)
+        const json = await response.json()
+
+        const {id, img, nickname, name } = json['result']
+
+        if (id) {
+            memberCache.current.set(memberId, {id, img, nickname, name});
+        }
+        return json['result'];
+    }
+
     const getAllMessages = async () => {
-        const response = await fetch(`/api/question/item/chat?item=${id}`, { next: { revalidate: 3600 } })
+        const response = await fetch(`/api/question/item/chat?item=${id}`)
         const json = await response.json()
         const copyJson = [...json['result']['answer']]
         setComment(copyJson)
@@ -141,6 +166,7 @@ export default function Item(){
     }
 
 
+
     useEffect(() => {
         async function getItem(){
             const response = await fetch(`/api/question/item?id=${id}`)
@@ -161,11 +187,33 @@ export default function Item(){
             .on('postgres_changes',{
                 event: 'INSERT',
                 schema: 'public',
-                table: 'answer'
-            }, payload => {
+                table: 'answer',
+                filter: `question_id=eq.${id}`
+            }, async payload => {
                 if(payload.eventType === 'INSERT' &&
                     !payload.errors){
-                    getAllMessages()
+                    const memberId = payload['new']['member_id']
+                    const newMemberData = await getMemberData(memberId);
+
+
+                    const newCommentMember = {
+                        id: payload['new']['id'],
+                        content: payload['new']['content'],
+                        memberId: {
+                            id: newMemberData['id'],
+                            nickname: newMemberData['nickname'],
+                            name: newMemberData['name'],
+                            img: newMemberData['img']
+                        },
+                        questionId: payload['new']['question_id'],
+                        createdAt: payload['new']['created_at'],
+                        updatedAt: payload['new']['updated_at'],
+                        deletedAt: payload['new']['deleted_at'],
+                    }
+
+                    setComment(prevComments => {
+                        return [...prevComments, newCommentMember];
+                    });
                 }
             }).subscribe()
 

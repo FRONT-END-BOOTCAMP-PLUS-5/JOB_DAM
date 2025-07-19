@@ -3,6 +3,7 @@ import style from "./dragDropImage.module.scss"
 import Button from '@/app/components/common/Button';
 import { useRef, useEffect, Dispatch, SetStateAction } from 'react';
 import FileImage from '../FileImage';
+import { Slide, toast } from 'react-toastify';
 
 interface IProps {
   setSelectedFiles:   Dispatch<SetStateAction<File[]>>
@@ -35,13 +36,35 @@ export default function DragDropImage({ setSelectedFiles, selectedFiles, setPrev
       });
 
       if (duplicateFileNames.length > 0) {
-        alert(`다음 파일명은 이미 존재합니다: ${duplicateFileNames.join(', ')}. 중복 파일은 추가되지 않습니다.`);
+        toast.error(`다음 파일명은 이미 존재합니다: ${duplicateFileNames.join(', ')}. 중복 파일은 추가되지 않습니다.`, {
+          position: "top-center",
+          autoClose: false,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: 0,
+          theme: "light",
+          transition: Slide,
+          toastId: 1,
+        });
       }
 
       const totalFiles = [...selectedFiles, ...filesToAdd];
 
       if (totalFiles.length > 3) {
-        alert('최대 3개의 이미지만 업로드할 수 있습니다. 초과된 파일은 추가되지 않습니다.');
+        toast.error('최대 3개의 이미지만 업로드할 수 있습니다. 초과된 파일은 추가되지 않습니다.', {
+          position: "top-center",
+          autoClose: false,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: 0,
+          theme: "light",
+          transition: Slide,
+          toastId: 1,
+        });
         setSelectedFiles(totalFiles.slice(0, 3));
       } else {
         setSelectedFiles(totalFiles);

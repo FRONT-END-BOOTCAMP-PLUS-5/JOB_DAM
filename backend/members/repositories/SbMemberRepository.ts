@@ -1,5 +1,5 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import { Member } from '../domain/entities/Member';
+import { Member, User } from '../domain/entities/Member';
 import { MemberRepository } from '../domain/repositories/MemberRepository';
 import { sign_up_form_type } from '@/app/types/signup/signup';
 import { MemberMentorRank } from '@/backend/members/domain/entities/MemberMentorRank';
@@ -49,6 +49,19 @@ export class SbMemberRepository implements MemberRepository {
     }
 
     return data;
+  }
+
+  async findOneMember(id: string){
+    const { data, error } = await this.supabase
+      .from('member')
+      .select('id, img, nickname, name')
+      .eq('id',id)
+      .single();
+
+
+    if (error) throw new Error(error.message);
+    return data;
+
   }
 
   async findAll(): Promise<Member[]> {
