@@ -14,3 +14,12 @@ export class MemberTable {
     public nickname: string,
   ) {}
 }
+
+export class OneMemberTable{
+  constructor(
+    public id: string,
+    public img: string | null,
+    public nickname: string,
+    public name: string
+  ) {}
+}
