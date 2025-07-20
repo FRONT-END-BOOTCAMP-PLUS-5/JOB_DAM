@@ -18,6 +18,12 @@ export function useRealtimeChat({ roomName, username, userId, type }: UseRealtim
   const [messages, setMessages] = useState<Chat[]>([]);
   const [channel, setChannel] = useState<ReturnType<typeof supabase.channel> | null>(null);
   const [isConnected, setIsConnected] = useState(false);
+  const [newMessage, setNewMessage] = useState<Chat>({
+    content: '',
+    memberId: '',
+    createdAt: '',
+    type: 0,
+  });
 
   useEffect(() => {
     const newChannel = supabase.channel(roomName);
@@ -26,7 +32,8 @@ export function useRealtimeChat({ roomName, username, userId, type }: UseRealtim
 
     newChannel
       .on('broadcast', { event: EVENT_MESSAGE_TYPE }, (payload) => {
-        setMessages((current) => [...current, payload.payload as Chat]);
+        setNewMessage(payload.payload as Chat);
+        // setMessages((current) => [...current, payload.payload as Chat]);
       })
       .subscribe(async (status) => {
         console.log('useRealtimeChat', status);
@@ -42,6 +49,17 @@ export function useRealtimeChat({ roomName, username, userId, type }: UseRealtim
     };
   }, [roomName, username, supabase]);
 
+  useEffect(() => {
+    const newTime = new Date(newMessage?.createdAt).getTime();
+    const prevTime = new Date(messages[messages.length - 1]?.createdAt).getTime();
+
+    if (newTime - prevTime < 200) {
+      console.log('오류 메시지');
+    } else {
+      setMessages((current) => [...current, newMessage as Chat]);
+    }
+  }, [newMessage]);
+
   const sendMessage = useCallback(
     async (content: string) => {
       if (!channel || !isConnected) return;
@@ -53,16 +71,22 @@ export function useRealtimeChat({ roomName, username, userId, type }: UseRealtim
         type: type,
       };
 
-      // Update local state immediately for the sender
-      setMessages((current) => [...current, message]);
+      const newTime = new Date(message?.createdAt).getTime();
+      const prevTime = new Date(messages[messages?.length - 1]?.createdAt).getTime();
 
-      await channel.send({
-        type: 'broadcast',
-        event: EVENT_MESSAGE_TYPE,
-        payload: message,
-      });
+      if (newTime - prevTime < 200) {
+        console.log('오류 메시지');
+      } else {
+        setMessages((current) => [...current, message]);
+
+        await channel.send({
+          type: 'broadcast',
+          event: EVENT_MESSAGE_TYPE,
+          payload: message,
+        });
+      }
     },
-    [channel, isConnected, type, userId],
+    [channel, isConnected, messages, type, userId],
   );
 
   return { messages, sendMessage, isConnected };
