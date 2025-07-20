@@ -120,6 +120,10 @@ const ChatPage = () => {
           });
         }
       });
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [supabase, member]);
 
   return (

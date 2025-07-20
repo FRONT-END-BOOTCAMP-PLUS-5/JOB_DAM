@@ -124,7 +124,7 @@ const ChatPage = () => {
   const onClickChatRoom = (chatRoomData: ChatRoom) => {
     setChatLoading(true);
     setSelectChatRoom(chatRoomData);
-    setChatRoomName(`chat-room-${selectChatRoom?.id}`);
+    setChatRoomName(`chat-room-${chatRoomData?.id}`);
 
     chatRoomData?.chatMember.forEach((item) =>
       setChatMembers((prev) => ({ ...prev, [item.member.id]: { name: item?.member.name, img: item?.member?.img } })),
@@ -207,6 +207,10 @@ const ChatPage = () => {
           });
         }
       });
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [supabase, chatRoom]);
 
   return (

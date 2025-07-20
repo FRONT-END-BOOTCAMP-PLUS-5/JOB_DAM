@@ -69,6 +69,10 @@ const Header = () => {
           });
         }
       });
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [supabase]);
 
   return (
