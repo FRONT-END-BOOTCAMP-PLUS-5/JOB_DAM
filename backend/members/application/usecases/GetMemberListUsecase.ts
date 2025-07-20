@@ -1,6 +1,7 @@
 import { MemberRepository } from '../../domain/repositories/MemberRepository';
 import { MemberMentorRank } from '@/backend/members/domain/entities/MemberMentorRank';
 import { MemberMentorRankDto } from '@/backend/members/application/dtos/MemberMentorRankDto';
+import { OneMemberTable } from '@/backend/members/domain/table/MemberTable';
 /**
  * 작성자: 김동우
  * 작성일: 2025-07-09
@@ -28,4 +29,19 @@ export class GetMemberListUsecase {
       member: memberMentorDtos,
     };
   }
+
+  async getOneMember(id: string){
+    const oneMember: OneMemberTable = await this.repository.findOneMember(id)
+
+    const oneMemberDto =  {
+      id: oneMember['id'],
+      nickname: oneMember['nickname'],
+      img: oneMember['img'],
+      name: oneMember['name']
+    }
+    return {
+      ...oneMemberDto
+    }
+  }
 }
+

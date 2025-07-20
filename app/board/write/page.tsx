@@ -25,22 +25,27 @@ export default function BoardWrite(){
   const router = useRouter()
 
   const handleWrite = async() => {
+    setDisabled(true)
+
     const formData = new FormData()
     setIsLoading(true)
     selectedFiles.forEach((item,idx) => formData.append(`file${idx+1}`, item))
 
     formData.append("title", getTitleVal)
     formData.append("content", getContentVal)
-    formData.append("memberId", member.id) //테스트 계정
+    formData.append("memberId", member.id)
     const result= await fetch('/api/question/write', {
       method: "POST",
       body: formData,
     })
 
+
     const json = await result.json()
     const id = json.result.question.id
     if(id){
       router.push(`/board/${id}`)
+    }else{
+      setDisabled(false)
     }
   }
 
