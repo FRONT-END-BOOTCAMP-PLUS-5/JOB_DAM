@@ -36,6 +36,7 @@ const ChatPage = () => {
   const [chatLoading, setChatLoading] = useState(false);
   const [chatRoomName, setChatRoomName] = useState('');
   const [reviewMoveModal, setReviewMoveModal] = useState(false);
+  const [prevChatTiem, setPrevChatTime] = useState(0);
 
   const { getChatRoom, insertChat, updateChatRoom, getChat } = chatService;
   const { updatePointMember } = chatroomService;
@@ -78,6 +79,14 @@ const ChatPage = () => {
       if (e.key !== 'Enter') return;
       if (!isConnected) return;
 
+      setPrevChatTime(new Date().getTime());
+      const nowChatTime = new Date().getTime();
+
+      if (nowChatTime - prevChatTiem < 200) {
+        console.log('오류 메시지');
+        return;
+      }
+
       sendMessage(newMessage);
 
       if (chatType === 2) {
@@ -94,7 +103,17 @@ const ChatPage = () => {
       });
     },
 
-    [chatType, insertChat, isConnected, newMessage, selectChatRoom?.id, sendMessage, updatePointMember, member?.id],
+    [
+      chatType,
+      insertChat,
+      isConnected,
+      newMessage,
+      prevChatTiem,
+      selectChatRoom?.id,
+      sendMessage,
+      updatePointMember,
+      member?.id,
+    ],
   );
 
   const onChangeMessage = (value: string) => {
