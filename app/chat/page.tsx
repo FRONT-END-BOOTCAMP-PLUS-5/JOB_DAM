@@ -145,6 +145,7 @@ const ChatPage = () => {
   const initChatRoom = async (memberId: string) => {
     await getChatRoom(memberId).then((res) => {
       if (res) {
+        if (res.length === 0) return;
         // 현재 진행중인 채팅방 filter
         const progressFilter = res.filter((item) => item?.progress !== 0);
         setChatRoom(progressFilter);
