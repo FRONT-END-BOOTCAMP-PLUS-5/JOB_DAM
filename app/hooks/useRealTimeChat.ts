@@ -27,6 +27,7 @@ export function useRealtimeChat({ roomName, username, userId, type }: UseRealtim
         setMessages((current) => [...current, payload.payload as Chat]);
       })
       .subscribe(async (status) => {
+        console.log('useRealtimeChat', status);
         if (status === 'SUBSCRIBED') {
           setIsConnected(true);
         }

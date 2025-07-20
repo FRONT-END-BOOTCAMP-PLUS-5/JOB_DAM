@@ -58,7 +58,17 @@ const Header = () => {
           ]);
         },
       )
-      .subscribe();
+      .subscribe(async (status) => {
+        console.log('alarm_chat_room-status', status);
+
+        if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+          channel.unsubscribe().then(() => {
+            supabase.channel(`alarm_chat_room`).subscribe((status) => {
+              console.log('alarm_chat_room-retry', status);
+            });
+          });
+        }
+      });
   }, [supabase]);
 
   return (
