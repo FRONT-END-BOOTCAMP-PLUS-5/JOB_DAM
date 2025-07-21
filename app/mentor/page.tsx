@@ -19,7 +19,6 @@ const MentorPage = () => {
   const [selectMentorId, setSelectMentorId] = useState('');
   const [chatRoomTitle, setChatRoomTitle] = useState('');
   const [chatRoomDescription, setChatRoomDescription] = useState('');
-  const [chatRoomMaxPeople, setChatRoomMaxPeople] = useState(1);
   const [applyCompleteModal, setApplyCompleteModal] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -31,7 +30,7 @@ const MentorPage = () => {
       title: chatRoomTitle,
       description: chatRoomDescription,
       created_member_id: selectMentorId,
-      max_people: chatRoomMaxPeople,
+      max_people: 2,
       member_id: member?.id,
     };
 
@@ -48,7 +47,6 @@ const MentorPage = () => {
     setSelectMentorId('');
     setChatRoomTitle('');
     setChatRoomDescription('');
-    setChatRoomMaxPeople(1);
   };
 
   useEffect(() => {
@@ -114,13 +112,6 @@ const MentorPage = () => {
               variant="outlined"
               placeholder="채팅방 설명"
               onChange={(e) => setChatRoomDescription(e.target.value)}
-            />
-            <TextField
-              label="최대 인원수"
-              variant="outlined"
-              placeholder="최대 인원수"
-              type="number"
-              onChange={(e) => setChatRoomMaxPeople(Number(e.target.value))}
             />
           </section>
           <section className={styles.button_section}>

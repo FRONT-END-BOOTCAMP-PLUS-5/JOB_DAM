@@ -66,7 +66,7 @@ const ChatPage = () => {
 
   const handleSendMessage = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
-      if (!selectChatRoom?.id) return;
+      if (!selectChatRoom?.id || !newMessage) return;
       if (selectChatRoom?.progress === 2) return initChatRoom(member?.id);
 
       const chatRef = {
