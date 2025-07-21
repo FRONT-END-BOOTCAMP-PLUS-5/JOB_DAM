@@ -87,7 +87,7 @@ const Application = () => {
         </div>
       )}
 
-      {!loading && member?.type === 1 && (
+      {!loading && member?.type === 1 && mentorInfo.length > 0 && (
         <section className={styles.mentor_info_section}>
           <div>
             <p>회사</p>
