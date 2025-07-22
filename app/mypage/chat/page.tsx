@@ -1,7 +1,7 @@
 'use client';
 
 import { chatService } from '@/app/services/mypage/chat';
-import { ChatRoom } from '@/app/types/mypage/chat';
+
 import { useEffect, useState } from 'react';
 
 import styles from './chatPage.module.scss';
@@ -18,16 +18,17 @@ import Link from 'next/link';
 import { CHAT_ROOM_PROGRESS } from '@/app/constants/chat';
 import Spinner from '@/app/components/common/Spinner';
 import { toast } from 'react-toastify';
+import { IChatRoom } from '@/app/types/mypage/chat';
 
 const ChatPage = () => {
   const member = useSelector((state: RootState) => state.login.member);
   const supabase = createClient();
 
-  const [chatRoom, setChatRoom] = useState<ChatRoom[]>([]);
+  const [chatRoom, setChatRoom] = useState<IChatRoom[]>([]);
   const [reviewOpen, setReviewOpen] = useState(false);
   const [rating, setRating] = useState<number | null>(0);
   const [content, setContent] = useState('');
-  const [selectChatRoom, setSelectChatRoom] = useState<ChatRoom>(ChatRoomValue);
+  const [selectChatRoom, setSelectChatRoom] = useState<IChatRoom>(ChatRoomValue);
   const [loading, setLoading] = useState(true);
 
   const { getChatRoom, updateChatRoom } = chatService;
@@ -64,7 +65,7 @@ const ChatPage = () => {
     reviewReset();
   };
 
-  const handleUpdateChatRoom = (chatRoom: ChatRoom) => {
+  const handleUpdateChatRoom = (chatRoom: IChatRoom) => {
     const updateChatRoomRef = {
       chat_room_id: chatRoom?.id,
       progress: 1,

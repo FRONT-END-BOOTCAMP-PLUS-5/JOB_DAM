@@ -3,21 +3,21 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styles from './chat.module.scss';
 import { chatService } from '../services/mypage/chat';
-import { Chat, ChatRoom, UpdateChatPointRef } from '../types/mypage/chat';
-import dayjs from 'dayjs';
+import { IChat, IChatRoom, IChatType, IMatchChatMember, UpdateChatPointRef } from '../types/mypage/chat';
 import { RootState } from '../store/store';
 import { useSelector } from 'react-redux';
-import { Button, Chip, Switch, TextField } from '@mui/material';
+import { Button, Chip } from '@mui/material';
 import { useChatScroll } from '../hooks/useChatScroll';
 import { useRealtimeChat } from '../hooks/useRealTimeChat';
-import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ChatRoomValue } from '../constants/initialValue';
-import { CHAT_ROOM_PROGRESS, CHAT_TYPE_TEXT } from '../constants/chat';
 import { chatroomService } from '../services/chatroom/chatroom';
 import Spinner from '../components/common/Spinner';
 import { createClient } from '../utils/supabase/client';
 import ConfirmModal from '../components/chat/ConfirmModal';
+import ChatRoom from '../components/chat/ChatRoom';
+import Message from '../components/chat/Message';
+import MessageInput from '../components/chat/MessageInput';
 
 const ChatPage = () => {
   const member = useSelector((state: RootState) => state.login.member);
@@ -25,12 +25,12 @@ const ChatPage = () => {
   const supabase = createClient();
   const router = useRouter();
 
-  const [chatRoom, setChatRoom] = useState<ChatRoom[]>([]);
+  const [chatRoom, setChatRoom] = useState<IChatRoom[]>([]);
   const [newMessage, setNewMessage] = useState('');
-  const [initialMessage, setIntialMessage] = useState<Chat[]>([]);
-  const [chatType, setChatType] = useState<0 | 1 | 2>(0);
-  const [chatMembers, setChatMembers] = useState<{ [key: string]: { name: string; img?: string } }>({});
-  const [selectChatRoom, setSelectChatRoom] = useState<ChatRoom>(ChatRoomValue);
+  const [initialMessage, setIntialMessage] = useState<IChat[]>([]);
+  const [chatType, setChatType] = useState<IChatType>(0);
+  const [chatMembers, setChatMembers] = useState<IMatchChatMember>({});
+  const [selectChatRoom, setSelectChatRoom] = useState<IChatRoom>(ChatRoomValue);
   const [chatEndModal, setChatEndModal] = useState(false);
   const [chatRoomLoading, setChatRoomLoading] = useState(true);
   const [chatLoading, setChatLoading] = useState(false);
@@ -140,7 +140,7 @@ const ChatPage = () => {
     setChatEndModal(false);
   };
 
-  const onClickChatRoom = (chatRoomData: ChatRoom) => {
+  const onClickChatRoom = (chatRoomData: IChatRoom) => {
     setChatLoading(true);
     setSelectChatRoom(chatRoomData);
     setChatRoomName(`chat-room-${chatRoomData?.id}`);
@@ -249,40 +249,7 @@ const ChatPage = () => {
         )}
 
         {chatRoomLoading && <Spinner />}
-
-        {!chatRoomLoading && chatRoom.length > 0 && (
-          <ul className={styles.chat_room_list}>
-            {chatRoom?.map((item, index) => (
-              <li key={item?.title + item?.id + index} className={styles.chat_room_item}>
-                <button onClick={() => onClickChatRoom(item)}>
-                  <span className={styles.profile_image}>
-                    {item?.createMember?.img && <Image src={item?.createMember?.img ?? ''} alt="프로필 이미지" fill />}
-                  </span>
-                  <div className={styles.chat_room_title}>
-                    <span className={styles.title}>
-                      <Chip
-                        variant="filled"
-                        label={CHAT_ROOM_PROGRESS[item?.progress]}
-                        color={item?.progress === 1 ? 'primary' : 'default'}
-                      />
-                      {item?.title}
-                    </span>
-                    <span className={styles.mentor_name}>
-                      <Chip variant="filled" label="멘토" color="secondary" />
-                      {item?.createMember?.name}
-                    </span>
-                  </div>
-                  <div className={styles.date_member}>
-                    <span className={styles.date}>{dayjs(item?.createdAt).format('YY. MM. DD')}</span>
-                    <span className={styles.chat_room_member}>
-                      {item?.chatMember.length} / {item?.maxPeople}
-                    </span>
-                  </div>
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
+        {!chatRoomLoading && chatRoom.length > 0 && <ChatRoom roomData={chatRoom} onClickChatRoom={onClickChatRoom} />}
 
         {chatLoading && <Spinner />}
         {!chatLoading && chatRoom.length > 0 && (!selectChatRoom || selectChatRoom?.id === 0) && (
@@ -303,70 +270,28 @@ const ChatPage = () => {
             <div ref={containerRef} className={styles.item_container}>
               {allMessages?.map((item, index) => {
                 return (
-                  <section
+                  <Message
+                    chatData={item}
+                    matchChatMember={chatMembers}
+                    selectChatRoom={selectChatRoom}
+                    setChatType={() => setChatType(2)}
                     key={item?.content + index}
-                    className={`${styles.chat_item} ${item?.memberId === member?.id && styles.my_chat}`}
-                  >
-                    <section className={styles.content_top}>
-                      <div className={styles.chat_title}>
-                        <span className={styles.profile_image}>
-                          <Image src={chatMembers[item?.memberId]?.img ?? ''} alt="프로필 이미지" fill />
-                        </span>
-                        <span className={styles.chat_name}>{chatMembers[item?.memberId]?.name}</span>
-                        {selectChatRoom?.createMember?.id === item?.memberId && (
-                          <span className={styles.chat_bedge}>멘토</span>
-                        )}
-                      </div>
-                      <p className={styles.date}>{dayjs(item?.createdAt).format('MM.DD / HH:mm')}</p>
-                    </section>
-                    <section className={styles.content_bottom}>
-                      <div className={styles.content_bottom_title}>
-                        {item?.type === 1 && <Chip label="질문" color="primary" variant="filled" />}
-                        {item?.type === 2 && <Chip label="답변" color="primary" variant="filled" />}
-                        {item?.type === 1 && selectChatRoom?.createMember?.id === member?.id && (
-                          <Button color="secondary" onClick={() => setChatType(2)}>
-                            답변하기
-                          </Button>
-                        )}
-                      </div>
-                      <div className={styles.chat_content}>{item?.content}</div>
-                    </section>
-                  </section>
+                    memberId={member?.id}
+                  />
                 );
               })}
             </div>
 
             {selectChatRoom?.progress !== 2 && (
-              <div className={styles.chat_enter}>
-                <section>
-                  <Chip
-                    label={CHAT_TYPE_TEXT[chatType]}
-                    variant="outlined"
-                    color={`${chatType !== 0 ? 'primary' : 'default'}`}
-                  />
-
-                  {selectChatRoom?.createMember?.id !== member?.id && (
-                    <Switch
-                      aria-label="Switch"
-                      checked={chatType === 1 ? true : false}
-                      onChange={(e) => setChatType(e.target.checked ? 1 : 0)}
-                    />
-                  )}
-                </section>
-
-                <TextField
-                  id="outlined-basic"
-                  className={styles.text_field}
-                  style={{ border: `1px solid ${chatType === 0 ? '#ddd' : '#667eea'}` }}
-                  label=""
-                  variant="outlined"
-                  placeholder="메시지 입력"
-                  fullWidth
-                  value={newMessage}
-                  onChange={(e) => onChangeMessage(e.target.value)}
-                  onKeyDown={(e) => handleSendMessage(e)}
-                />
-              </div>
+              <MessageInput
+                chatType={chatType}
+                handleSendMessage={handleSendMessage}
+                memberId={member.id}
+                newMessage={newMessage}
+                onChangeMessage={onChangeMessage}
+                selectChatRoom={selectChatRoom}
+                setChatType={setChatType}
+              />
             )}
           </section>
         )}
