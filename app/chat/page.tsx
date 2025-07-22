@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styles from './chat.module.scss';
 import { chatService } from '../services/mypage/chat';
-import { Chat, ChatRoom, UpdateChatPointRef } from '../types/mypage/chat';
+import { IChat, IChatRoom, UpdateChatPointRef } from '../types/mypage/chat';
 import dayjs from 'dayjs';
 import { RootState } from '../store/store';
 import { useSelector } from 'react-redux';
@@ -13,11 +13,12 @@ import { useRealtimeChat } from '../hooks/useRealTimeChat';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ChatRoomValue } from '../constants/initialValue';
-import { CHAT_ROOM_PROGRESS, CHAT_TYPE_TEXT } from '../constants/chat';
+import { CHAT_TYPE_TEXT } from '../constants/chat';
 import { chatroomService } from '../services/chatroom/chatroom';
 import Spinner from '../components/common/Spinner';
 import { createClient } from '../utils/supabase/client';
 import ConfirmModal from '../components/chat/ConfirmModal';
+import ChatRoom from '../components/chat/ChatRoom';
 
 const ChatPage = () => {
   const member = useSelector((state: RootState) => state.login.member);
@@ -25,12 +26,12 @@ const ChatPage = () => {
   const supabase = createClient();
   const router = useRouter();
 
-  const [chatRoom, setChatRoom] = useState<ChatRoom[]>([]);
+  const [chatRoom, setChatRoom] = useState<IChatRoom[]>([]);
   const [newMessage, setNewMessage] = useState('');
-  const [initialMessage, setIntialMessage] = useState<Chat[]>([]);
+  const [initialMessage, setIntialMessage] = useState<IChat[]>([]);
   const [chatType, setChatType] = useState<0 | 1 | 2>(0);
   const [chatMembers, setChatMembers] = useState<{ [key: string]: { name: string; img?: string } }>({});
-  const [selectChatRoom, setSelectChatRoom] = useState<ChatRoom>(ChatRoomValue);
+  const [selectChatRoom, setSelectChatRoom] = useState<IChatRoom>(ChatRoomValue);
   const [chatEndModal, setChatEndModal] = useState(false);
   const [chatRoomLoading, setChatRoomLoading] = useState(true);
   const [chatLoading, setChatLoading] = useState(false);
@@ -140,7 +141,7 @@ const ChatPage = () => {
     setChatEndModal(false);
   };
 
-  const onClickChatRoom = (chatRoomData: ChatRoom) => {
+  const onClickChatRoom = (chatRoomData: IChatRoom) => {
     setChatLoading(true);
     setSelectChatRoom(chatRoomData);
     setChatRoomName(`chat-room-${chatRoomData?.id}`);
@@ -250,39 +251,7 @@ const ChatPage = () => {
 
         {chatRoomLoading && <Spinner />}
 
-        {!chatRoomLoading && chatRoom.length > 0 && (
-          <ul className={styles.chat_room_list}>
-            {chatRoom?.map((item, index) => (
-              <li key={item?.title + item?.id + index} className={styles.chat_room_item}>
-                <button onClick={() => onClickChatRoom(item)}>
-                  <span className={styles.profile_image}>
-                    {item?.createMember?.img && <Image src={item?.createMember?.img ?? ''} alt="프로필 이미지" fill />}
-                  </span>
-                  <div className={styles.chat_room_title}>
-                    <span className={styles.title}>
-                      <Chip
-                        variant="filled"
-                        label={CHAT_ROOM_PROGRESS[item?.progress]}
-                        color={item?.progress === 1 ? 'primary' : 'default'}
-                      />
-                      {item?.title}
-                    </span>
-                    <span className={styles.mentor_name}>
-                      <Chip variant="filled" label="멘토" color="secondary" />
-                      {item?.createMember?.name}
-                    </span>
-                  </div>
-                  <div className={styles.date_member}>
-                    <span className={styles.date}>{dayjs(item?.createdAt).format('YY. MM. DD')}</span>
-                    <span className={styles.chat_room_member}>
-                      {item?.chatMember.length} / {item?.maxPeople}
-                    </span>
-                  </div>
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
+        {!chatRoomLoading && chatRoom.length > 0 && <ChatRoom roomData={chatRoom} onClickChatRoom={onClickChatRoom} />}
 
         {chatLoading && <Spinner />}
         {!chatLoading && chatRoom.length > 0 && (!selectChatRoom || selectChatRoom?.id === 0) && (
