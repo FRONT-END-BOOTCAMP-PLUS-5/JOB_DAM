@@ -70,3 +70,12 @@ export interface UpdateChatPointRef {
   member_id: string;
   point: number;
 }
+
+export interface IMatchChatMember {
+  [key: string]: {
+    name: string;
+    img?: string;
+  };
+}
+
+export type IChatType = 0 | 1 | 2;
