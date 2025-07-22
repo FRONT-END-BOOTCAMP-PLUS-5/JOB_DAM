@@ -1,13 +1,12 @@
 import { UpdateChatRoomRef } from '@/app/types/chatroom/chatroom';
 
-import { ChatRef, ChatRoom } from '@/app/types/mypage/chat';
-import { Chat } from '@/app/types/mypage/chat';
+import { IChatRef, IChat, IChatRoom } from '@/app/types/mypage/chat';
 import axios from 'axios';
 
 export const chatService = {
-  getChatRoom: async (memberId: string): Promise<ChatRoom[]> => {
+  getChatRoom: async (memberId: string): Promise<IChatRoom[]> => {
     const { data, error } = await axios
-      .get<{ result: ChatRoom[] }>(`/api/user/room?id=${memberId}`)
+      .get<{ result: IChatRoom[] }>(`/api/user/room?id=${memberId}`)
       .catch((error) => error);
 
     if (error) throw new Error(error.message);
@@ -15,7 +14,7 @@ export const chatService = {
     return data.chatRoom;
   },
 
-  insertChat: async (chatData: ChatRef) => {
+  insertChat: async (chatData: IChatRef) => {
     const { data, error } = await axios.post(`/api/user/chat`, chatData).catch((error) => error);
 
     if (error) throw new Error(error.message);
@@ -37,7 +36,7 @@ export const chatService = {
 
   getChat: async (chatRoomId: number) => {
     const { data, error } = await axios
-      .get<{ result: Chat }>(`/api/user/chat?id=${chatRoomId}`)
+      .get<{ result: IChat }>(`/api/user/chat?id=${chatRoomId}`)
       .catch((error) => error);
 
     if (error) throw new Error(error.message);

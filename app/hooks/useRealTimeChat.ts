@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { createClient } from '../utils/supabase/client';
-import { Chat } from '../types/mypage/chat';
+import { IChat } from '../types/mypage/chat';
 
 interface UseRealtimeChatProps {
   roomName: string;
@@ -15,10 +15,10 @@ const EVENT_MESSAGE_TYPE = 'message';
 
 export function useRealtimeChat({ roomName, username, userId, type }: UseRealtimeChatProps) {
   const supabase = createClient();
-  const [messages, setMessages] = useState<Chat[]>([]);
+  const [messages, setMessages] = useState<IChat[]>([]);
   const [channel, setChannel] = useState<ReturnType<typeof supabase.channel> | null>(null);
   const [isConnected, setIsConnected] = useState(false);
-  const [newMessage, setNewMessage] = useState<Chat>({
+  const [newMessage, setNewMessage] = useState<IChat>({
     content: '',
     memberId: '',
     createdAt: '',
@@ -32,7 +32,7 @@ export function useRealtimeChat({ roomName, username, userId, type }: UseRealtim
 
     newChannel
       .on('broadcast', { event: EVENT_MESSAGE_TYPE }, (payload) => {
-        setNewMessage(payload.payload as Chat);
+        setNewMessage(payload.payload as IChat);
         // setMessages((current) => [...current, payload.payload as Chat]);
       })
       .subscribe(async (status) => {
@@ -56,7 +56,7 @@ export function useRealtimeChat({ roomName, username, userId, type }: UseRealtim
     if (newTime - prevTime < 200) {
       console.log('오류 메시지');
     } else {
-      setMessages((current) => [...current, newMessage as Chat]);
+      setMessages((current) => [...current, newMessage as IChat]);
     }
   }, [newMessage]);
 
@@ -64,7 +64,7 @@ export function useRealtimeChat({ roomName, username, userId, type }: UseRealtim
     async (content: string) => {
       if (!channel || !isConnected) return;
 
-      const message: Chat = {
+      const message: IChat = {
         memberId: userId,
         content,
         createdAt: new Date().toISOString(),
