@@ -26,6 +26,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    //jwt 토큰 생성
     const access_token = generateAccessToken(memberEmail.id.toString());
     const refresh_token = generateRefreshToken(memberEmail.id.toString());
 
