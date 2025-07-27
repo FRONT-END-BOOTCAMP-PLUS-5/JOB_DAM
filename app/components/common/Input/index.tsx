@@ -16,8 +16,9 @@ interface InputProps<T extends FieldValues> {
   errors?: FieldErrors<T>;
   pattern?: RegExp;
   errorMessage?: string;
-  passwordCheckPattern?: boolean;
+  validate?: (value: string) => string | boolean;
   type?: string;
+  passwordInputValue?: string;
 }
 
 export default function Input<T extends FieldValues>({
@@ -31,7 +32,7 @@ export default function Input<T extends FieldValues>({
   errors,
   pattern,
   errorMessage,
-  passwordCheckPattern,
+  validate,
   type = 'text',
 }: InputProps<T>) {
   const login_form_label = label === '이메일' || label === '비밀번호' ? styles.login_form_label : '';
@@ -45,6 +46,8 @@ export default function Input<T extends FieldValues>({
   if (pattern) {
     validationRules.pattern = { value: pattern, message: errorMessage || `${label} 형식이 올바르지 않습니다` };
   }
+
+  if (validate) validationRules.validate = validate;
 
   // 실제 input type 결정 - 원래 타입이 password이고 showPassword가 true일 때만 text로 변경
   const inputType = type === 'password' && showPassword ? 'text' : type;
@@ -73,9 +76,6 @@ export default function Input<T extends FieldValues>({
         <span className={styles.error_message}>
           {typeof errors[name]?.message === 'string' ? errors[name]?.message : ''}
         </span>
-      )}
-      {name === 'password_check' && passwordCheckPattern === false && !errors?.[name] && (
-        <span className={styles.error_message}>{errorMessage}</span>
       )}
     </div>
   );

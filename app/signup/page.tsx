@@ -9,6 +9,7 @@ import { sign_up_form_type } from '@/app/types/signup/signup';
 import { validation } from '@/app/utils/signup/signup';
 import { useRouter } from 'next/navigation';
 import styles from './signupPage.module.scss';
+import { CheckBoxItem, InputItem } from '../constants/signup';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -28,10 +29,7 @@ export default function SignupPage() {
     },
   });
 
-  const passwordValue = useWatch<sign_up_form_type>({ control, name: 'password' });
-  const passwordCheckValue = useWatch<sign_up_form_type>({ control, name: 'password_check' });
-
-  const passwordCheckPattern = passwordValue === passwordCheckValue;
+  const passwordInputValue = useWatch({ control, name: 'password' });
 
   const onSubmit = async (data: sign_up_form_type) => {
     // ✅ 위에서 선언한 router 사용
@@ -46,77 +44,39 @@ export default function SignupPage() {
             <h1 className={styles.signup_title_text}>회원가입</h1>
             <p>당신의 커리어 여정을 함께 시작하세요</p>
           </header>
+
           <ImageForm register={register} setValue={setValue} errors={errors} />
+
           <div className={styles.signup_form_container}>
-            <Input
-              name="name"
-              label="이름"
-              placeholder="이름을 입력해주세요"
-              className={styles.signup_form_item}
-              register={register}
-              errors={errors}
-              pattern={/^[가-힣]{2,10}$/}
-              errorMessage="이름은 한글만 사용할 수 있습니다"
-              required
-            />
+            {InputItem.map((item, i) => (
+              <Input
+                key={i}
+                name={item.name as keyof sign_up_form_type}
+                label={item.label}
+                placeholder={item.placeholder}
+                className={item.className}
+                register={register}
+                errors={errors}
+                pattern={item.pattern}
+                errorMessage={item.errorMessage}
+                required={item.required}
+                type={item.type}
+                validate={(value) => item.validate?.(value, passwordInputValue) || ''}
+              />
+            ))}
 
-            <Input
-              name="email"
-              label="이메일"
-              placeholder="이메일을 입력해주세요"
-              className={styles.signup_form_item}
-              register={register}
-              errors={errors}
-              pattern={/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}$/}
-              errorMessage="이메일 형식이 올바르지 않습니다"
-              required
-              type="email"
-            />
-
-            <Input
-              name="password"
-              label="비밀번호"
-              placeholder="비밀번호를 입력해주세요"
-              className={styles.signup_form_item}
-              register={register}
-              errors={errors}
-              pattern={/^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/}
-              errorMessage="비밀번호는 영문, 숫자, 특수문자 포함 8자 이상 15자 이하이어야 합니다"
-              required
-              type="password"
-            />
-
-            <Input
-              name="password_check"
-              label="비밀번호 확인"
-              placeholder="비밀번호를 다시 입력해주세요"
-              className={styles.signup_form_item}
-              register={register}
-              errors={errors}
-              passwordCheckPattern={passwordCheckPattern}
-              errorMessage="비밀번호가 일치하지 않습니다"
-              required
-              type="password"
-            />
-
-            <div className={styles.signup_check_box_container}>
-              <input type="checkbox" className={styles.signup_check_box} {...register('service_terms', {})} />
-              <p>
-                (필수) <span className={styles.signup_check_box_text}>서비스 이용약관</span>에 동의합니다
-              </p>
-            </div>
-
-            <div className={styles.signup_check_box_container}>
-              <input type="checkbox" className={styles.signup_check_box} {...register('privacy_terms', {})} />
-              <p>
-                (필수) <span className={styles.signup_check_box_text}>개인정보 처리방침</span>에 동의합니다
-              </p>
-            </div>
-
-            <div className={styles.signup_check_box_container}>
-              <input type="checkbox" className={styles.signup_check_box} {...register('marketing_terms')} />
-              <p className={styles.signup_check_text}>(선택) 마케팅 정보 수신에 동의합니다</p>
-            </div>
+            {CheckBoxItem.map((item, i) => (
+              <div key={i} className={styles.signup_check_box_container}>
+                <input
+                  type="checkbox"
+                  className={styles.signup_check_box}
+                  {...register(item.name as keyof sign_up_form_type)}
+                />
+                <p>
+                  (필수) <span className={styles.signup_check_box_text}>{item.label}</span>에 동의합니다
+                </p>
+              </div>
+            ))}
 
             <button type="submit" disabled={isSubmitting} className={styles.signup_button}>
               회원가입
