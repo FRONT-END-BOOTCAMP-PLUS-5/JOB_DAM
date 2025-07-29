@@ -10,9 +10,14 @@ import { validation } from '@/app/utils/signup/signup';
 import { useRouter } from 'next/navigation';
 import styles from './signupPage.module.scss';
 import { CheckBoxItem, InputItem } from '../constants/signup';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store/store';
+import IsLogin from '../components/common/IsLogin';
 
 export default function SignupPage() {
   const router = useRouter();
+  const userData = useSelector((state: RootState) => state.login.member);
 
   const {
     register,
@@ -35,6 +40,16 @@ export default function SignupPage() {
     // ✅ 위에서 선언한 router 사용
     await validation(data, router);
   };
+
+  useEffect(() => {
+    if (userData.id) {
+      router.replace('/');
+    }
+  }, [userData.id]);
+
+  if (userData.id) {
+    return <IsLogin />;
+  }
 
   return (
     <article className={styles.signup_page_container}>

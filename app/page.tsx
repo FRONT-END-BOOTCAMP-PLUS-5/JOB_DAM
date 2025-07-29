@@ -3,127 +3,30 @@
 import styles from './page.module.scss';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { membersNum } from './services/count/member';
-import { questionsNum } from './services/count/question';
-import { mentorsNum } from './services/count/mentor';
-import { chatroomsNum } from './services/count/chatroom';
 import CategoryBox from './components/StartPage/CategoryBox';
+import { categories } from './constants/main';
+import { mainData } from './services/main/main';
 
 function StartPage() {
-  const [memberNum, setMemberNum] = useState<number>(0);
-  const [questionNum, setQuestionNum] = useState<number>(0);
-  const [mentorNum, setMentorNum] = useState<number>(0);
-  const [mentorRoomNum, setMentorRoomNum] = useState<number>(0);
+  const [pageState, setPageState] = useState({
+    멤버수: 0,
+    질문수: 0,
+    멘토수: 0,
+    멘토링방수: 0,
+  });
 
   useEffect(() => {
-    findMemNum();
-    findQuestionNum();
-    findMentorNum();
-    findMentorRoomNum();
+    const fetchData = async () => {
+      const data = await mainData();
+      setPageState({
+        멤버수: data.memberNum,
+        질문수: data.questionNum,
+        멘토수: data.mentorNum,
+        멘토링방수: data.mentorRoomNum,
+      });
+    };
+    fetchData();
   }, []);
-
-  const findMemNum = async () => {
-    const response = await membersNum();
-    if (!response) {
-      return;
-    }
-    setMemberNum(response.data.result.length);
-  };
-
-  const findQuestionNum = async () => {
-    const response = await questionsNum();
-    if (!response) {
-      return;
-    }
-    setQuestionNum(response.data.result.length);
-  };
-
-  const findMentorNum = async () => {
-    const response = await mentorsNum();
-    if (!response) {
-      return;
-    }
-    setMentorNum(response.data.result.length);
-  };
-
-  const findMentorRoomNum = async () => {
-    const response = await chatroomsNum();
-    if (!response) {
-      return;
-    }
-    setMentorRoomNum(response.data.result.length);
-  };
-
-  const categories = [
-    {
-      logo: '👨🏻‍💻',
-      title: '전문가 멘토링',
-      description: (
-        <p>
-          현업에서 활동하는 시니어 개발자들과 1:1 멘토
-          <br />
-          링을 통해 실무 경험과 커리어 인사이트를 얻으
-          <br />
-          세요.
-        </p>
-      ),
-    },
-    {
-      logo: '💬',
-      title: '실시간 Q&A',
-      description: (
-        <p>
-          막힌 부분이 있다면 언제든 질문하세요. 커뮤니
-          <br />티 전문가들이 신속하고 정확한 답변을 제공합
-          <br />
-          니다.
-        </p>
-      ),
-    },
-    {
-      logo: '🎯',
-      title: '맞춤형 성장 로드맵',
-      description: (
-        <p>
-          개인의 목표와 현재 수준에 맞는 학습 계획을
-          <br /> 세우고, 단계별로 체계적인 성장을 이뤄나가세
-          <br />
-          요.
-        </p>
-      ),
-    },
-    {
-      logo: '🤝',
-      title: '네트워킹',
-      description: (
-        <p>
-          같은 분야의 개발자들과 네트워크를 형성하고,
-          <br /> 서로의 경험을 공유하며 함께 성장하세요.
-        </p>
-      ),
-    },
-    {
-      logo: '📚',
-      title: '실무 중심 콘텐츠',
-      description: (
-        <p>
-          이론보다는 실제 프로젝트에서 사용되는 살아
-          <br />
-          있는 지식과 노하우를 배우세요.
-        </p>
-      ),
-    },
-    {
-      logo: '🏆',
-      title: '성과 추적',
-      description: (
-        <p>
-          학습 진도와 성장 과정을 시각화하여 동기 부여
-          <br />를 유지하고 목표를 달성하세요.
-        </p>
-      ),
-    },
-  ];
 
   return (
     <main>
@@ -148,27 +51,15 @@ function StartPage() {
         </section>
         <section className={styles.up_right}>
           <h2 className={styles.current}> 📊 실시간 현황 </h2>
-          <div className={styles.current_option}>
-            <div className={styles.current_option1}>
-              <h1 className={styles.current_number}> {memberNum} </h1>
-              <p className={styles.current_description}> 멤버 수 </p>
-            </div>
-            <div className={styles.current_option1}>
-              <h1 className={styles.current_number}> {questionNum} </h1>
-              <p className={styles.current_description}> 질문 수 </p>
-            </div>
-            <div className={styles.current_option1}>
-              <h1 className={styles.current_number}>{mentorNum}</h1>
-              <p className={styles.current_description}> 멘토 수 </p>
-            </div>
-            <div className={styles.current_option1}>
-              <h1 className={styles.current_number}>{mentorRoomNum}</h1>
-              <p className={styles.current_description}> 멘토링 방 수 </p>
-            </div>
-            <div className={styles.current_status_bar}>
-              <span className={styles.current_status_bar_text}> </span>
-              <span className={styles.current_status_bar}></span>
-            </div>
+          <div className={styles.current_option_div}>
+            {Object.entries(pageState).map(([key, value], index) => (
+              <div className={styles.current_option} key={index}>
+                <div className={styles.current_option1}>
+                  <h1 className={styles.current_number}> {value} </h1>
+                  <p className={styles.current_description}> {key} </p>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
       </div>
