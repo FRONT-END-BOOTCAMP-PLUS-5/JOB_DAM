@@ -1,32 +1,13 @@
 'use client';
 
 import styles from './page.module.scss';
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import CategoryBox from './components/StartPage/CategoryBox';
 import { categories } from './constants/main';
-import { mainData } from './services/main/main';
+import { useMainData } from './hooks/useMainData';
+import CategoryBox from './components/StartPage/CategoryBox';
 
 function StartPage() {
-  const [pageState, setPageState] = useState({
-    멤버수: 0,
-    질문수: 0,
-    멘토수: 0,
-    멘토링방수: 0,
-  });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await mainData();
-      setPageState({
-        멤버수: data.memberNum,
-        질문수: data.questionNum,
-        멘토수: data.mentorNum,
-        멘토링방수: data.mentorRoomNum,
-      });
-    };
-    fetchData();
-  }, []);
+  const { stats } = useMainData();
 
   return (
     <main>
@@ -52,7 +33,7 @@ function StartPage() {
         <section className={styles.up_right}>
           <h2 className={styles.current}> 📊 실시간 현황 </h2>
           <div className={styles.current_option_div}>
-            {Object.entries(pageState).map(([key, value], index) => (
+            {Object.entries(stats).map(([key, value], index) => (
               <div className={styles.current_option} key={index}>
                 <div className={styles.current_option1}>
                   <h1 className={styles.current_number}> {value} </h1>

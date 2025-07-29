@@ -1,4 +1,6 @@
-export const categories = [
+import { Category } from '@/app/types/main';
+
+export const categories: Category[] = [
   {
     logo: '👨🏻‍💻',
     title: '전문가 멘토링',

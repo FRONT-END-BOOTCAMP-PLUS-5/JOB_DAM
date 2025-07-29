@@ -1,31 +1,88 @@
 .category_box {
-    width: 23%;
-    border: 0px;
-    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.25);
-    margin-left: 8%;
-    padding-bottom: 60px;
-    border-radius: 13px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-align: center;
+  border: 1px solid #e0e0e0;
+  width: 23%;
+  margin-left: 8%;
+  padding-bottom: 60px;
+  border-radius: 13px;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  .category_logo {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .category_title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+  }
+
+  .category_description {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.6;
+    max-width: 280px;
+  }
 }
 
-.category_logo {
-    background-color: #705EBD;
-    font-size: 45px;
-    width: 20%;
-    display: flex;
-    justify-content: center;
-    border-radius: 10px;
-    margin-left: 40%;
-    margin-top: 40px;
+// 반응형 디자인
+@media (max-width: 768px) {
+  .category_box {
+    padding: 1.5rem;
+    min-height: 180px;
+
+    .category_logo {
+      font-size: 2.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .category_title {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .category_description {
+      font-size: 0.85rem;
+      max-width: 100%;
+    }
+  }
 }
 
-.category_title {
-    font-weight: bold;
-    font-size: 19px;
-    text-align: center;
-    margin-top: 15px;
-    margin-bottom: 15px;
-}
+@media (max-width: 480px) {
+  .category_box {
+    padding: 1rem;
+    min-height: 160px;
 
-.category_description {
-    text-align: center;
+    .category_logo {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .category_title {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .category_description {
+      font-size: 0.8rem;
+    }
+  }
 }
