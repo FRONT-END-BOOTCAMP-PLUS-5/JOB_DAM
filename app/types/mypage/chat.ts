@@ -1,10 +1,10 @@
-export interface ChatRoom {
+export interface IChatRoom {
   id: number;
   createdAt: string;
   updatedAt?: string;
   deletedAt?: string | null;
   title: string;
-  chatMember: ChatMember[];
+  chatMember: IChatMember[];
   createMember: {
     id: string;
     img: string;
@@ -15,10 +15,10 @@ export interface ChatRoom {
   };
   progress: number;
   maxPeople: number;
-  review?: Review[];
+  review?: IReview[];
 }
 
-export interface ChatMember {
+export interface IChatMember {
   member: {
     id: string;
     name: string;
@@ -28,14 +28,14 @@ export interface ChatMember {
   chatRoomId: number;
 }
 
-export interface ChatRef {
+export interface IChatRef {
   chat_room_id: number;
   member_id: string;
   content: string;
   type: number;
 }
 
-export interface Chat {
+export interface IChat {
   id?: number;
   content: string;
   chatRoomId?: number;
@@ -46,7 +46,7 @@ export interface Chat {
   type: number;
 }
 
-export interface PayloadChat {
+export interface IPayloadChat {
   chat_room_id: number;
   content: string;
   created_at: string;
@@ -56,7 +56,7 @@ export interface PayloadChat {
   updated_at?: string;
 }
 
-interface Review {
+interface IReview {
   id: number;
   rating: number;
   content: string;
@@ -66,8 +66,16 @@ interface Review {
   chatRoomId: number;
 }
 
-
 export interface UpdateChatPointRef {
   member_id: string;
   point: number;
 }
+
+export interface IMatchChatMember {
+  [key: string]: {
+    name: string;
+    img?: string;
+  };
+}
+
+export type IChatType = 0 | 1 | 2;

@@ -8,35 +8,33 @@ import { Mentors } from '../types/mentor/search';
 import { chatroomService } from '../services/chatroom/chatroom';
 import { RootState } from '../store/store';
 import { useSelector } from 'react-redux';
-import { Member } from '../store/isLogin/loginSlice';
 import Image from 'next/image';
 import Spinner from '../components/common/Spinner';
 
 const MentorPage = () => {
   const member = useSelector((state: RootState) => state.login.member);
+
   const [mentors, setMentors] = useState<Mentors[]>([]);
-  const [user, setUser] = useState<Member>(member);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectMentorId, setSelectMentorId] = useState('');
   const [chatRoomTitle, setChatRoomTitle] = useState('');
   const [chatRoomDescription, setChatRoomDescription] = useState('');
-  const [chatRoomMaxPeople, setChatRoomMaxPeople] = useState(1);
   const [applyCompleteModal, setApplyCompleteModal] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const { getMentorList } = mentorService;
   const { addChatRoom } = chatroomService;
 
-  const handleAddChatRoom = () => {
+  const handleAddChatRoom = async () => {
     const chatRoomData = {
       title: chatRoomTitle,
       description: chatRoomDescription,
       created_member_id: selectMentorId,
-      max_people: chatRoomMaxPeople,
-      member_id: user?.id,
+      max_people: 2,
+      member_id: member?.id,
     };
 
-    addChatRoom(chatRoomData).then((res) => {
+    await addChatRoom(chatRoomData).then((res) => {
       if (res.result.status === 200) {
         setApplyCompleteModal(true);
         reset();
@@ -49,12 +47,7 @@ const MentorPage = () => {
     setSelectMentorId('');
     setChatRoomTitle('');
     setChatRoomDescription('');
-    setChatRoomMaxPeople(1);
   };
-
-  useEffect(() => {
-    setUser(member);
-  }, [member]);
 
   useEffect(() => {
     getMentorList().then((res) => {
@@ -87,7 +80,7 @@ const MentorPage = () => {
                   <h3>포인트: {item?.point}</h3>
                 </section>
               </div>
-              {user?.id !== item?.id && user?.type !== 1 && (
+              {member?.id !== item?.id && member?.type !== 1 && (
                 <button
                   className={styles.apply_button}
                   onClick={() => {
@@ -119,13 +112,6 @@ const MentorPage = () => {
               variant="outlined"
               placeholder="채팅방 설명"
               onChange={(e) => setChatRoomDescription(e.target.value)}
-            />
-            <TextField
-              label="최대 인원수"
-              variant="outlined"
-              placeholder="최대 인원수"
-              type="number"
-              onChange={(e) => setChatRoomMaxPeople(Number(e.target.value))}
             />
           </section>
           <section className={styles.button_section}>

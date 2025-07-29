@@ -2,10 +2,10 @@
 
 import { Modal, Rating } from '@mui/material';
 import styles from './reviewModal.module.scss';
-import { ChatRoom } from '@/app/types/mypage/chat';
+import { IChatRoom } from '@/app/types/mypage/chat';
 
 interface IProps {
-  chatRoomInfo: ChatRoom;
+  chatRoomInfo: IChatRoom;
   rating: number | null;
   setRating: (value: number | null) => void;
   content: string;

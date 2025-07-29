@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { createClient } from '../utils/supabase/client';
-import { Chat } from '../types/mypage/chat';
+import { IChat } from '../types/mypage/chat';
 
 interface UseRealtimeChatProps {
   roomName: string;
@@ -15,9 +15,15 @@ const EVENT_MESSAGE_TYPE = 'message';
 
 export function useRealtimeChat({ roomName, username, userId, type }: UseRealtimeChatProps) {
   const supabase = createClient();
-  const [messages, setMessages] = useState<Chat[]>([]);
+  const [messages, setMessages] = useState<IChat[]>([]);
   const [channel, setChannel] = useState<ReturnType<typeof supabase.channel> | null>(null);
   const [isConnected, setIsConnected] = useState(false);
+  const [newMessage, setNewMessage] = useState<IChat>({
+    content: '',
+    memberId: '',
+    createdAt: '',
+    type: 0,
+  });
 
   useEffect(() => {
     const newChannel = supabase.channel(roomName);
@@ -26,9 +32,11 @@ export function useRealtimeChat({ roomName, username, userId, type }: UseRealtim
 
     newChannel
       .on('broadcast', { event: EVENT_MESSAGE_TYPE }, (payload) => {
-        setMessages((current) => [...current, payload.payload as Chat]);
+        setNewMessage(payload.payload as IChat);
+        // setMessages((current) => [...current, payload.payload as Chat]);
       })
       .subscribe(async (status) => {
+        console.log('useRealtimeChat', status);
         if (status === 'SUBSCRIBED') {
           setIsConnected(true);
         }
@@ -41,27 +49,44 @@ export function useRealtimeChat({ roomName, username, userId, type }: UseRealtim
     };
   }, [roomName, username, supabase]);
 
+  useEffect(() => {
+    const newTime = new Date(newMessage?.createdAt).getTime();
+    const prevTime = new Date(messages[messages.length - 1]?.createdAt).getTime();
+
+    if (newTime - prevTime < 200) {
+      console.log('오류 메시지');
+    } else {
+      setMessages((current) => [...current, newMessage as IChat]);
+    }
+  }, [newMessage]);
+
   const sendMessage = useCallback(
     async (content: string) => {
       if (!channel || !isConnected) return;
 
-      const message: Chat = {
+      const message: IChat = {
         memberId: userId,
         content,
         createdAt: new Date().toISOString(),
         type: type,
       };
 
-      // Update local state immediately for the sender
-      setMessages((current) => [...current, message]);
+      const newTime = new Date(message?.createdAt).getTime();
+      const prevTime = new Date(messages[messages?.length - 1]?.createdAt).getTime();
 
-      await channel.send({
-        type: 'broadcast',
-        event: EVENT_MESSAGE_TYPE,
-        payload: message,
-      });
+      if (newTime - prevTime < 200) {
+        console.log('오류 메시지');
+      } else {
+        setMessages((current) => [...current, message]);
+
+        await channel.send({
+          type: 'broadcast',
+          event: EVENT_MESSAGE_TYPE,
+          payload: message,
+        });
+      }
     },
-    [channel, isConnected, type, userId],
+    [channel, isConnected, messages, type, userId],
   );
 
   return { messages, sendMessage, isConnected };

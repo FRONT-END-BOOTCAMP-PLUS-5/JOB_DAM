@@ -1,7 +1,7 @@
 'use client';
 
 import { chatService } from '@/app/services/mypage/chat';
-import { ChatRoom } from '@/app/types/mypage/chat';
+
 import { useEffect, useState } from 'react';
 
 import styles from './chatPage.module.scss';
@@ -12,23 +12,23 @@ import { ChatRoomValue } from '@/app/constants/initialValue';
 import { createClient } from '@/app/utils/supabase/client';
 import { RootState } from '@/app/store/store';
 import { useSelector } from 'react-redux';
-import { Member } from '@/app/store/isLogin/loginSlice';
 import Image from 'next/image';
 import { Button, Chip } from '@mui/material';
 import Link from 'next/link';
 import { CHAT_ROOM_PROGRESS } from '@/app/constants/chat';
 import Spinner from '@/app/components/common/Spinner';
+import { toast } from 'react-toastify';
+import { IChatRoom } from '@/app/types/mypage/chat';
 
 const ChatPage = () => {
   const member = useSelector((state: RootState) => state.login.member);
   const supabase = createClient();
 
-  const [chatRoom, setChatRoom] = useState<ChatRoom[]>([]);
+  const [chatRoom, setChatRoom] = useState<IChatRoom[]>([]);
   const [reviewOpen, setReviewOpen] = useState(false);
   const [rating, setRating] = useState<number | null>(0);
   const [content, setContent] = useState('');
-  const [selectChatRoom, setSelectChatRoom] = useState<ChatRoom>(ChatRoomValue);
-  const [user, setUser] = useState<Member>(member);
+  const [selectChatRoom, setSelectChatRoom] = useState<IChatRoom>(ChatRoomValue);
   const [loading, setLoading] = useState(true);
 
   const { getChatRoom, updateChatRoom } = chatService;
@@ -53,19 +53,19 @@ const ChatPage = () => {
       chat_room_id: chatRoomId,
       content: content,
       rating: rating || 0,
-      member_id: user?.id,
+      member_id: member?.id,
     };
 
     await addReview(reviewData).then((res) => {
       if (res.status === 200) {
-        chatRoomInit(user?.id);
+        chatRoomInit(member?.id);
       }
     });
 
     reviewReset();
   };
 
-  const handleUpdateChatRoom = (chatRoom: ChatRoom) => {
+  const handleUpdateChatRoom = (chatRoom: IChatRoom) => {
     const updateChatRoomRef = {
       chat_room_id: chatRoom?.id,
       progress: 1,
@@ -75,12 +75,14 @@ const ChatPage = () => {
 
     updateChatRoom(updateChatRoomRef).then((res) => {
       if (res) {
-        chatRoomInit(user?.id);
+        chatRoomInit(member?.id);
       }
     });
   };
 
   const chatRoomInit = (userId: string) => {
+    if (!userId) return toast.warning('유저 정보를 불러오지 못했어요');
+
     getChatRoom(userId).then((res) => {
       setChatRoom(res);
       setLoading(false);
@@ -88,15 +90,13 @@ const ChatPage = () => {
   };
 
   useEffect(() => {
-    setUser(member);
-
     if (member?.id) {
       chatRoomInit(member?.id);
     }
   }, [member]);
 
   useEffect(() => {
-    const channel = supabase.channel('mypage_chat_room' + user?.id);
+    const channel = supabase.channel('mypage_chat_room');
 
     channel
       .on(
@@ -105,20 +105,33 @@ const ChatPage = () => {
           event: 'UPDATE',
           schema: 'public',
           table: 'chat_room',
-          filter: `id=in.(${chatRoom?.map((item) => item.id).join(',')})`,
         },
         () => {
-          chatRoomInit(user?.id);
+          chatRoomInit(member?.id);
         },
       )
-      .subscribe();
-  }, [supabase, chatRoom]);
+      .subscribe(async (status) => {
+        console.log('mypage_chat_room-status', status);
+
+        if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+          channel.unsubscribe().then(() => {
+            supabase.channel(`mypage_chat_room`).subscribe((status) => {
+              console.log('mypage_chat_room-retry', status);
+            });
+          });
+        }
+      });
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase, member]);
 
   return (
     <section>
       {loading && <Spinner />}
 
-      {!loading && chatRoom?.length === 0 && user?.type === 0 && (
+      {!loading && chatRoom?.length === 0 && member?.type === 0 && (
         <section className={styles.none_chat_section}>
           <p>채팅중인 방이 없습니다. </p>
           <p>멘토에게 채팅 신청을 해보세요!</p>
@@ -128,7 +141,7 @@ const ChatPage = () => {
         </section>
       )}
 
-      {!loading && chatRoom?.length === 0 && user?.type === 1 && (
+      {!loading && chatRoom?.length === 0 && member?.type === 1 && (
         <section className={styles.none_chat_section}>
           <p>채팅중인 방이 없습니다.</p>
           <p>멘티에게 어필할 만한 활동을 해보세요!</p>
@@ -158,7 +171,7 @@ const ChatPage = () => {
                 </span>
                 <span className={styles.created_date}>{dayjs(item?.createdAt).format('YYYY.MM.DD')}</span>
               </div>
-              {item?.progress === 0 && item?.createMember.id === user?.id && (
+              {item?.progress === 0 && item?.createMember.id === member?.id && (
                 <div className={styles.button_wrap}>
                   <button onClick={() => handleUpdateChatRoom(item)}>생성하기</button>
                 </div>
@@ -178,8 +191,8 @@ const ChatPage = () => {
               )}
 
               {item?.progress === 2 &&
-                item?.createMember.id !== user?.id &&
-                item?.review?.filter((item) => user?.id === item?.memberId).length === 0 && (
+                item?.createMember.id !== member?.id &&
+                item?.review?.filter((item) => member?.id === item?.memberId).length === 0 && (
                   <Button variant="contained" onClick={() => handleReviewModalShow(true, item?.id)}>
                     리뷰쓰기
                   </Button>

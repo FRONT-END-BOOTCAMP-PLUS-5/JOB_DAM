@@ -14,3 +14,13 @@ export class Member {
     public nickname: string,
   ) {}
 }
+
+
+export class User{
+  constructor(
+    public id: string,
+    public nickname: string,
+    public img: string,
+    public name: string
+  ) {}
+}

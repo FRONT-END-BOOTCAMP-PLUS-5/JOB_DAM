@@ -38,7 +38,8 @@ export class SbChatRepository implements ChatRepository {
         review:review_chat_room_id_fkey(*)
       `,
       )
-      .in('id', chatRoomIds);
+      .in('id', chatRoomIds)
+      .order('created_at', { ascending: false });
 
     if (chatRoomError) throw new Error(chatRoomError.message);
 

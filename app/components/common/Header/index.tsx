@@ -41,7 +41,7 @@ const Header = () => {
   }, [member]);
 
   useEffect(() => {
-    const channel = supabase.channel('alarm_chat_room' + member?.id);
+    const channel = supabase.channel('alarm_chat_room');
 
     channel
       .on(
@@ -58,7 +58,21 @@ const Header = () => {
           ]);
         },
       )
-      .subscribe();
+      .subscribe(async (status) => {
+        console.log('alarm_chat_room-status', status);
+
+        if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+          channel.unsubscribe().then(() => {
+            supabase.channel(`alarm_chat_room`).subscribe((status) => {
+              console.log('alarm_chat_room-retry', status);
+            });
+          });
+        }
+      });
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [supabase]);
 
   return (
