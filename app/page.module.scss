@@ -85,14 +85,20 @@
       color: white;
     }
 
-    .current_option {
+    .current_option_div {
       display: grid;
       grid-template-columns: 1fr 1fr;
       place-items: center;
       width: 100%;
-      height: 60%;
-      gap: 20px;
-      margin-block: 15px;
+      height: 80%;
+    }
+
+    .current_option {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .current_option1 {
@@ -100,6 +106,7 @@
       height: 100%;
       display: flex;
       flex-direction: column;
+      justify-content: center;
     }
 
     .current_number {
@@ -118,6 +125,8 @@
       text-align: center;
       font-weight: 600;
       font-size: 0.875rme;
+      margin-top: 10px;
+      white-space: nowrap;
     }
 
     .current_status_bar_text {

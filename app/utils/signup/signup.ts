@@ -19,7 +19,6 @@ export const validation = async (data: sign_up_form_type, router: AppRouterInsta
   const memberData = data;
 
   const signUpResponse = await signUpService(memberData);
-  console.log(signUpResponse);
 
   if (signUpResponse.data.status === 200) {
     if (signUpResponse.data.message) {
@@ -29,7 +28,7 @@ export const validation = async (data: sign_up_form_type, router: AppRouterInsta
       // 회원가입 성공
       toast.success('회원가입에 성공했습니다!', {
         position: 'top-right',
-        autoClose: 1000,
+        autoClose: 500,
         onClose: () => router.push('/login'),
       });
     }

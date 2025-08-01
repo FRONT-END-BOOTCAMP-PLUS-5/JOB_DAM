@@ -8,11 +8,9 @@ import { loginMember } from '@/app/services/login/login';
 import { useDispatch } from 'react-redux';
 import { setLoginMemberData } from '@/app/store/isLogin/loginSlice';
 import { useRouter } from 'next/navigation';
+import { LoginItem, LoginItemType } from '@/app/constants/login';
 
-interface FormInput {
-  email: string;
-  password: string;
-}
+type FormInput = Record<LoginItemType['name'], string>;
 
 export default function LoginForm() {
   const {
@@ -51,33 +49,22 @@ export default function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.login_form}>
-      <Input
-        label="이메일"
-        type="email"
-        required={true}
-        name="email"
-        placeholder="이메일을 입력해주세요."
-        register={register}
-        className={styles.login_form_input}
-        containerClassName={styles.login_form_item}
-        pattern={/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/}
-        errorMessage="이메일 형식이 올바르지 않습니다."
-        errors={errors}
-      />
-
-      <Input
-        label="비밀번호"
-        name="password"
-        type="password"
-        required={true}
-        placeholder="비밀번호를 입력해주세요."
-        className={styles.login_form_input}
-        containerClassName={styles.login_form_item}
-        register={register}
-        pattern={/^(?=.*[!@#$%&*])[a-zA-Z0-9!@#$%&*]{8,15}$/}
-        errorMessage="비밀번호는 특수문자 포함해서 8글자이상 15이하로 작성해주세요."
-        errors={errors}
-      />
+      {LoginItem.map((item: LoginItemType, i) => (
+        <Input
+          key={i}
+          label={item.label}
+          type={item.type}
+          required={item.required}
+          name={item.name}
+          placeholder={item.placeholder}
+          className={item.className}
+          containerClassName={item.containerClassName}
+          pattern={item.pattern}
+          errorMessage={item.errorMessage}
+          register={register}
+          errors={errors}
+        />
+      ))}
 
       <div className={styles.login_form_checkbox}>
         <div className={styles.login_form_checkbox_item}>
