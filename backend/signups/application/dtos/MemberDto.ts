@@ -11,6 +11,6 @@ export class MemberDto {
     public grade: number | null,
     public point: number | null,
     public type: number | null,
-    public deletedAt: string | null
+    public deletedAt: string | null,
   ) {}
 }

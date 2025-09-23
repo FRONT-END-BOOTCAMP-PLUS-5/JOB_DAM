@@ -18,22 +18,29 @@ export const validation = async (data: sign_up_form_type, router: AppRouterInsta
 
   const memberData = data;
 
-  const signUpResponse = await signUpService(memberData);
+  try {
+    const signUpResponse = await signUpService(memberData);
 
-  if (signUpResponse.data.status === 200) {
-    if (signUpResponse.data.message) {
-      // 중복 체크 실패
-      toast.error(signUpResponse.data.message);
+    if (signUpResponse.data.status === 200) {
+      if (signUpResponse.data.message) {
+        // 중복 체크 실패
+
+        toast.error(signUpResponse.data.message);
+      } else {
+        // 회원가입 성공
+
+        toast.success('회원가입에 성공했습니다!', {
+          position: 'top-right',
+          autoClose: 500,
+          onClose: () => router.push('/login'),
+        });
+      }
     } else {
-      // 회원가입 성공
-      toast.success('회원가입에 성공했습니다!', {
-        position: 'top-right',
-        autoClose: 500,
-        onClose: () => router.push('/login'),
-      });
+      // 서버 에러 처리
+
+      toast.error(signUpResponse.data.message);
     }
-  } else {
-    // 서버 에러 처리
-    toast.error(signUpResponse.data.message);
+  } catch (error) {
+    toast.error((error as Error).message);
   }
 };

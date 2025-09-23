@@ -33,7 +33,6 @@ export default function LoginForm() {
       }
 
       if (response.data.status === 200) {
-        console.log(response);
         // 🔹 POST 응답에서 바로 유저 정보를 Redux에 저장
         dispatch(setLoginMemberData(response.data.user));
         toast.success('로그인 성공', {
@@ -66,12 +65,12 @@ export default function LoginForm() {
         />
       ))}
 
-      <div className={styles.login_form_checkbox}>
-        <div className={styles.login_form_checkbox_item}>
-          <input type="checkbox" className={styles.login_form_checkbox_input} />
-          <label>로그인 상태 유지</label>
-        </div>
-        <Link href="/find/password">비밀번호 찾기</Link>
+      <div className={styles.login_form_checkbox_item}>
+        <input type="checkbox" className={styles.login_form_checkbox_input} />
+        <p className={styles.login_form_checkbox_label}>로그인 상태 유지</p>
+        <Link href="/find/password" className={styles.login_form_checkbox_link}>
+          비밀번호 찾기
+        </Link>
       </div>
       <button type="submit" className={styles.login_button} disabled={isSubmitting}>
         로그인

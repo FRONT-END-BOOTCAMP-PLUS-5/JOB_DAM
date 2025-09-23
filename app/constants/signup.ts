@@ -1,4 +1,25 @@
 import styles from '@/app/signup/signupPage.module.scss';
+import type { Path } from 'react-hook-form';
+import type { sign_up_form_type } from '@/app/types/signup/signup';
+
+// InputItem 타입 정의
+export interface InputItemType {
+  name: Path<sign_up_form_type>;
+  label: string;
+  placeholder: string;
+  className: string;
+  pattern?: RegExp;
+  errorMessage?: string;
+  required?: boolean;
+  type?: string;
+  validate?: (value: string, passwordInputValue: string) => string | true;
+}
+
+// CheckBoxItem 타입 정의
+interface CheckBoxItemType {
+  name: Path<sign_up_form_type>;
+  label: string;
+}
 
 const TOAST_MESSAGES = {
   SUCCESS: '회원가입에 성공했습니다!',
@@ -19,7 +40,7 @@ const FORM_DEFAULT_VALUES = {
 
 export { TOAST_MESSAGES, FORM_DEFAULT_VALUES };
 
-export const InputItem = [
+export const InputItem: InputItemType[] = [
   {
     name: 'name',
     label: '이름',
@@ -63,12 +84,13 @@ export const InputItem = [
       if (value !== passwordInputValue) {
         return '비밀번호가 일치하지 않습니다';
       }
+      return true; // 검증 성공 시 true 반환
     },
     type: 'password',
   },
 ];
 
-export const CheckBoxItem = [
+export const CheckBoxItem: CheckBoxItemType[] = [
   {
     name: 'service_terms',
     label: '서비스 이용약관',
