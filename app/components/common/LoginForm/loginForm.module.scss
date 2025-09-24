@@ -47,26 +47,38 @@
     }
   }
 
-  .login_form_checkbox_input {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-  }
-
-  .login_form_checkbox {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    width: 70%;
-    height: 5.5vh;
-    padding: 10px;
-  }
-
   .login_form_checkbox_item {
     display: flex;
-    gap: 10px;
+    width: 70%;
     align-items: center;
+    gap: 5px;
+    position: relative;
+  }
+
+  .login_form_checkbox_input {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #6b70d6;
+  }
+
+  .login_form_checkbox_label {
+    font-size: 0.95rem;
+    color: #333;
+  }
+
+  .login_form_checkbox_link {
+    font-size: 0.95rem;
+    color: #3861ff;
+    text-decoration: none;
+    position: absolute;
+    right: 0;
+  }
+
+  .checkbox_group {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
   }
 
   span {

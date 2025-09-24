@@ -1,7 +1,7 @@
 import { passwordDecrypto } from '@/app/utils/signup/passwordCrypto';
 import { generateAccessToken, generateRefreshToken } from '@/app/utils/signup/token';
 import { verifyAccessToken } from '@/app/utils/signup/tokenVerify';
-import { createClient } from '@/app/utils/supabase/server';
+import { createAdminClient } from '@/app/utils/supabase/server';
 import { GetLoginUserIdUseCase } from '@/backend/login/application/usecases/GetLoginUserIdUseCase';
 import { GetLoginUserUseCase } from '@/backend/login/application/usecases/GetLoginUserUseCase';
 import { SbLoginRepository } from '@/backend/login/repository/SbLoginRepository';
@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json();
 
-    const supabase = await createClient();
+    const supabase = await createAdminClient(); // RLS 우회용 관리자 권한
 
     const loginRepository = new SbLoginRepository(supabase);
 
@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
     const { userId } = verifyAccessToken(accessToken);
 
     // 2️⃣ DB에서 사용자 정보 조회
-    const supabase = await createClient();
+    const supabase = await createAdminClient(); // RLS 우회용 관리자 권한
     const loginRepository = new SbLoginRepository(supabase);
     const memberData = await new GetLoginUserIdUseCase(loginRepository).execute(userId);
 

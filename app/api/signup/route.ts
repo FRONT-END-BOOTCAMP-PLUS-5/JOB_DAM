@@ -1,4 +1,4 @@
-import { createClient } from '@/app/utils/supabase/server';
+import { createAdminClient } from '@/app/utils/supabase/server';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 import { SbMemberRepository } from '../../../backend/members/repositories/SbMemberRepository';
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
   };
 
   try {
-    const supabase: SupabaseClient = await createClient(); // 🔹 2. 데이터베이스 연결
+    const supabase: SupabaseClient = await createAdminClient(); // 🔹 2. 관리자 권한으로 데이터베이스 연결 (RLS 우회)
 
     const memberRepository = new SbMemberRepository(supabase, memberData); // 🔹 3. 인프라 계층 생성
 
